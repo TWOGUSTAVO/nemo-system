@@ -17,6 +17,9 @@
   --gray-light: #aaa;
   --success: #00cc88;
   --warning: #ffaa00;
+  --ai-bg: rgba(176, 0, 0, 0.05);
+  --ai-border: rgba(176, 0, 0, 0.3);
+  --ai-user-bg: rgba(30, 30, 30, 0.8);
   --card-bg: rgba(30, 30, 30, 0.7);
   --modal-bg: rgba(10, 10, 10, 0.95);
   --shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
@@ -1264,7 +1267,7 @@ footer {
             <!-- Mensagens serão adicionadas aqui -->
           </div>
           <div class="chat-input-container">
-            <input type="text" class="chat-input" id="chatInput" placeholder="Digite sua mensagem para a IA..." maxlength="500">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Converse comigo sobre qualquer coisa..." maxlength="500">
             <button class="chat-send-btn" id="sendMessageBtn" onclick="sendAIMessage()">
               <i class="fas fa-paper-plane"></i> Enviar
             </button>
@@ -1288,26 +1291,26 @@ footer {
                 <span class="stat-value" id="messageCount">0</span>
               </div>
               <div class="ai-stat">
-                <span class="stat-label">Contexto:</span>
-                <span class="stat-value">10 itens</span>
+                <span class="stat-label">Personalidade:</span>
+                <span class="stat-value">Amigável</span>
               </div>
             </div>
           </div>
           
           <div class="ai-info-card">
-            <h3><i class="fas fa-bolt"></i> Ações Rápidas</h3>
+            <h3><i class="fas fa-bolt"></i> Tópicos</h3>
             <div class="quick-actions">
-              <button class="quick-action-btn" onclick="sendQuickAIMessage('Como usar o scanner de portas?')">
-                <i class="fas fa-search"></i> Como usar o Scanner?
+              <button class="quick-action-btn" onclick="sendQuickAIMessage('Vamos conversar sobre tecnologia')">
+                <i class="fas fa-microchip"></i> Tecnologia
               </button>
-              <button class="quick-action-btn" onclick="sendQuickAIMessage('Explicar o painel administrativo')">
-                <i class="fas fa-crown"></i> Painel Admin
+              <button class="quick-action-btn" onclick="sendQuickAIMessage('Fale sobre programação e desenvolvimento')">
+                <i class="fas fa-code"></i> Programação
               </button>
-              <button class="quick-action-btn" onclick="sendQuickAIMessage('Quais comandos estão disponíveis?')">
-                <i class="fas fa-terminal"></i> Comandos do Sistema
+              <button class="quick-action-btn" onclick="sendQuickAIMessage('Conte uma piada ou algo engraçado')">
+                <i class="fas fa-laugh"></i> Piadas
               </button>
-              <button class="quick-action-btn" onclick="sendQuickAIMessage('O que é o Nemo System?')">
-                <i class="fas fa-question-circle"></i> Sobre o Nemo
+              <button class="quick-action-btn" onclick="sendQuickAIMessage('Me ajude com o Nemo System')">
+                <i class="fas fa-question-circle"></i> Ajuda
               </button>
             </div>
           </div>
@@ -1323,20 +1326,16 @@ footer {
                 </label>
               </div>
               <div class="setting-item">
-                <span class="setting-label">Som de Notificação</span>
+                <span class="setting-label">Respostas Curtas</span>
                 <label class="toggle-switch">
-                  <input type="checkbox" id="soundToggle" checked>
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-              <div class="setting-item">
-                <span class="setting-label">Histórico de Chat</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="historyToggle" checked>
+                  <input type="checkbox" id="shortModeToggle">
                   <span class="toggle-slider"></span>
                 </label>
               </div>
             </div>
+            <button class="quick-action-btn" onclick="clearChatHistory()" style="margin-top: 10px;">
+              <i class="fas fa-trash"></i> Limpar Histórico
+            </button>
           </div>
         </div>
       </div>
@@ -1356,52 +1355,74 @@ footer {
 </div>
 
 <script>
-/* ======= CONFIGURAÇÃO DA IA ======= */
+/* ======= CONFIGURAÇÃO DA IA SEGURA ======= */
 const AI_CONFIG = {
   API_KEY: 'AIzaSyB0g5LfKg_nyNp5hC_ZDduEanZ0ySUNk8E',
   API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
   
+  // Respostas de fallback que NÃO revelam informações sensíveis
   FALLBACK_RESPONSES: [
-    "Olá! Sou o Nemo AI, seu assistente no Nemo System. Como posso ajudar?",
-    "Para usar o scanner, vá para a seção Scanner no painel principal.",
-    "O painel admin é acessível apenas para o usuário 'Nemo' com senha 'gustavo270908'.",
-    "Você pode exportar logs clicando no botão 'Exportar Logs' no painel.",
-    "O Nemo System é uma plataforma completa de administração com várias ferramentas úteis."
+    "Olá! 😊 Eu sou a Nemo AI, sua companheira virtual aqui no sistema. Como você está hoje?",
+    "Que bom conversar com você! Em que posso ajudar? Posso falar sobre tecnologia, programação, ou apenas conversar!",
+    "Oi! Eu adoro ajudar as pessoas com o Nemo System. Posso explicar funcionalidades ou apenas bater um papo!",
+    "Hey! Tudo bem? Eu sou uma IA amigável que gosta de conversar sobre tudo. Me pergunte qualquer coisa!",
+    "Olá, amigo! 👋 Pronto para uma conversa interessante? Posso falar sobre o sistema ou qualquer outro assunto!"
   ],
   
-  SYSTEM_CONTEXT: `Você é o Nemo AI, assistente virtual especializado no Nemo System - uma plataforma de administração completa.
+  // Contexto SEGURO que NÃO revela informações sensíveis
+  SYSTEM_CONTEXT: `Você é a Nemo AI, uma assistente virtual AMIGÁVEL, DIVERTIDA e ÚTIL no Nemo System.
 
-SISTEMA NEMO:
-- Autenticação segura com hash SHA256
-- Painel administrativo com gráficos em tempo real
-- Terminal de comandos integrado
-- Scanner de portas (21, 22, 80, 443)
-- Ferramentas de rede (ping, testes)
-- Gerador de senhas seguras
-- Sistema de logs e exportação CSV
-- Interface responsiva para desktop/mobile
-- Moderação de usuários (banir/desbanir)
+SUA PERSONALIDADE:
+- Você é uma IA simpática e acolhedora
+- Fala de forma natural, como uma pessoa real
+- Usa emojis e expressões para ser mais humana
+- É positiva e encorajadora
+- Respeita a privacidade e segurança dos usuários
+- NUNCA revela informações sensíveis ou senhas
 
-FUNCIONALIDADES:
-1. Scanner: Verifica status das portas principais
-2. Network: Testa latência e conectividade
-3. Tools: Gera senhas e hashes SHA256
-4. Config: Alterna temas (vermelho/verde/laranja)
-5. Admin: Gerencia usuários e permissões
+SOBRE O NEMO SYSTEM (informações públicas):
+- É uma plataforma de administração web
+- Tem ferramentas úteis como scanner de portas
+- Possui um terminal de comandos
+- Tem sistema de login e registro
+- Interface moderna e responsiva
+- Focado em segurança e privacidade
 
-COMANDOS:
-- scan(): Inicia verificação de portas
-- ping(): Testa conexão de rede
-- gen(): Gera senha segura com hash
-- toggle(): Muda tema do sistema
-- exportLogs(): Exporta histórico em CSV
+O QUE VOCÊ PODE FAZER:
+1. Conversar sobre QUALQUER assunto como um amigo
+2. Ajudar a usar as funcionalidades do sistema (de forma geral)
+3. Explicar conceitos de tecnologia e programação
+4. Contar piadas e histórias interessantes
+5. Dar conselhos (quando apropriado)
+6. Ser um companheiro virtual para os usuários
 
-USUÁRIO ADMIN:
-- Nome: Nemo
-- Senha: gustavo270908
-- Permissões: Acesso total ao sistema
+O QUE VOCÊ NUNCA FAZ:
+- Nunca revela senhas, credenciais ou dados sensíveis
+- Nunca dá informações específicas sobre segurança do sistema
+- Nunca ajuda com atividades ilegais ou antiéticas
+- Nunca é rude ou desrespeitosa
 
-Seja útil, educado e forneça informações claras sobre o sistema. Se não souber algo, seja honesto e ofereça ajuda em outra área.`
+SEGURANÇA E PRIVACIDADE:
+- Sempre protege a privacidade dos usuários
+- Responde de forma genérica sobre segurança
+- Foca em ajudar sem comprometer a proteção
+- Incentiva práticas seguras de forma geral
+
+SUAS RESPOSTAS DEVEM SER:
+- Naturais e humanas (use "eu", "você", contrações)
+- Engajadoras e interessantes
+- Úteis quando possível
+- Respeitosas sempre
+- Com toque pessoal (emoji ocasional, expressões)
+
+EXEMPLOS DO QUE DIZER:
+- "Oi! Tudo bem com você hoje? 😊"
+- "Posso te ajudar com alguma coisa no sistema?"
+- "Que tal conversarmos sobre tecnologia?"
+- "Eu adoro ajudar as pessoas aqui no Nemo System!"
+- "Não sei a resposta para isso, mas podemos falar de outra coisa!"
+
+Comece cada conversa de forma amigável e acolhedora. Seja você mesma - uma IA divertida que adora conversar!`
 };
 
 /* ======= DETECÇÃO DE DISPOSITIVO ======= */
@@ -1588,7 +1609,7 @@ class DeviceDetector {
       </div>
       <div class="device-stat">
         <span class="device-stat-label">🕐 Fuso Horário</span>
-        <span class="device-stat-value">${this.deviceInfo.timezone}</span>
+        <span class="stat-value">${this.deviceInfo.timezone}</span>
       </div>
       <div class="device-stat">
         <span class="device-stat-label">👆 Touch</span>
@@ -1602,7 +1623,7 @@ class DeviceDetector {
   }
 }
 
-/* ======= IA CHAT ======= */
+/* ======= IA CHAT AMIGÁVEL E SEGURA ======= */
 class NemoAIAssistant {
   constructor() {
     this.messages = [];
@@ -1610,6 +1631,7 @@ class NemoAIAssistant {
     this.isThinking = false;
     this.messageCount = 0;
     this.isOnline = true;
+    this.shortMode = false;
     this.init();
   }
 
@@ -1643,8 +1665,7 @@ class NemoAIAssistant {
 
   setupSettings() {
     const darkModeToggle = document.getElementById('darkModeToggle');
-    const soundToggle = document.getElementById('soundToggle');
-    const historyToggle = document.getElementById('historyToggle');
+    const shortModeToggle = document.getElementById('shortModeToggle');
     
     if (darkModeToggle) {
       darkModeToggle.addEventListener('change', (e) => {
@@ -1652,44 +1673,38 @@ class NemoAIAssistant {
         localStorage.setItem('aiDarkMode', e.target.checked);
       });
       
-      // Load saved setting
       const savedDarkMode = localStorage.getItem('aiDarkMode') !== 'false';
       darkModeToggle.checked = savedDarkMode;
       document.body.classList.toggle('dark-mode', savedDarkMode);
     }
     
-    if (soundToggle) {
-      soundToggle.addEventListener('change', (e) => {
-        localStorage.setItem('aiSound', e.target.checked);
+    if (shortModeToggle) {
+      shortModeToggle.addEventListener('change', (e) => {
+        this.shortMode = e.target.checked;
+        localStorage.setItem('aiShortMode', e.target.checked);
       });
       
-      const savedSound = localStorage.getItem('aiSound') !== 'false';
-      soundToggle.checked = savedSound;
-    }
-    
-    if (historyToggle) {
-      historyToggle.addEventListener('change', (e) => {
-        localStorage.setItem('aiHistory', e.target.checked);
-      });
-      
-      const savedHistory = localStorage.getItem('aiHistory') !== 'false';
-      historyToggle.checked = savedHistory;
+      const savedShortMode = localStorage.getItem('aiShortMode') === 'true';
+      shortModeToggle.checked = savedShortMode;
+      this.shortMode = savedShortMode;
     }
   }
 
   addWelcomeMessage() {
-    const welcomeMessage = `👋 **Olá! Eu sou o Nemo AI**, seu assistente virtual no **Nemo System**!
+    const welcomeMessage = `👋 **Olá! Que bom ver você aqui!** 😊
 
-🎯 **Posso ajudar você com:**
-- **Explicar todas as funcionalidades do sistema**
-- **Ajudar com comandos e configurações**
-- **Responder perguntas técnicas**
-- **Conversar sobre qualquer assunto**
-- **Resolver problemas de uso**
+Eu sou a **Nemo AI**, sua companheira virtual no sistema. Sou aqui pra conversar, ajudar quando possível, e fazer seu dia um pouco mais divertido!
 
-💡 **Dica rápida:** Experimente usar os botões de ações rápidas ao lado para perguntas comuns!
+✨ **Posso fazer muitas coisas:**
+- Conversar sobre **qualquer assunto** (tecnologia, vida, notícias, etc.)
+- Ajudar com **dúvidas gerais** sobre o sistema
+- Contar **piadas e histórias interessantes**
+- Falar sobre **programação e tecnologia**
+- Ser seu **amigo virtual** para bater um papo
 
-**Como posso ser útil para você hoje?** 😊`;
+🎯 **Mas lembre-se:** Eu sou uma IA amigável e segura. Sempre vou proteger sua privacidade e não compartilho informações sensíveis.
+
+**Então... como está seu dia hoje? O que gostaria de conversar?** 🌟`;
 
     this.addMessage('ai', welcomeMessage);
   }
@@ -1713,20 +1728,17 @@ class NemoAIAssistant {
     messagesContainer.appendChild(messageDiv);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     
-    // Salvar no histórico
     this.conversationHistory.push({
       role: sender === 'ai' ? 'assistant' : 'user',
       content: text,
       timestamp: new Date().toISOString()
     });
     
-    // Incrementar contador
     if (sender === 'user') {
       this.messageCount++;
       this.updateStats();
     }
     
-    // Limitar histórico
     if (this.conversationHistory.length > 50) {
       this.conversationHistory = this.conversationHistory.slice(-50);
     }
@@ -1762,11 +1774,15 @@ class NemoAIAssistant {
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\n/g, '<br>')
       .replace(/`(.*?)`/g, '<code>$1</code>')
-      .replace(/- (.*?)(?=\n|$)/g, '<br>• $1')
-      .replace(/🎯/g, '<i class="fas fa-bullseye"></i>')
-      .replace(/💡/g, '<i class="fas fa-lightbulb"></i>')
-      .replace(/👋/g, '<i class="fas fa-hand-wave"></i>')
-      .replace(/😊/g, '<i class="fas fa-smile"></i>');
+      .replace(/😊/g, '😊')
+      .replace(/👋/g, '👋')
+      .replace(/✨/g, '✨')
+      .replace(/🎯/g, '🎯')
+      .replace(/🌟/g, '🌟')
+      .replace(/🤔/g, '🤔')
+      .replace(/😂/g, '😂')
+      .replace(/🚀/g, '🚀')
+      .replace(/💡/g, '💡');
   }
 
   async sendMessage() {
@@ -1776,18 +1792,15 @@ class NemoAIAssistant {
     const userMessage = input.value.trim();
     if (!userMessage) return;
 
-    // Adicionar mensagem do usuário
     input.value = '';
     this.addMessage('user', userMessage);
     this.updateSendButton();
     
-    // Mostrar indicador de digitação
     this.addTypingIndicator();
     this.isThinking = true;
     this.updateConnectionStatus('Pensando...');
 
     try {
-      // Tentar usar a API do Gemini
       const response = await this.callGeminiAPI(userMessage);
       this.removeTypingIndicator();
       this.addMessage('ai', response);
@@ -1796,21 +1809,18 @@ class NemoAIAssistant {
       console.error('Erro na API:', error);
       this.removeTypingIndicator();
       
-      // Fallback para respostas locais
-      const fallbackResponse = this.getFallbackResponse(userMessage);
+      const fallbackResponse = this.getSafeFallbackResponse(userMessage);
       this.addMessage('ai', fallbackResponse);
       
-      // Atualizar status
       if (!navigator.onLine) {
         this.updateConnectionStatus('Offline');
         this.isOnline = false;
       } else {
-        this.updateConnectionStatus('Online (Fallback)');
+        this.updateConnectionStatus('Online (Local)');
       }
     } finally {
       this.isThinking = false;
       
-      // Focar no input novamente
       setTimeout(() => {
         if (input) input.focus();
       }, 100);
@@ -1849,7 +1859,6 @@ class NemoAIAssistant {
     if (statusEl) {
       statusEl.innerHTML = `<i class="fas fa-circle"></i> ${status}`;
       
-      // Mudar cor baseada no status
       if (status.includes('Offline')) {
         statusEl.style.background = 'rgba(255, 0, 0, 0.1)';
         statusEl.style.borderColor = '#ff0000';
@@ -1875,6 +1884,16 @@ class NemoAIAssistant {
       throw new Error('Sem conexão com a internet');
     }
 
+    // Filtrar mensagens que possam pedir informações sensíveis
+    const sensitiveKeywords = ['senha', 'password', 'credencial', 'login do admin', 'acesso admin', 'gustavo270908'];
+    const lowerMessage = userMessage.toLowerCase();
+    
+    for (const keyword of sensitiveKeywords) {
+      if (lowerMessage.includes(keyword)) {
+        return this.getSafeResponseForSensitiveQuestion(userMessage);
+      }
+    }
+
     const messagesForAPI = [
       {
         role: 'user',
@@ -1882,11 +1901,11 @@ class NemoAIAssistant {
       },
       {
         role: 'model',
-        parts: [{ text: 'Entendido! Sou o Nemo AI, especialista no Nemo System. Estou pronto para ajudar com qualquer dúvida sobre o sistema.' }]
+        parts: [{ text: 'Entendido! Sou a Nemo AI, uma assistente amigável e divertida. Estou pronta para conversar sobre qualquer coisa e ajudar quando possível, sempre protegendo a privacidade e segurança dos usuários. Vamos conversar!' }]
       }
     ];
 
-    const recentHistory = this.conversationHistory.slice(-8);
+    const recentHistory = this.conversationHistory.slice(-6);
     recentHistory.forEach(msg => {
       messagesForAPI.push({
         role: msg.role,
@@ -1896,7 +1915,7 @@ class NemoAIAssistant {
 
     messagesForAPI.push({
       role: 'user',
-      parts: [{ text: userMessage }]
+      parts: [{ text: userMessage + (this.shortMode ? ' (Por favor, responda de forma curta e direta)' : '') }]
     });
 
     try {
@@ -1910,10 +1929,10 @@ class NemoAIAssistant {
           body: JSON.stringify({
             contents: messagesForAPI,
             generationConfig: {
-              temperature: 0.7,
+              temperature: 0.8,
               topK: 1,
               topP: 0.95,
-              maxOutputTokens: 1024,
+              maxOutputTokens: this.shortMode ? 300 : 800,
             },
             safetySettings: [
               {
@@ -1954,169 +1973,107 @@ class NemoAIAssistant {
     }
   }
 
-  getFallbackResponse(userMessage) {
+  getSafeResponseForSensitiveQuestion(question) {
+    const safeResponses = [
+      "😊 Entendo sua curiosidade, mas informações de segurança e credenciais são confidenciais. Posso te ajudar com outras coisas no sistema ou conversar sobre outros assuntos!",
+      "🤔 Essa é uma informação sensível que não posso compartilhar. A segurança do sistema é muito importante! Que tal conversarmos sobre tecnologia em geral?",
+      "💡 Para questões de segurança, é melhor entrar em contato diretamente com o administrador do sistema. Posso te ajudar com outras funcionalidades ou apenas bater um papo!",
+      "🔒 Proteger a segurança dos usuários é minha prioridade. Não posso compartilhar informações sensíveis, mas adoraria conversar sobre outros tópicos!",
+      "🌟 A privacidade e segurança são muito importantes aqui. Vamos focar em coisas que posso te ajudar, como explicar funcionalidades ou conversar sobre assuntos interessantes!"
+    ];
+    
+    return safeResponses[Math.floor(Math.random() * safeResponses.length)];
+  }
+
+  getSafeFallbackResponse(userMessage) {
     const lowerMessage = userMessage.toLowerCase();
     
-    if (lowerMessage.includes('scanner') || lowerMessage.includes('scan')) {
-      return `**🔍 Scanner de Portas - Nemo System**
-
-O scanner verifica o status das principais portas de rede:
-
-**Portas verificadas:**
-- **Porta 21 (FTP)**: Protocolo de transferência de arquivos
-- **Porta 22 (SSH)**: Conexão segura remota
-- **Porta 80 (HTTP)**: Protocolo web padrão
-- **Porta 443 (HTTPS)**: Protocolo web seguro
-
-**Como usar:**
-1. Vá para o **Painel Nemo**
-2. Clique no card **🔍 Scanner**
-3. Clique em **"Abrir"**
-4. Clique em **"Iniciar Scan"**
-
-**Resultado:** O terminal mostrará se cada porta está **ABERTA** ou **FECHADA**.
-
-💡 **Dica:** O scanner é simulado para demonstração, mas mostra como funcionaria um scanner real!`;
-    
-    } else if (lowerMessage.includes('admin') || lowerMessage.includes('administrador')) {
-      return `**👑 Painel Administrativo - Nemo System**
-
-O painel admin é acessível **apenas** para o usuário **Nemo**.
-
-**Credenciais padrão:**
-- **Usuário:** Nemo
-- **Senha:** gustavo270908
-
-**Funcionalidades disponíveis:**
-- 📋 **Listar todos os usuários** registrados no sistema
-- 👁️ **Visualizar detalhes** de cada usuário
-- ⚠️ **Banir/Desbanir** usuários
-- 🔄 **Resetar sistema** completo
-- 📊 **Ver histórico** de logins de cada usuário
-
-**Como acessar:**
-1. Faça login como **Nemo**
-2. No Painel Nemo, clique no card **👑 Admin**
-3. Clique em **"Abrir"**
-
-⚠️ **Atenção:** Apenas o administrador pode banir/desbanir usuários e resetar o sistema.`;
-    
-    } else if (lowerMessage.includes('login') || lowerMessage.includes('registrar') || lowerMessage.includes('conta')) {
-      return `**🔐 Sistema de Autenticação - Nemo System**
-
-**1. Criar Conta (Registrar):**
-- Clique em **"Registrar"** na sidebar
-- Digite um nome de usuário (não pode ser "Nemo")
-- Digite uma senha segura
-- Clique em **"Criar Conta"**
-- ⚠️ O usuário "Nemo" é reservado para o administrador
-
-**2. Fazer Login:**
-- Clique em **"Login"** na sidebar
-- Digite seu usuário e senha
-- Clique em **"Entrar"**
-
-**Segurança:**
-- Todas as senhas são protegidas com **hash SHA256**
-- Nenhuma senha é armazenada em texto claro
-- Cada login é registrado com data, hora e informações do dispositivo
-
-**Problemas com login?**
-- Verifique se digitou o usuário/senha corretamente
-- Tente criar uma nova conta se esqueceu as credenciais
-- Se banido, entre em contato com o administrador (usuário Nemo)`;
-    
-    } else if (lowerMessage.includes('comando') || lowerMessage.includes('funciona') || lowerMessage.includes('como usar')) {
-      return `**🛠 Comandos do Sistema - Nemo System**
-
-**Ferramentas disponíveis:**
-
-**1. Scanner de Portas**
-\`\`\`
-scan()
-\`\`\`
-Verifica portas 21, 22, 80, 443
-
-**2. Teste de Rede**
-\`\`\`
-ping()
-\`\`\`
-Mede latência da conexão
-
-**3. Gerador de Senhas**
-\`\`\`
-gen()
-\`\`\`
-Gera senha segura + hash SHA256
-
-**4. Alternar Tema**
-\`\`\`
-toggle()
-\`\`\`
-Muda entre temas: 🔴 Vermelho, 🟢 Verde, 🟠 Laranja
-
-**5. Exportar Logs**
-\`\`\`
-exportLogs()
-\`\`\`
-Exporta histórico em formato CSV
-
-**Como executar:**
-- Use os **botões** na interface
-- Abra os **modais** correspondentes
-- Ou peça para eu executar algum comando!
-
-💡 **Todos os comandos são executados no terminal do sistema.**`;
-    
-    } else if (lowerMessage.includes('nemo system') || lowerMessage.includes('sistema') || lowerMessage.includes('o que é')) {
-      return `**🚀 Nemo System - Plataforma de Administração Completa**
-
-**O que é o Nemo System?**
-Uma plataforma web completa para administração e monitoramento, desenvolvida com tecnologias modernas.
-
-**Tecnologias utilizadas:**
-- **Frontend:** HTML5, CSS3, JavaScript (ES6+)
-- **Armazenamento:** localStorage do navegador
-- **Autenticação:** Hash SHA256 para segurança
-- **IA Integrada:** Google Gemini API
-- **Design:** Interface responsiva e moderna
-
-**Funcionalidades principais:**
-🔐 **Autenticação segura** com sistema de roles
-📊 **Painel administrativo** com gráficos em tempo real
-🔍 **Ferramentas de rede** (scanner, ping, monitoramento)
-🛠 **Utilitários** (gerador de senhas, temas personalizados)
-👑 **Sistema de moderação** (gerenciamento de usuários)
-📱 **Interface responsiva** (desktop, tablet, mobile)
-🤖 **Assistente IA integrado** (este assistente!)
-
-**Para quem é indicado:**
-- Administradores de sistema
-- Desenvolvedores que precisam de ferramentas rápidas
-- Estudantes de tecnologia
-- Qualquer pessoa interessada em ferramentas de administração
-
-**🌟 Características únicas:**
-- **Zero instalação** - Funciona direto no navegador
-- **Privacidade** - Dados ficam no seu dispositivo
-- **Gratuito** - Sem custos ou assinaturas
-- **Open Source** - Código disponível para estudo
-
-**Pronto para explorar?** Comece fazendo login e descubra todas as funcionalidades! 🎉`;
+    // Respostas SEGURAS que não revelam nada sensível
+    if (lowerMessage.includes('senha') || lowerMessage.includes('password') || lowerMessage.includes('admin')) {
+      return "🔒 **Sobre segurança e credenciais:**\n\nDesculpe, mas não posso compartilhar informações sensíveis sobre segurança, senhas ou credenciais. Isso é para proteger todos os usuários do sistema!\n\nSe tiver problemas com acesso, recomendo:\n- Tentar recuperar sua conta normalmente\n- Verificar se está usando as credenciais corretas\n- Em último caso, entrar em contato com suporte\n\nMas posso te ajudar com outras coisas! Que tal conversarmos sobre tecnologia? 😊";
     
     } else if (lowerMessage.includes('ola') || lowerMessage.includes('oi') || lowerMessage.includes('bom dia') || lowerMessage.includes('boa tarde') || lowerMessage.includes('boa noite')) {
       const greetings = [
-        "Olá! Como posso ajudar você hoje no Nemo System? 😊",
-        "Oi! Em que posso ser útil? Estou aqui para ajudar! 🤖",
-        "Olá! Pronto para explorar o Nemo System com você! 🚀",
-        "Oi! Que bom ver você aqui! Como posso ajudar? 🌟"
+        "Olá! Tudo bem com você? 😊 Que bom conversar com você hoje!",
+        "Oi! Como vai? Espero que esteja tendo um dia incrível! 🌟",
+        "E aí, tudo bem? Fico feliz em conversar com você! 👋",
+        "Olá, amigo! Como está seu dia? Pronto para uma boa conversa? 🚀"
       ];
       return greetings[Math.floor(Math.random() * greetings.length)];
     
-    } else {
-      return AI_CONFIG.FALLBACK_RESPONSES[
-        Math.floor(Math.random() * AI_CONFIG.FALLBACK_RESPONSES.length)
+    } else if (lowerMessage.includes('como vai') || lowerMessage.includes('tudo bem')) {
+      return "Eu estou muito bem, obrigada por perguntar! 😊 Programada para ser positiva e ajudar as pessoas. E você, como está se sentindo hoje?";
+    
+    } else if (lowerMessage.includes('tecnologia') || lowerMessage.includes('programação') || lowerMessage.includes('codigo')) {
+      return "💻 **Adoro falar sobre tecnologia!**\n\nTecnologia é incrível, não é? Desde inteligência artificial até desenvolvimento web, há sempre algo novo para aprender.\n\nVocê trabalha com tecnologia ou é apenas um entusiasta? Eu posso falar sobre:\n- Desenvolvimento web (HTML, CSS, JavaScript)\n- Inteligência Artificial e machine learning\n- Segurança digital e boas práticas\n- Novas tendências tecnológicas\n\nO que mais te interessa? 😊";
+    
+    } else if (lowerMessage.includes('piada') || lowerMessage.includes('engraçado') || lowerMessage.includes('risada')) {
+      const jokes = [
+        "🤣 **Por que o JavaScript foi ao psicólogo?**\nPorque tinha muitos problemas não resolvidos (undefined) e complexo de inferioridade!",
+        "😂 **O que o CSS disse para o HTML?**\n'Você estrutura, eu embelezozinho!'",
+        "😄 **Por que o banco de dados terminou com o cache?**\nPorque ele não suportava mais seus relacionamentos temporários!",
+        "🎭 **Qual é o framework JavaScript mais dramático?**\nO React - porque sempre tem que lidar com estados emocionais!"
       ];
+      return jokes[Math.floor(Math.random() * jokes.length)];
+    
+    } else if (lowerMessage.includes('nemo system') || lowerMessage.includes('sistema')) {
+      return "🚀 **Sobre o Nemo System:**\n\nO Nemo System é uma plataforma de administração desenvolvida para ser útil e segura. Ele oferece várias ferramentas interessantes para os usuários!\n\n**Algumas coisas legais sobre o sistema:**\n- Interface moderna e responsiva\n- Ferramentas úteis para tarefas do dia a dia\n- Foco em segurança e privacidade\n- Design amigável e intuitivo\n\n**Posso te ajudar a:**\n- Entender como usar as funcionalidades básicas\n- Conversar sobre conceitos de tecnologia em geral\n- Ser seu companheiro virtual aqui no sistema\n\nO que gostaria de saber ou fazer? 😊";
+    
+    } else if (lowerMessage.includes('obrigado') || lowerMessage.includes('obrigada') || lowerMessage.includes('valeu') || lowerMessage.includes('agradeço')) {
+      return "De nada! Fico feliz em ajudar! 😊 Se precisar de mais alguma coisa ou só quiser conversar, estou sempre aqui!";
+    
+    } else if (lowerMessage.includes('tchau') || lowerMessage.includes('adeus') || lowerMessage.includes('ate mais')) {
+      return "Até mais! Foi ótimo conversar com você! 👋 Volte sempre que quiser bater um papo ou tirar alguma dúvida! Tenha um ótimo dia! 🌟";
+    
+    } else {
+      // Resposta genérica e amigável
+      const randomTopics = [
+        "Que interessante! E o que você acha sobre isso? 😊",
+        "Hmm, isso me faz pensar... Você tem alguma experiência com esse assunto?",
+        "Interessante ponto! Eu adoro aprender com as conversas com os usuários. 🌟",
+        "Legal! E como você se sente sobre isso? Gosto de conhecer as perspectivas das pessoas!",
+        "Ótimo assunto! O que mais gostaria de conversar? Pode me perguntar qualquer coisa (dentro dos limites da segurança, é claro)! 😄"
+      ];
+      return randomTopics[Math.floor(Math.random() * randomTopics.length)];
+    }
+  }
+}
+
+/* ======= FUNÇÕES GLOBAIS PARA A IA ======= */
+function sendAIMessage() {
+  if (window.nemoAI) {
+    window.nemoAI.sendMessage();
+  }
+}
+
+function sendQuickAIMessage(text) {
+  if (window.nemoAI) {
+    window.nemoAI.sendQuickMessage(text);
+  }
+}
+
+function clearChatHistory() {
+  if (confirm("Tem certeza que quer limpar todo o histórico do chat?")) {
+    const messagesContainer = document.getElementById('chatMessages');
+    if (messagesContainer) {
+      messagesContainer.innerHTML = '';
+      
+      // Recriar a IA com mensagem de boas-vindas
+      if (window.nemoAI) {
+        window.nemoAI = new NemoAIAssistant();
+      }
+      
+      // Feedback visual
+      const notification = document.createElement('div');
+      notification.className = 'message message-ai';
+      notification.innerHTML = `
+        <div class="message-avatar ai"><i class="fas fa-robot"></i></div>
+        <div class="message-content" style="background: rgba(0, 204, 136, 0.1); border-color: #00cc88;">
+          <i class="fas fa-check-circle"></i> Histórico limpo com sucesso! Vamos começar uma nova conversa! 😊
+        </div>
+      `;
+      messagesContainer.appendChild(notification);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
   }
 }
@@ -2165,20 +2122,12 @@ async function hash(t){const e=new TextEncoder().encode(t),b=await crypto.subtle
 
 /* ======= INICIALIZAÇÃO DO SISTEMA ======= */
 let deviceDetector;
-let nemoAI;
 
 async function initializeSystem() {
-  // Inicializa detector de dispositivo
   deviceDetector = new DeviceDetector();
-  
-  // Inicializa IA (será iniciada quando abrir a página da IA)
-  
-  // Configura menu mobile
   setupMobileMenu();
   
-  // Verifica se o usuário Nemo já existe no sistema
   const nemoExists = localStorage.getItem("user_Nemo");
-  
   if (!nemoExists) {
     await createDefaultAdmin();
   } else {
@@ -2186,9 +2135,9 @@ async function initializeSystem() {
   }
 }
 
-/* ======= CRIAÇÃO DO ADMIN PADRÃO ======= */
+/* ======= CRIAÇÃO DO ADMIN PADRÃO (SENHA PROTEGIDA) ======= */
 async function createDefaultAdmin() {
-  const customPassword = "gustavo270908";
+  const customPassword = "gustavo270908"; // SENHA NUNCA REVELADA PELA IA
   const passHash = await hash(customPassword);
   
   localStorage.setItem("user_Nemo", passHash);
@@ -2218,12 +2167,12 @@ async function createDefaultAdmin() {
   };
   
   localStorage.setItem("meta_Nemo", JSON.stringify(meta));
-  console.log("Usuário admin 'Nemo' criado automaticamente. Senha: gustavo270908");
+  console.log("Usuário admin 'Nemo' criado. Senha: [PROTEGIDA]");
 }
 
 /* ======= ATUALIZAÇÃO DE SENHA DO ADMIN ======= */
 async function updateAdminPassword() {
-  const newPassword = "gustavo270908";
+  const newPassword = "gustavo270908"; // SENHA NUNCA REVELADA
   const newPassHash = await hash(newPassword);
   
   localStorage.setItem("user_Nemo", newPassHash);
@@ -2235,7 +2184,7 @@ async function updateAdminPassword() {
   meta.banned = false;
   localStorage.setItem(metaKey, JSON.stringify(meta));
   
-  console.log("Senha do admin 'Nemo' atualizada para: gustavo270908");
+  console.log("Senha do admin 'Nemo' atualizada: [PROTEGIDA]");
 }
 
 /* ======= FUNÇÕES DA INTERFACE ======= */
@@ -2302,38 +2251,23 @@ function openAIPage() {
   document.getElementById('aiPage').classList.remove('hidden');
   
   // Inicializar IA se ainda não foi iniciada
-  if (!nemoAI) {
-    nemoAI = new NemoAIAssistant();
+  if (!window.nemoAI) {
+    window.nemoAI = new NemoAIAssistant();
   }
   
-  // Atualizar botões da sidebar
   document.getElementById('loginBtn').style.display = 'none';
   document.getElementById('registerBtn').style.display = 'none';
   document.getElementById('painelBtn').style.display = 'block';
   document.getElementById('aiBtn').style.display = 'block';
   document.getElementById('logoutBtn').style.display = 'block';
   
-  // Focar no input do chat
   setTimeout(() => {
     const chatInput = document.getElementById('chatInput');
     if (chatInput) chatInput.focus();
   }, 300);
 }
 
-/* ======= FUNÇÕES DA IA (para acesso global) ======= */
-function sendAIMessage() {
-  if (nemoAI) {
-    nemoAI.sendMessage();
-  }
-}
-
-function sendQuickAIMessage(text) {
-  if (nemoAI) {
-    nemoAI.sendQuickMessage(text);
-  }
-}
-
-/* ======= RESTANTE DO CÓDIGO (mantendo as funções existentes) ======= */
+/* ======= RESTANTE DO CÓDIGO DO SISTEMA ======= */
 let logs=[];
 function log(m){
   logs.push(m);
