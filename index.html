@@ -5,45 +5,489 @@
 <title>Nemo System — Admin</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:monospace}
-:root{--red:#b00000;--dark:#050505;--gray:#777}
-body{background:var(--dark);color:#fff;height:100vh;overflow:hidden}
-header{height:60px;border-bottom:1px solid var(--red);display:flex;justify-content:space-between;align-items:center;padding:0 20px}
-header h1{color:var(--red);letter-spacing:2px}
-header img{width:40px;filter:grayscale(100%)}
-.wrapper{display:flex;height:calc(100vh - 60px)}
-.sidebar{width:220px;border-right:1px solid var(--red);padding:15px}
-.sidebar button{width:100%;background:transparent;border:1px solid var(--red);color:#fff;padding:10px;margin-bottom:10px;cursor:pointer}
-.sidebar button:hover{background:var(--red);box-shadow:0 0 10px var(--red)}
-.main{flex:1;padding:20px;overflow:auto}
-.box{max-width:400px;border:1px solid var(--red);padding:20px}
-.box input{width:100%;padding:10px;margin:10px 0;background:#000;border:1px solid var(--gray);color:#fff}
-.box button{width:100%;padding:10px;background:var(--red);border:none;cursor:pointer}
-.terminal{background:#000;border:1px solid var(--red);padding:15px;margin-bottom:15px;height:140px;overflow:auto}
-.terminal span{color:var(--red)}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px}
-.card{border:1px solid var(--red);padding:15px}
-.card button{width:100%;margin-top:10px;padding:8px;background:#000;border:1px solid var(--red);color:#fff;cursor:pointer}
-.card button:hover{background:var(--red);box-shadow:0 0 15px var(--red)}
-.hidden{display:none}
+/* ======= VARIÁVEIS CSS ======= */
+:root {
+  --primary: #b00000;
+  --primary-light: #ff3333;
+  --dark: #0a0a0a;
+  --dark-secondary: #121212;
+  --gray: #777;
+  --gray-light: #aaa;
+  --success: #00cc88;
+  --warning: #ffaa00;
+  --card-bg: rgba(30, 30, 30, 0.7);
+  --modal-bg: rgba(10, 10, 10, 0.95);
+  --shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 15px rgba(176, 0, 0, 0.3);
+  --gradient-primary: linear-gradient(135deg, #b00000 0%, #ff3333 100%);
+  --gradient-dark: linear-gradient(135deg, #050505 0%, #1a1a1a 100%);
+}
 
-/* MODAL */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center}
-.modal .content{background:#000;border:1px solid var(--red);padding:20px;width:420px}
-.modal h3{color:var(--red);margin-bottom:10px}
-.modal button{margin-top:10px}
+/* ======= RESET & BASE ======= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-/* CHART */
-#chart{background:#000;border:1px solid var(--red);margin-top:10px}
+body {
+  background: var(--dark-secondary);
+  color: #fff;
+  height: 100vh;
+  overflow: hidden;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(176, 0, 0, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(176, 0, 0, 0.05) 0%, transparent 20%);
+}
 
-footer{text-align:center;color:#444;padding:10px}
+/* ======= HEADER ======= */
+header {
+  height: 70px;
+  background: var(--dark);
+  border-bottom: 1px solid rgba(176, 0, 0, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 25px;
+  box-shadow: var(--shadow);
+  border-radius: 0 0 15px 15px;
+}
+
+header h1 {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  font-size: 1.8rem;
+  text-shadow: 0 0 10px rgba(176, 0, 0, 0.2);
+}
+
+header img {
+  width: 45px;
+  filter: invert(15%) sepia(100%) saturate(5000%) hue-rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+header img:hover {
+  transform: scale(1.1);
+}
+
+/* ======= LAYOUT PRINCIPAL ======= */
+.wrapper {
+  display: flex;
+  height: calc(100vh - 70px);
+  padding: 15px;
+  gap: 15px;
+}
+
+/* ======= SIDEBAR ======= */
+.sidebar {
+  width: 240px;
+  background: var(--dark);
+  border-radius: 15px;
+  padding: 20px 15px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(176, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar button {
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: #fff;
+  padding: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar button:before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--primary);
+  border-radius: 50%;
+}
+
+.sidebar button:hover {
+  background: var(--gradient-primary);
+  transform: translateX(5px);
+  box-shadow: var(--shadow-glow);
+}
+
+/* ======= ÁREA PRINCIPAL ======= */
+.main {
+  flex: 1;
+  background: var(--dark);
+  border-radius: 15px;
+  padding: 25px;
+  overflow: auto;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(176, 0, 0, 0.2);
+}
+
+/* ======= BOX DE LOGIN/REGISTRO ======= */
+.box {
+  max-width: 420px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  border: 1px solid rgba(176, 0, 0, 0.3);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(5px);
+}
+
+.box h2 {
+  color: #fff;
+  margin-bottom: 25px;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.box input {
+  width: 100%;
+  padding: 14px 18px;
+  margin: 12px 0;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.box input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(176, 0, 0, 0.2);
+}
+
+.box button {
+  width: 100%;
+  padding: 14px;
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.box button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+/* ======= TERMINAL ======= */
+.terminal {
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(176, 0, 0, 0.3);
+  padding: 20px;
+  margin-bottom: 20px;
+  height: 160px;
+  overflow: auto;
+  border-radius: 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.terminal span {
+  color: var(--primary-light);
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* ======= CARDS DO PAINEL ======= */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 25px;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid rgba(176, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-glow);
+}
+
+.card h3 {
+  color: #fff;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.card button:hover {
+  background: var(--gradient-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+/* ======= INFO DO USUÁRIO ======= */
+#painelBox > p {
+  background: rgba(176, 0, 0, 0.1);
+  padding: 12px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border-left: 4px solid var(--primary);
+}
+
+#userName, #userRole {
+  color: var(--primary-light);
+}
+
+/* ======= BOTÃO EXPORTAR ======= */
+#painelBox > button:last-child {
+  background: var(--gradient-dark);
+  border: 1px solid var(--gray);
+  color: #fff;
+  padding: 14px 25px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 25px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 300px;
+}
+
+#painelBox > button:last-child:hover {
+  border-color: var(--primary);
+  background: rgba(176, 0, 0, 0.1);
+  box-shadow: var(--shadow-glow);
+}
+
+/* ======= MODAL ======= */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+}
+
+.modal .content {
+  background: var(--modal-bg);
+  border: 1px solid var(--primary);
+  padding: 30px;
+  width: 500px;
+  max-width: 90vw;
+  border-radius: 15px;
+  box-shadow: var(--shadow-glow);
+  animation: modalAppear 0.3s ease-out;
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal h3 {
+  color: var(--primary-light);
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  border-bottom: 1px solid rgba(176, 0, 0, 0.3);
+  padding-bottom: 10px;
+}
+
+.modal button {
+  background: var(--gradient-primary);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.modal button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+/* ======= CHART ======= */
+#chart {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(176, 0, 0, 0.3);
+  margin-top: 20px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+/* ======= FOOTER ======= */
+footer {
+  text-align: center;
+  color: var(--gray);
+  padding: 15px;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(176, 0, 0, 0.1);
+  background: var(--dark);
+}
+
+/* ======= UTILITÁRIOS ======= */
+.hidden {
+  display: none !important;
+}
+
+.admin {
+  border: 1px solid var(--warning);
+}
+
+.admin h3 {
+  color: var(--warning) !important;
+}
+
+.admin button {
+  border-color: var(--warning) !important;
+}
+
+.admin button:hover {
+  background: linear-gradient(135deg, #ffaa00 0%, #ffcc00 100%) !important;
+}
+
+/* ======= RESPONSIVIDADE ======= */
+@media (max-width: 992px) {
+  .wrapper {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .sidebar button {
+    flex: 1;
+    min-width: 150px;
+    justify-content: center;
+  }
+  
+  .cards {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 0 15px;
+    height: 60px;
+  }
+  
+  header h1 {
+    font-size: 1.4rem;
+  }
+  
+  .main {
+    padding: 15px;
+  }
+  
+  .box {
+    padding: 20px;
+  }
+  
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ======= ANIMAÇÕES ======= */
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(176, 0, 0, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(176, 0, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(176, 0, 0, 0); }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+/* ======= SCROLLBAR PERSONALIZADA ======= */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-light);
+}
 </style>
 </head>
 
 <body>
 <header>
   <h1>NEMO SYSTEM</h1>
-  <img src="https://cdn-icons-png.flaticon.com/512/924/924915.png">
+  <img src="https://cdn-icons-png.flaticon.com/512/924/924915.png" alt="Logo Nemo">
 </header>
 
 <div class="wrapper">
@@ -104,6 +548,80 @@ footer{text-align:center;color:#444;padding:10px}
 /* ======= CRIPTO ======= */
 async function hash(t){const e=new TextEncoder().encode(t),b=await crypto.subtle.digest("SHA-256",e);return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
 
+/* ======= INICIALIZAÇÃO DO SISTEMA ======= */
+async function initializeSystem() {
+  // Verifica se o usuário Nemo já existe no sistema
+  const nemoExists = localStorage.getItem("user_Nemo");
+  
+  if (!nemoExists) {
+    // Se o usuário Nemo não existe, cria automaticamente
+    await createDefaultAdmin();
+  } else {
+    // Se já existe, atualiza a senha para "gustavo270908"
+    await updateAdminPassword();
+  }
+}
+
+/* ======= CRIAÇÃO DO ADMIN PADRÃO ======= */
+async function createDefaultAdmin() {
+  // Senha personalizada para o usuário Nemo
+  const customPassword = "gustavo270908";
+  const passHash = await hash(customPassword);
+  
+  // Cria o usuário Nemo
+  localStorage.setItem("user_Nemo", passHash);
+  localStorage.setItem("role_Nemo", "admin");
+  
+  // Cria metadados do usuário Nemo
+  const ua = navigator.userAgent;
+  const createdAt = new Date().toISOString();
+  let ip = "127.0.0.1";
+  
+  try {
+    const res = await fetch('https://api.ipify.org?format=json');
+    if(res.ok) {
+      const data = await res.json();
+      ip = data.ip;
+    }
+  } catch(e) {
+    // Usa IP padrão se não conseguir obter
+  }
+  
+  const meta = {
+    role: "admin",
+    createdAt,
+    createdIP: ip,
+    createdUA: ua,
+    banned: false,
+    logins: []
+  };
+  
+  localStorage.setItem("meta_Nemo", JSON.stringify(meta));
+  console.log("Usuário admin 'Nemo' criado automaticamente. Senha: gustavo270908");
+}
+
+/* ======= ATUALIZAÇÃO DE SENHA DO ADMIN ======= */
+async function updateAdminPassword() {
+  // Atualiza a senha do usuário Nemo para "gustavo270908"
+  const newPassword = "gustavo270908";
+  const newPassHash = await hash(newPassword);
+  
+  // Atualiza no localStorage
+  localStorage.setItem("user_Nemo", newPassHash);
+  
+  // Garante que o role seja admin
+  localStorage.setItem("role_Nemo", "admin");
+  
+  // Atualiza metadados se necessário
+  const metaKey = "meta_Nemo";
+  let meta = JSON.parse(localStorage.getItem(metaKey) || '{}');
+  meta.role = "admin";
+  meta.banned = false; // Garante que não esteja banido
+  localStorage.setItem(metaKey, JSON.stringify(meta));
+  
+  console.log("Senha do admin 'Nemo' atualizada para: gustavo270908");
+}
+
 /* ======= LOG ======= */
 let logs=[];
 function log(m){logs.push(m);terminal.innerHTML+=`<span>> ${m}</span><br>`;terminal.scrollTop=terminal.scrollHeight}
@@ -112,36 +630,66 @@ function log(m){logs.push(m);terminal.innerHTML+=`<span>> ${m}</span><br>`;termi
 async function register(){
   if(!rUser.value||!rPass.value) return alert("Campos vazios");
   const username = rUser.value.trim();
-  if(username === "Nemo") return alert("Usuário reservado");
+  
+  // Verifica se o usuário já existe
   if(localStorage.getItem("user_"+username)) return alert("Usuário já existe");
+  
+  // Permite criar qualquer usuário (incluindo Nemo se não existir)
   const passHash = await hash(rPass.value);
   localStorage.setItem("user_"+username, passHash);
-  const role = "user"; // Sempre "user", exceto se for o dev que cria manualmente
+  
+  // Define role padrão como "user"
+  const role = "user";
   localStorage.setItem("role_"+username, role);
+  
+  // Cria metadados
   const ua = navigator.userAgent;
   const createdAt = new Date().toISOString();
-  const ip = await getIP().catch(()=>undefined);
-  const meta = {role, createdAt, createdIP: ip||"—", createdUA: ua, banned: false, logins: []};
+  const ip = await getIP().catch(()=>"127.0.0.1");
+  const meta = {role, createdAt, createdIP: ip, createdUA: ua, banned: false, logins: []};
   localStorage.setItem("meta_"+username, JSON.stringify(meta));
-  alert("Conta criada"); showLogin();
+  
+  alert("Conta criada com sucesso!"); 
+  showLogin();
 }
+
 async function login(){
   const username = lUser.value.trim();
-  const s = localStorage.getItem("user_"+username);
-  if(!s) return alert("Acesso negado");
-  if(s===await hash(lPass.value)){
+  const password = lPass.value;
+  
+  if(!username || !password) return alert("Preencha todos os campos");
+  
+  // Busca o hash da senha armazenada
+  const storedHash = localStorage.getItem("user_"+username);
+  if(!storedHash) return alert("Usuário não encontrado");
+  
+  // Calcula hash da senha fornecida
+  const inputHash = await hash(password);
+  
+  // Compara os hashes
+  if(storedHash === inputHash){
+    // Verifica se a conta está banida
     const metaKey = "meta_"+username;
     const meta = JSON.parse(localStorage.getItem(metaKey) || '{}');
     if(meta.banned) return alert('Conta banida');
-    const ip = await getIP().catch(()=>undefined);
-    const entry = {at: new Date().toISOString(), ip: ip||"—", ua: navigator.userAgent};
+    
+    // Registra o login
+    const ip = await getIP().catch(()=>"127.0.0.1");
+    const entry = {at: new Date().toISOString(), ip: ip, ua: navigator.userAgent};
     meta.logins = meta.logins || [];
     meta.logins.push(entry);
     localStorage.setItem(metaKey, JSON.stringify(meta));
-    localStorage.setItem("session",username);
+    
+    // Cria sessão
+    localStorage.setItem("session", username);
+    
+    // Abre o painel
     openPainel();
-  } else alert("Acesso negado");
+  } else {
+    alert("Senha incorreta");
+  }
 }
+
 function logout(){
   localStorage.removeItem("session");
   document.getElementById('loginBtn').style.display = 'block';
@@ -152,68 +700,147 @@ function logout(){
 }
 
 /* ======= UI ======= */
-function hideAll(){loginBox.classList.add("hidden");registerBox.classList.add("hidden");painelBox.classList.add("hidden")}
-function showLogin(){hideAll();loginBox.classList.remove("hidden")}
-function showRegister(){hideAll();registerBox.classList.remove("hidden")}
+function hideAll(){
+  loginBox.classList.add("hidden");
+  registerBox.classList.add("hidden");
+  painelBox.classList.add("hidden");
+}
+
+function showLogin(){
+  hideAll();
+  loginBox.classList.remove("hidden");
+  lUser.value = "";
+  lPass.value = "";
+}
+
+function showRegister(){
+  hideAll();
+  registerBox.classList.remove("hidden");
+  rUser.value = "";
+  rPass.value = "";
+}
 
 function openPainel(){
-  const u=localStorage.getItem("session"); if(!u) return alert("Faça login");
-  hideAll(); painelBox.classList.remove("hidden");
-  userName.textContent=u;
-  const role=localStorage.getItem("role_"+u)||"user";
-  userRole.textContent=role;
-  // Mostrar painel admin apenas para o dono do site: usuário 'Nemo'
+  const u = localStorage.getItem("session"); 
+  if(!u) return alert("Faça login primeiro");
+  
+  hideAll(); 
+  painelBox.classList.remove("hidden");
+  userName.textContent = u;
+  
+  const role = localStorage.getItem("role_"+u) || "user";
+  userRole.textContent = role;
+  
+  // Mostrar painel admin apenas para o usuário 'Nemo'
   document.querySelector(".admin").style.display = (u === "Nemo") ? "block" : "none";
-  // Esconder botões de login e registrar, mostrar painel e logout
+  
+  // Atualizar botões da sidebar
   document.getElementById('loginBtn').style.display = 'none';
   document.getElementById('registerBtn').style.display = 'none';
   document.getElementById('painelBtn').style.display = 'block';
   document.getElementById('logoutBtn').style.display = 'block';
-  terminal.innerHTML=""; log("Sistema iniciado"); startChart();
+  
+  // Limpar e iniciar terminal
+  terminal.innerHTML = ""; 
+  log("Sistema Nemo iniciado");
+  log(`Bem-vindo, ${u}`);
+  startChart();
 }
 
 /* ======= MODAIS ======= */
 function openModal(t){
-  modal.style.display="flex";
-  modalTitle.textContent=t.toUpperCase();
-  if(t==="scanner") modalBody.innerHTML=`<button onclick="scan()">Scan</button>`;
-  if(t==="network") modalBody.innerHTML=`<button onclick="ping()">Ping</button>`;
-  if(t==="tools") modalBody.innerHTML=`<button onclick="gen()">Gerar Senha</button>`;
-  if(t==="config") modalBody.innerHTML=`<button onclick="toggle()">Trocar Tema</button>`;
-  if(t==="admin"){
+  modal.style.display = "flex";
+  modalTitle.textContent = t.toUpperCase();
+  
+  if(t === "scanner") modalBody.innerHTML = `<button onclick="scan()" class="pulse">Iniciar Scan</button>`;
+  if(t === "network") modalBody.innerHTML = `<button onclick="ping()">Testar Ping</button>`;
+  if(t === "tools") modalBody.innerHTML = `<button onclick="gen()">Gerar Senha Segura</button>`;
+  if(t === "config") modalBody.innerHTML = `<button onclick="toggle()">Alternar Tema</button>`;
+  
+  if(t === "admin"){
     const current = localStorage.getItem('session');
     if(current !== 'Nemo'){
-      modalBody.innerHTML = `<p style="color:var(--red)">Acesso negado</p>`;
+      modalBody.innerHTML = `<p style="color:var(--primary-light); padding: 20px; text-align: center;">Acesso restrito ao administrador</p>`;
       return;
     }
     modalBody.innerHTML = `<div id="adminContainer"></div>`;
     renderAdmin();
   }
 }
-function closeModal(){modal.style.display="none";modalBody.innerHTML=""}
+
+function closeModal(){
+  modal.style.display = "none";
+  modalBody.innerHTML = "";
+}
 
 /* ======= AÇÕES ======= */
-function scan(){[21,22,80,443].forEach((p,i)=>setTimeout(()=>log("Porta "+p+": "+(Math.random()>.5?"ABERTA":"FECHADA")),i*300))}
-function ping(){log("Ping: "+(20+Math.random()*80).toFixed(0)+"ms")}
-async function gen(){const p=Math.random().toString(36).slice(-10);log("Senha: "+p);log("SHA256: "+await hash(p))}
-function toggle(){const c=getComputedStyle(document.documentElement).getPropertyValue("--red").trim();document.documentElement.style.setProperty("--red",c==="#b00000"?"#00ff88":"#b00000");log("Tema alterado")}
-function resetSys(){if(confirm("Resetar tudo?")){localStorage.clear();location.reload()}}
+function scan(){
+  log("Iniciando scan de portas...");
+  [21,22,80,443].forEach((p,i)=>setTimeout(()=>{
+    const status = Math.random()>.5?"ABERTA":"FECHADA";
+    log(`Porta ${p}: ${status}`);
+  },i*300))
+}
 
-/* ======= EXPORT ======= */
+function ping(){
+  log("Enviando ping...");
+  setTimeout(()=>{
+    const latency = (20+Math.random()*80).toFixed(0);
+    log(`Ping: ${latency}ms`);
+  },500)
+}
+
+async function gen(){
+  const p = Math.random().toString(36).slice(-10);
+  log("Gerando senha segura...");
+  setTimeout(async ()=>{
+    log(`Senha: ${p}`);
+    log(`SHA256: ${await hash(p)}`);
+  },300)
+}
+
+function toggle(){
+  const root = document.documentElement;
+  const currentPrimary = getComputedStyle(root).getPropertyValue("--primary").trim();
+  
+  if(currentPrimary === "#b00000"){
+    root.style.setProperty("--primary", "#00cc88");
+    root.style.setProperty("--primary-light", "#33ffaa");
+    log("Tema alterado: Modo Verde");
+  } else if(currentPrimary === "#00cc88"){
+    root.style.setProperty("--primary", "#ffaa00");
+    root.style.setProperty("--primary-light", "#ffcc44");
+    log("Tema alterado: Modo Laranja");
+  } else {
+    root.style.setProperty("--primary", "#b00000");
+    root.style.setProperty("--primary-light", "#ff3333");
+    log("Tema alterado: Modo Vermelho (Padrão)");
+  }
+}
+
+function resetSys(){
+  if(confirm("Isso irá resetar todo o sistema. Tem certeza?")){
+    localStorage.clear();
+    initializeSystem(); // Recria o admin padrão com a nova senha
+    location.reload();
+  }
+}
+
+/* ======= FUNÇÕES UTILITÁRIAS ======= */
 async function getIP(){
   try{
     const res = await fetch('https://api.ipify.org?format=json');
-    if(!res.ok) throw 0;
+    if(!res.ok) throw new Error('Erro na requisição');
     const j = await res.json();
     return j.ip;
   }catch(e){
-    return undefined;
+    return "127.0.0.1";
   }
 }
 
 function getAllUsers(){
   const users = [];
-  for(let i=0;i<localStorage.length;i++){
+  for(let i = 0; i < localStorage.length; i++){
     const k = localStorage.key(i);
     if(k && k.startsWith('user_')){
       const username = k.slice(5);
@@ -228,26 +855,41 @@ function getAllUsers(){
 function renderAdmin(){
   const container = document.getElementById('adminContainer');
   const users = getAllUsers();
-  let html = `<div style="max-height:320px;overflow:auto"><table style="width:100%;border-collapse:collapse">`;
-  html += `<tr style="text-align:left;color:var(--red)"><th>Usuário</th><th>Role</th><th>Criado</th><th>IP</th><th>Ban</th><th>Ações</th></tr>`;
+  let html = `<div style="max-height:320px;overflow:auto; margin-bottom: 20px;"><table style="width:100%;border-collapse:collapse; color: #fff;">`;
+  html += `<thead><tr style="text-align:left;color:var(--primary-light); background: rgba(176, 0, 0, 0.1);"><th>Usuário</th><th>Role</th><th>Criado</th><th>IP</th><th>Ban</th><th>Ações</th></tr></thead><tbody>`;
+  
   users.forEach(u=>{
-    const created = u.meta.createdAt||'—';
-    const ip = u.meta.createdIP||'—';
-    const banned = u.meta.banned? 'Sim':'Não';
-    html += `<tr><td>${u.username}</td><td>${u.role}</td><td>${created}</td><td>${ip}</td><td>${banned}</td><td>`+
-            `<button data-user="${u.username}" data-action="view">Ver</button> `+
-            `<button data-user="${u.username}" data-action="toggle">${u.meta.banned? 'Desbanir':'Banir'}</button>`+
-            `</td></tr>`;
+    const created = u.meta.createdAt ? new Date(u.meta.createdAt).toLocaleDateString() : '—';
+    const ip = u.meta.createdIP || '—';
+    const banned = u.meta.banned ? 'Sim' : 'Não';
+    const bannedClass = u.meta.banned ? 'style="color: var(--primary-light)"' : '';
+    
+    html += `<tr>
+      <td>${u.username}</td>
+      <td>${u.role}</td>
+      <td>${created}</td>
+      <td>${ip}</td>
+      <td ${bannedClass}>${banned}</td>
+      <td>
+        <button data-user="${u.username}" data-action="view" style="margin-right: 5px; padding: 5px 10px; background: rgba(255,255,255,0.1); border: 1px solid var(--gray-light); border-radius: 5px; color: white; cursor: pointer;">Ver</button>
+        <button data-user="${u.username}" data-action="toggle" style="padding: 5px 10px; background: ${u.meta.banned ? 'rgba(0,204,136,0.2)' : 'rgba(176,0,0,0.2)'}; border: 1px solid ${u.meta.banned ? 'var(--success)' : 'var(--primary)'}; border-radius: 5px; color: white; cursor: pointer;">${u.meta.banned ? 'Desbanir' : 'Banir'}</button>
+      </td>
+    </tr>`;
   });
-  html += `</table></div>`;
-  html += `<div style="margin-top:8px"><button onclick="modalBody.innerHTML='';modalTitle.textContent='ADMIN';modalBody.innerHTML='<button onclick=&quot;resetSys()&quot;>Reset Sistema</button>'">Reset Sistema</button></div>`;
+  
+  html += `</tbody></table></div>`;
+  html += `<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+    <button onclick="modalBody.innerHTML='<h4>Reset do Sistema</h4><p style=\'margin-bottom: 15px;\'>Esta ação irá apagar todos os dados (exceto o admin Nemo). Use com cuidado.</p><button onclick=\'resetSys()\' style=\'background: var(--primary); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;\'>Resetar Sistema</button>'">Reset Sistema</button>
+  </div>`;
+  
   container.innerHTML = html;
+  
   container.querySelectorAll('button[data-user]').forEach(btn=>{
     btn.addEventListener('click', e=>{
       const u = e.currentTarget.getAttribute('data-user');
       const a = e.currentTarget.getAttribute('data-action');
-      if(a==='view') viewUser(u);
-      if(a==='toggle') toggleBan(u);
+      if(a === 'view') viewUser(u);
+      if(a === 'toggle') toggleBan(u);
     });
   });
 }
@@ -255,54 +897,109 @@ function renderAdmin(){
 function viewUser(username){
   const meta = JSON.parse(localStorage.getItem('meta_'+username) || '{}');
   const role = localStorage.getItem('role_'+username) || meta.role || 'user';
-  let html = `<h4>${username}</h4><p>Role: ${role}</p><p>Criado: ${meta.createdAt||'—'}</p><p>IP: ${meta.createdIP||'—'}</p><p>UA: <small>${meta.createdUA||'—'}</small></p>`;
-  html += `<h5>Logins:</h5>`;
+  
+  let html = `<div style="padding: 10px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 15px;">
+    <h4 style="color: var(--primary-light); margin-bottom: 10px;">${username}</h4>
+    <p><strong>Role:</strong> ${role}</p>
+    <p><strong>Criado:</strong> ${meta.createdAt ? new Date(meta.createdAt).toLocaleString() : '—'}</p>
+    <p><strong>IP de Criação:</strong> ${meta.createdIP || '—'}</p>
+    <p><strong>User Agent:</strong> <small>${meta.createdUA || '—'}</small></p>
+  </div>`;
+  
+  html += `<h5 style="margin-top: 20px; color: var(--gray-light);">Histórico de Logins:</h5>`;
+  
   if(meta.logins && meta.logins.length){
-    html += `<div style="max-height:200px;overflow:auto"><ul>` + meta.logins.slice().reverse().map(l=>`<li>${l.at} — ${l.ip||'—'}</li>`).join('') + `</ul></div>`;
-  } else html += `<p>Sem logins</p>`;
-  html += `<div style="margin-top:8px"><button onclick="renderAdmin()">Voltar</button> <button onclick="toggleBan('${username}')">${meta.banned? 'Desbanir':'Banir'}</button></div>`;
+    html += `<div style="max-height:200px;overflow:auto; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;"><ul style="list-style: none;">` + 
+            meta.logins.slice().reverse().map(l=>`<li style="padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05);"><small>${new Date(l.at).toLocaleString()} — ${l.ip || '—'}</small></li>`).join('') + 
+            `</ul></div>`;
+  } else {
+    html += `<p style="color: var(--gray);">Sem logins registrados</p>`;
+  }
+  
+  html += `<div style="margin-top:20px; display: flex; gap: 10px;">
+    <button onclick="renderAdmin()" style="flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid var(--gray-light); border-radius: 8px; color: white; cursor: pointer;">Voltar</button>
+    <button onclick="toggleBan('${username}')" style="flex: 1; padding: 10px; background: ${meta.banned ? 'rgba(0,204,136,0.2)' : 'rgba(176,0,0,0.2)'}; border: 1px solid ${meta.banned ? 'var(--success)' : 'var(--primary)'}; border-radius: 8px; color: white; cursor: pointer;">${meta.banned ? 'Desbanir' : 'Banir'}</button>
+  </div>`;
+  
   modalBody.innerHTML = html;
 }
 
 function toggleBan(username){
+  if(username === "Nemo") {
+    alert("Não é possível banir o administrador principal.");
+    return;
+  }
+  
   const key = 'meta_'+username;
   const meta = JSON.parse(localStorage.getItem(key) || '{}');
   meta.banned = !meta.banned;
   localStorage.setItem(key, JSON.stringify(meta));
-  log(`Usuário ${username} ${meta.banned? 'banido':'desbanido'}`);
+  log(`Usuário ${username} ${meta.banned ? 'banido' : 'desbanido'}`);
   renderAdmin();
 }
 
 function exportLogs(){
-  const csv=logs.join("\n");
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
-  a.download="logs.csv"; a.click();
+  if(logs.length === 0) {
+    alert("Nenhum log para exportar.");
+    return;
+  }
+  const csv = logs.join("\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  a.download = `nemo_logs_${new Date().toISOString().slice(0,10)}.csv`; 
+  a.click();
+  log("Logs exportados com sucesso");
 }
 
 /* ======= CHART ======= */
-let ctx=document.getElementById("chart").getContext("2d"),data=[];
+let ctx = document.getElementById("chart").getContext("2d");
+let data = [];
+
 function startChart(){
-  data=[]; setInterval(()=>{
-    data.push(Math.random()*100); if(data.length>20) data.shift();
+  data = []; 
+  setInterval(()=>{
+    data.push(Math.random()*100); 
+    if(data.length > 20) data.shift();
+    
     ctx.clearRect(0,0,400,120);
-    ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue("--red");
+    
+    // Gradiente para o gráfico
+    const gradient = ctx.createLinearGradient(0, 0, 400, 0);
+    gradient.addColorStop(0, getComputedStyle(document.documentElement).getPropertyValue("--primary"));
+    gradient.addColorStop(1, getComputedStyle(document.documentElement).getPropertyValue("--primary-light"));
+    
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = 2;
     ctx.beginPath();
     data.forEach((v,i)=>ctx.lineTo(i*20,120-v));
     ctx.stroke();
+    
+    // Pontos no gráfico
+    ctx.fillStyle = gradient;
+    data.forEach((v,i)=>{
+      ctx.beginPath();
+      ctx.arc(i*20,120-v,3,0,Math.PI*2);
+      ctx.fill();
+    });
   },1000);
 }
 
-/* AUTO LOGIN */
-if(localStorage.getItem("session")) {
-  openPainel();
-} else {
-  document.getElementById('loginBtn').style.display = 'block';
-  document.getElementById('registerBtn').style.display = 'block';
-  document.getElementById('painelBtn').style.display = 'none';
-  document.getElementById('logoutBtn').style.display = 'none';
-  showLogin();
-}
+/* ======= INICIALIZAÇÃO DA PÁGINA ======= */
+window.onload = async function() {
+  // Inicializa o sistema (cria/atualiza admin com nova senha)
+  await initializeSystem();
+  
+  // Verifica se já existe uma sessão ativa
+  if(localStorage.getItem("session")) {
+    openPainel();
+  } else {
+    document.getElementById('loginBtn').style.display = 'block';
+    document.getElementById('registerBtn').style.display = 'block';
+    document.getElementById('painelBtn').style.display = 'none';
+    document.getElementById('logoutBtn').style.display = 'none';
+    showLogin();
+  }
+};
 </script>
 </body>
 </html>
