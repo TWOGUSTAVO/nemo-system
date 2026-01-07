@@ -34,11 +34,41 @@
 body {
   background: var(--dark-secondary);
   color: #fff;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-x: hidden;
   background-image: 
     radial-gradient(circle at 10% 20%, rgba(176, 0, 0, 0.05) 0%, transparent 20%),
     radial-gradient(circle at 90% 80%, rgba(176, 0, 0, 0.05) 0%, transparent 20%);
+}
+
+/* ======= BADGE DE DISPOSITIVO ======= */
+.device-badge {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: var(--primary);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  z-index: 1001;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.device-badge::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #00ff00;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
 }
 
 /* ======= HEADER ======= */
@@ -51,7 +81,9 @@ header {
   align-items: center;
   padding: 0 25px;
   box-shadow: var(--shadow);
-  border-radius: 0 0 15px 15px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 header h1 {
@@ -65,6 +97,21 @@ header h1 {
   text-shadow: 0 0 10px rgba(176, 0, 0, 0.2);
 }
 
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.device-info {
+  font-size: 0.7rem;
+  color: var(--gray-light);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px 8px;
+  border-radius: 8px;
+  display: none;
+}
+
 header img {
   width: 45px;
   filter: invert(15%) sepia(100%) saturate(5000%) hue-rotate(0deg);
@@ -75,10 +122,21 @@ header img:hover {
   transform: scale(1.1);
 }
 
+/* ======= MENU HAMBURGUER (MOBILE) ======= */
+.menu-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 10px;
+}
+
 /* ======= LAYOUT PRINCIPAL ======= */
 .wrapper {
   display: flex;
-  height: calc(100vh - 70px);
+  min-height: calc(100vh - 70px);
   padding: 15px;
   gap: 15px;
 }
@@ -94,6 +152,11 @@ header img:hover {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  transition: transform 0.3s ease;
+}
+
+.sidebar.active {
+  transform: translateX(0);
 }
 
 .sidebar button {
@@ -203,7 +266,8 @@ header img:hover {
   border: 1px solid rgba(176, 0, 0, 0.3);
   padding: 20px;
   margin-bottom: 20px;
-  height: 160px;
+  min-height: 160px;
+  max-height: 200px;
   overflow: auto;
   border-radius: 10px;
   font-family: 'Courier New', monospace;
@@ -215,6 +279,36 @@ header img:hover {
   color: var(--primary-light);
   display: block;
   margin-bottom: 5px;
+  word-break: break-word;
+}
+
+/* ======= INFO DO DISPOSITIVO NO TERMINAL ======= */
+.device-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+  background: rgba(176, 0, 0, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  border-left: 4px solid var(--primary);
+}
+
+.device-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.device-stat-label {
+  font-size: 0.8rem;
+  color: var(--gray-light);
+}
+
+.device-stat-value {
+  font-weight: 600;
+  color: var(--primary-light);
+  font-size: 0.9rem;
 }
 
 /* ======= CARDS DO PAINEL ======= */
@@ -274,6 +368,10 @@ header img:hover {
   border-radius: 10px;
   margin-bottom: 20px;
   border-left: 4px solid var(--primary);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
 }
 
 #userName, #userRole {
@@ -314,18 +412,21 @@ header img:hover {
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(5px);
-  z-index: 1000;
+  z-index: 2000;
+  padding: 20px;
 }
 
 .modal .content {
   background: var(--modal-bg);
   border: 1px solid var(--primary);
-  padding: 30px;
+  padding: 25px;
   width: 500px;
-  max-width: 90vw;
+  max-width: 100%;
   border-radius: 15px;
   box-shadow: var(--shadow-glow);
   animation: modalAppear 0.3s ease-out;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 @keyframes modalAppear {
@@ -357,6 +458,7 @@ header img:hover {
   font-weight: 500;
   margin-top: 20px;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 .modal button:hover {
@@ -371,6 +473,7 @@ header img:hover {
   margin-top: 20px;
   border-radius: 10px;
   width: 100%;
+  max-width: 100%;
 }
 
 /* ======= FOOTER ======= */
@@ -381,6 +484,7 @@ footer {
   font-size: 0.9rem;
   border-top: 1px solid rgba(176, 0, 0, 0.1);
   background: var(--dark);
+  margin-top: auto;
 }
 
 /* ======= UTILITÁRIOS ======= */
@@ -404,59 +508,22 @@ footer {
   background: linear-gradient(135deg, #ffaa00 0%, #ffcc00 100%) !important;
 }
 
-/* ======= RESPONSIVIDADE ======= */
-@media (max-width: 992px) {
-  .wrapper {
-    flex-direction: column;
-    height: auto;
-  }
-  
-  .sidebar {
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .sidebar button {
-    flex: 1;
-    min-width: 150px;
-    justify-content: center;
-  }
-  
-  .cards {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-  header {
-    padding: 0 15px;
-    height: 60px;
-  }
-  
-  header h1 {
-    font-size: 1.4rem;
-  }
-  
-  .main {
-    padding: 15px;
-  }
-  
-  .box {
-    padding: 20px;
-  }
-  
-  .cards {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* ======= ANIMAÇÕES ======= */
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(176, 0, 0, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(176, 0, 0, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(176, 0, 0, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(0, 255, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0); }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .pulse {
@@ -465,7 +532,8 @@ footer {
 
 /* ======= SCROLLBAR PERSONALIZADA ======= */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -481,21 +549,248 @@ footer {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary-light);
 }
+
+/* ======= RESPONSIVIDADE - TABLET ======= */
+@media (max-width: 1024px) {
+  .wrapper {
+    flex-direction: column;
+    height: auto;
+    min-height: calc(100vh - 70px);
+  }
+  
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 15px;
+  }
+  
+  .sidebar button {
+    flex: 1;
+    min-width: 160px;
+    justify-content: center;
+    padding: 12px;
+  }
+  
+  .cards {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+  
+  .device-info {
+    display: block;
+  }
+}
+
+/* ======= RESPONSIVIDADE - MOBILE ======= */
+@media (max-width: 768px) {
+  header {
+    padding: 0 15px;
+    height: 60px;
+  }
+  
+  header h1 {
+    font-size: 1.4rem;
+  }
+  
+  .logo-container h1 {
+    font-size: 1.2rem;
+  }
+  
+  .menu-toggle {
+    display: block;
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 280px;
+    height: calc(100vh - 70px);
+    transform: translateX(-100%);
+    z-index: 999;
+    padding: 20px;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  
+  .sidebar.active {
+    transform: translateX(0);
+  }
+  
+  .sidebar-overlay {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 998;
+    display: none;
+  }
+  
+  .sidebar-overlay.active {
+    display: block;
+  }
+  
+  .sidebar button {
+    min-width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .main {
+    padding: 15px;
+  }
+  
+  .box {
+    padding: 20px;
+  }
+  
+  .cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .device-badge {
+    top: 75px;
+    right: 15px;
+    font-size: 0.6rem;
+    padding: 4px 8px;
+  }
+  
+  .modal .content {
+    padding: 20px;
+    width: 95%;
+  }
+  
+  #chart {
+    height: 100px;
+  }
+  
+  .terminal {
+    min-height: 120px;
+    max-height: 150px;
+    font-size: 0.8rem;
+    padding: 15px;
+  }
+  
+  .device-stats {
+    grid-template-columns: 1fr;
+    padding: 10px;
+    gap: 8px;
+  }
+  
+  #painelBox > p {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 10px 15px;
+  }
+}
+
+/* ======= RESPONSIVIDADE - SMALL MOBILE ======= */
+@media (max-width: 480px) {
+  header {
+    padding: 0 10px;
+  }
+  
+  header h1 {
+    font-size: 1.2rem;
+  }
+  
+  header img {
+    width: 35px;
+  }
+  
+  .box {
+    padding: 15px;
+    margin: 0 10px;
+  }
+  
+  .box h2 {
+    font-size: 1.5rem;
+  }
+  
+  .box input {
+    padding: 12px 15px;
+  }
+  
+  .card {
+    padding: 15px;
+  }
+  
+  .card h3 {
+    font-size: 1.1rem;
+  }
+  
+  .device-badge {
+    font-size: 0.55rem;
+    padding: 3px 6px;
+  }
+  
+  .wrapper {
+    padding: 10px;
+  }
+  
+  .main {
+    padding: 10px;
+  }
+}
+
+/* ======= DARK OVERLAY FOR MOBILE MENU ======= */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 998;
+}
+
+.overlay.active {
+  display: block;
+}
+
+/* ======= TOUCH-FRIENDLY ELEMENTS ======= */
+@media (hover: none) and (pointer: coarse) {
+  .sidebar button,
+  .card button,
+  .box button,
+  .modal button {
+    min-height: 44px;
+  }
+  
+  input, button {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+}
 </style>
 </head>
 
 <body>
 <header>
-  <h1>NEMO SYSTEM</h1>
+  <div class="logo-container">
+    <h1>NEMO SYSTEM</h1>
+    <div class="device-info" id="deviceInfo"></div>
+  </div>
+  <button class="menu-toggle" id="menuToggle">☰</button>
   <img src="https://cdn-icons-png.flaticon.com/512/924/924915.png" alt="Logo Nemo">
 </header>
 
+<div class="device-badge" id="deviceBadge">
+  <span id="deviceType">Carregando...</span>
+</div>
+
 <div class="wrapper">
-  <div class="sidebar">
-    <button id="loginBtn" onclick="showLogin()">Login</button>
-    <button id="registerBtn" onclick="showRegister()">Registrar</button>
-    <button id="painelBtn" onclick="openPainel()">Painel Nemo</button>
-    <button id="logoutBtn" onclick="logout()">Logout</button>
+  <div class="overlay" id="overlay"></div>
+  <div class="sidebar" id="sidebar">
+    <button id="loginBtn" onclick="showLogin()">🔐 Login</button>
+    <button id="registerBtn" onclick="showRegister()">📝 Registrar</button>
+    <button id="painelBtn" onclick="openPainel()">🖥️ Painel Nemo</button>
+    <button id="logoutBtn" onclick="logout()">🚪 Logout</button>
   </div>
 
   <div class="main">
@@ -515,6 +810,11 @@ footer {
 
     <div id="painelBox" class="hidden">
       <div class="terminal" id="terminal"></div>
+      
+      <div class="device-stats" id="deviceStats">
+        <!-- Device info will be populated here -->
+      </div>
+      
       <p>Usuário: <b><span id="userName"></span></b> | Role: <b><span id="userRole"></span></b></p>
 
       <canvas id="chart" width="400" height="120"></canvas>
@@ -533,7 +833,7 @@ footer {
   </div>
 </div>
 
-<footer>Nemo System © 2026</footer>
+<footer>Nemo System © 2026 | <span id="connectionType">Detectando conexão...</span></footer>
 
 <!-- MODAL -->
 <div id="modal" class="modal">
@@ -545,11 +845,265 @@ footer {
 </div>
 
 <script>
+/* ======= DETECÇÃO DE DISPOSITIVO ======= */
+class DeviceDetector {
+  constructor() {
+    this.deviceInfo = {
+      type: 'desktop',
+      os: 'Unknown',
+      browser: 'Unknown',
+      screenSize: 'Unknown',
+      orientation: 'portrait',
+      touch: false,
+      connection: 'Unknown',
+      platform: 'Unknown',
+      language: 'Unknown',
+      timezone: 'Unknown'
+    };
+    this.init();
+  }
+
+  init() {
+    this.detectDeviceType();
+    this.detectOS();
+    this.detectBrowser();
+    this.detectScreen();
+    this.detectTouch();
+    this.detectConnection();
+    this.detectPlatform();
+    this.detectLanguage();
+    this.detectTimezone();
+    this.updateUI();
+  }
+
+  detectDeviceType() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isMobile = /mobile|iphone|ipod|android|blackberry|mini|windows\s+ce|palm|smartphone|webos/i.test(userAgent);
+    const isTablet = /tablet|ipad|playbook|silk/i.test(userAgent);
+    
+    if (isMobile) this.deviceInfo.type = 'mobile';
+    else if (isTablet) this.deviceInfo.type = 'tablet';
+    else this.deviceInfo.type = 'desktop';
+  }
+
+  detectOS() {
+    const userAgent = navigator.userAgent;
+    if (userAgent.indexOf("Win") !== -1) this.deviceInfo.os = "Windows";
+    else if (userAgent.indexOf("Mac") !== -1) this.deviceInfo.os = "macOS";
+    else if (userAgent.indexOf("Linux") !== -1) this.deviceInfo.os = "Linux";
+    else if (userAgent.indexOf("Android") !== -1) this.deviceInfo.os = "Android";
+    else if (userAgent.indexOf("iOS") !== -1 || /iPad|iPhone|iPod/.test(userAgent)) this.deviceInfo.os = "iOS";
+    else this.deviceInfo.os = "Unknown OS";
+  }
+
+  detectBrowser() {
+    const userAgent = navigator.userAgent;
+    if (userAgent.indexOf("Chrome") !== -1) this.deviceInfo.browser = "Chrome";
+    else if (userAgent.indexOf("Firefox") !== -1) this.deviceInfo.browser = "Firefox";
+    else if (userAgent.indexOf("Safari") !== -1) this.deviceInfo.browser = "Safari";
+    else if (userAgent.indexOf("Edge") !== -1) this.deviceInfo.browser = "Edge";
+    else if (userAgent.indexOf("Opera") !== -1) this.deviceInfo.browser = "Opera";
+    else this.deviceInfo.browser = "Unknown Browser";
+  }
+
+  detectScreen() {
+    this.deviceInfo.screenSize = `${window.screen.width} × ${window.screen.height}`;
+    this.deviceInfo.orientation = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+    
+    // Update on resize
+    window.addEventListener('resize', () => {
+      this.deviceInfo.screenSize = `${window.screen.width} × ${window.screen.height}`;
+      this.deviceInfo.orientation = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+      this.updateUI();
+    });
+    
+    // Update on orientation change
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        this.deviceInfo.orientation = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+        this.updateUI();
+      }, 100);
+    });
+  }
+
+  detectTouch() {
+    this.deviceInfo.touch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  }
+
+  detectConnection() {
+    if (navigator.connection) {
+      const connection = navigator.connection;
+      this.deviceInfo.connection = connection.effectiveType || 'Unknown';
+      
+      // Listen for connection changes
+      connection.addEventListener('change', () => {
+        this.deviceInfo.connection = connection.effectiveType || 'Unknown';
+        this.updateUI();
+      });
+    } else {
+      this.deviceInfo.connection = 'Ethernet/WiFi';
+    }
+  }
+
+  detectPlatform() {
+    this.deviceInfo.platform = navigator.platform || 'Unknown';
+  }
+
+  detectLanguage() {
+    this.deviceInfo.language = navigator.language || 'Unknown';
+  }
+
+  detectTimezone() {
+    this.deviceInfo.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown';
+  }
+
+  updateUI() {
+    // Update badge
+    const badge = document.getElementById('deviceBadge');
+    const deviceType = document.getElementById('deviceType');
+    
+    if (badge && deviceType) {
+      let typeText = '';
+      let typeIcon = '';
+      
+      switch(this.deviceInfo.type) {
+        case 'mobile':
+          typeText = '📱 Mobile';
+          typeIcon = '📱';
+          break;
+        case 'tablet':
+          typeText = '📟 Tablet';
+          typeIcon = '📟';
+          break;
+        default:
+          typeText = '🖥️ Desktop';
+          typeIcon = '🖥️';
+      }
+      
+      deviceType.textContent = `${typeIcon} ${typeText} | ${this.deviceInfo.os}`;
+      
+      // Update connection in footer
+      const connectionSpan = document.getElementById('connectionType');
+      if (connectionSpan) {
+        connectionSpan.textContent = `Conexão: ${this.deviceInfo.connection}`;
+      }
+    }
+    
+    // Update device info in header (mobile)
+    const deviceInfoDiv = document.getElementById('deviceInfo');
+    if (deviceInfoDiv) {
+      deviceInfoDiv.textContent = `${this.deviceInfo.type} | ${this.deviceInfo.os}`;
+    }
+    
+    // Update device stats in panel
+    this.updateDeviceStats();
+    
+    // Log device info
+    if (typeof log === 'function') {
+      log(`Dispositivo: ${this.deviceInfo.type} | OS: ${this.deviceInfo.os} | Navegador: ${this.deviceInfo.browser}`);
+      log(`Tela: ${this.deviceInfo.screenSize} | Orientação: ${this.deviceInfo.orientation}`);
+      log(`Touch: ${this.deviceInfo.touch ? 'Sim' : 'Não'} | Conexão: ${this.deviceInfo.connection}`);
+    }
+  }
+
+  updateDeviceStats() {
+    const statsContainer = document.getElementById('deviceStats');
+    if (!statsContainer) return;
+    
+    statsContainer.innerHTML = `
+      <div class="device-stat">
+        <span class="device-stat-label">📱 Dispositivo</span>
+        <span class="device-stat-value">${this.deviceInfo.type.toUpperCase()}</span>
+      </div>
+      <div class="device-stat">
+        <span class="device-stat-label">⚙️ Sistema</span>
+        <span class="device-stat-value">${this.deviceInfo.os}</span>
+      </div>
+      <div class="device-stat">
+        <span class="device-stat-label">🌐 Navegador</span>
+        <span class="device-stat-value">${this.deviceInfo.browser}</span>
+      </div>
+      <div class="device-stat">
+        <span class="device-stat-label">📏 Resolução</span>
+        <span class="device-stat-value">${this.deviceInfo.screenSize}</span>
+      </div>
+      <div class="device-stat">
+        <span class="device-stat-label">📶 Conexão</span>
+        <span class="device-stat-value">${this.deviceInfo.connection}</span>
+      </div>
+      <div class="device-stat">
+        <span class="device-stat-label">📍 Idioma</span>
+        <span class="device-stat-value">${this.deviceInfo.language}</span>
+      </div>
+      <div class="device-stat">
+        <span class="device-stat-label">🕐 Fuso Horário</span>
+        <span class="device-stat-value">${this.deviceInfo.timezone}</span>
+      </div>
+      <div class="device-stat">
+        <span class="device-stat-label">👆 Touch</span>
+        <span class="device-stat-value">${this.deviceInfo.touch ? 'Sim' : 'Não'}</span>
+      </div>
+    `;
+  }
+
+  getDeviceInfo() {
+    return this.deviceInfo;
+  }
+}
+
+/* ======= GERENCIAMENTO DE MENU MOBILE ======= */
+function setupMobileMenu() {
+  const menuToggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  
+  if (menuToggle && sidebar) {
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+      document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+    });
+    
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+    
+    // Close menu when clicking on a sidebar button
+    sidebar.querySelectorAll('button').forEach(button => {
+      button.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+    });
+    
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  }
+}
+
 /* ======= CRIPTO ======= */
 async function hash(t){const e=new TextEncoder().encode(t),b=await crypto.subtle.digest("SHA-256",e);return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
 
 /* ======= INICIALIZAÇÃO DO SISTEMA ======= */
+let deviceDetector;
 async function initializeSystem() {
+  // Inicializa detector de dispositivo
+  deviceDetector = new DeviceDetector();
+  
+  // Configura menu mobile
+  setupMobileMenu();
+  
   // Verifica se o usuário Nemo já existe no sistema
   const nemoExists = localStorage.getItem("user_Nemo");
   
@@ -624,7 +1178,14 @@ async function updateAdminPassword() {
 
 /* ======= LOG ======= */
 let logs=[];
-function log(m){logs.push(m);terminal.innerHTML+=`<span>> ${m}</span><br>`;terminal.scrollTop=terminal.scrollHeight}
+function log(m){
+  logs.push(m);
+  const terminal = document.getElementById('terminal');
+  if (terminal) {
+    terminal.innerHTML += `<span>> ${m}</span><br>`;
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+}
 
 /* ======= AUTH ======= */
 async function register(){
@@ -646,7 +1207,15 @@ async function register(){
   const ua = navigator.userAgent;
   const createdAt = new Date().toISOString();
   const ip = await getIP().catch(()=>"127.0.0.1");
-  const meta = {role, createdAt, createdIP: ip, createdUA: ua, banned: false, logins: []};
+  const meta = {
+    role, 
+    createdAt, 
+    createdIP: ip, 
+    createdUA: ua, 
+    banned: false, 
+    logins: [],
+    deviceInfo: deviceDetector ? deviceDetector.getDeviceInfo() : null
+  };
   localStorage.setItem("meta_"+username, JSON.stringify(meta));
   
   alert("Conta criada com sucesso!"); 
@@ -675,7 +1244,12 @@ async function login(){
     
     // Registra o login
     const ip = await getIP().catch(()=>"127.0.0.1");
-    const entry = {at: new Date().toISOString(), ip: ip, ua: navigator.userAgent};
+    const entry = {
+      at: new Date().toISOString(), 
+      ip: ip, 
+      ua: navigator.userAgent,
+      deviceInfo: deviceDetector ? deviceDetector.getDeviceInfo() : null
+    };
     meta.logins = meta.logins || [];
     meta.logins.push(entry);
     localStorage.setItem(metaKey, JSON.stringify(meta));
@@ -741,9 +1315,18 @@ function openPainel(){
   document.getElementById('logoutBtn').style.display = 'block';
   
   // Limpar e iniciar terminal
-  terminal.innerHTML = ""; 
+  const terminal = document.getElementById('terminal');
+  if (terminal) terminal.innerHTML = ""; 
+  
   log("Sistema Nemo iniciado");
   log(`Bem-vindo, ${u}`);
+  
+  if (deviceDetector) {
+    const deviceInfo = deviceDetector.getDeviceInfo();
+    log(`Dispositivo: ${deviceInfo.type} | OS: ${deviceInfo.os}`);
+    log(`Navegador: ${deviceInfo.browser} | Conexão: ${deviceInfo.connection}`);
+  }
+  
   startChart();
 }
 
@@ -906,11 +1489,29 @@ function viewUser(username){
     <p><strong>User Agent:</strong> <small>${meta.createdUA || '—'}</small></p>
   </div>`;
   
+  // Show device info if available
+  if (meta.deviceInfo) {
+    html += `<div style="padding: 10px; background: rgba(176, 0, 0, 0.1); border-radius: 10px; margin-bottom: 15px;">
+      <h5 style="color: var(--primary-light); margin-bottom: 5px;">📱 Informações do Dispositivo (Criação):</h5>
+      <p><small>${meta.deviceInfo.type} | ${meta.deviceInfo.os} | ${meta.deviceInfo.browser}</small></p>
+    </div>`;
+  }
+  
   html += `<h5 style="margin-top: 20px; color: var(--gray-light);">Histórico de Logins:</h5>`;
   
   if(meta.logins && meta.logins.length){
     html += `<div style="max-height:200px;overflow:auto; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;"><ul style="list-style: none;">` + 
-            meta.logins.slice().reverse().map(l=>`<li style="padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05);"><small>${new Date(l.at).toLocaleString()} — ${l.ip || '—'}</small></li>`).join('') + 
+            meta.logins.slice().reverse().map(l=>{
+              let loginInfo = `<li style="padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <small>${new Date(l.at).toLocaleString()} — ${l.ip || '—'}</small>`;
+              
+              if (l.deviceInfo) {
+                loginInfo += `<br><small style="color: var(--gray-light);">📱 ${l.deviceInfo.type} | ${l.deviceInfo.os}</small>`;
+              }
+              
+              loginInfo += `</li>`;
+              return loginInfo;
+            }).join('') + 
             `</ul></div>`;
   } else {
     html += `<p style="color: var(--gray);">Sem logins registrados</p>`;
@@ -961,24 +1562,27 @@ function startChart(){
     data.push(Math.random()*100); 
     if(data.length > 20) data.shift();
     
-    ctx.clearRect(0,0,400,120);
+    const chartCanvas = document.getElementById("chart");
+    if (!chartCanvas) return;
+    
+    ctx.clearRect(0,0,chartCanvas.width,chartCanvas.height);
     
     // Gradiente para o gráfico
-    const gradient = ctx.createLinearGradient(0, 0, 400, 0);
+    const gradient = ctx.createLinearGradient(0, 0, chartCanvas.width, 0);
     gradient.addColorStop(0, getComputedStyle(document.documentElement).getPropertyValue("--primary"));
     gradient.addColorStop(1, getComputedStyle(document.documentElement).getPropertyValue("--primary-light"));
     
     ctx.strokeStyle = gradient;
     ctx.lineWidth = 2;
     ctx.beginPath();
-    data.forEach((v,i)=>ctx.lineTo(i*20,120-v));
+    data.forEach((v,i)=>ctx.lineTo(i*(chartCanvas.width/20),chartCanvas.height-v));
     ctx.stroke();
     
     // Pontos no gráfico
     ctx.fillStyle = gradient;
     data.forEach((v,i)=>{
       ctx.beginPath();
-      ctx.arc(i*20,120-v,3,0,Math.PI*2);
+      ctx.arc(i*(chartCanvas.width/20),chartCanvas.height-v,3,0,Math.PI*2);
       ctx.fill();
     });
   },1000);
@@ -1000,6 +1604,24 @@ window.onload = async function() {
     showLogin();
   }
 };
+
+// Handle window resize for responsive design
+window.addEventListener('resize', () => {
+  if (deviceDetector) {
+    deviceDetector.detectScreen();
+  }
+  
+  // Close mobile menu on resize to larger screens
+  if (window.innerWidth > 768) {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    if (sidebar && overlay) {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
+});
 </script>
 </body>
 </html>
