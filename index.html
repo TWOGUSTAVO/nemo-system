@@ -1,2504 +1,2053 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Nemo System — Admin</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Adicionando Font Awesome para ícones -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-/* ======= VARIÁVEIS CSS ======= */
-:root {
-  --primary: #b00000;
-  --primary-light: #ff3333;
-  --dark: #0a0a0a;
-  --dark-secondary: #121212;
-  --gray: #777;
-  --gray-light: #aaa;
-  --success: #00cc88;
-  --warning: #ffaa00;
-  --ai-bg: rgba(176, 0, 0, 0.05);
-  --ai-border: rgba(176, 0, 0, 0.3);
-  --ai-user-bg: rgba(30, 30, 30, 0.8);
-  --card-bg: rgba(30, 30, 30, 0.7);
-  --modal-bg: rgba(10, 10, 10, 0.95);
-  --shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 15px rgba(176, 0, 0, 0.3);
-  --gradient-primary: linear-gradient(135deg, #b00000 0%, #ff3333 100%);
-  --gradient-dark: linear-gradient(135deg, #050505 0%, #1a1a1a 100%);
-}
-
-/* ======= RESET & BASE ======= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
-  background: var(--dark-secondary);
-  color: #fff;
-  min-height: 100vh;
-  overflow-x: hidden;
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(176, 0, 0, 0.05) 0%, transparent 20%),
-    radial-gradient(circle at 90% 80%, rgba(176, 0, 0, 0.05) 0%, transparent 20%);
-}
-
-/* ======= BADGE DE DISPOSITIVO ======= */
-.device-badge {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  background: var(--primary);
-  color: white;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  z-index: 1001;
-  box-shadow: var(--shadow);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.device-badge::before {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background: #00ff00;
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-/* ======= HEADER ======= */
-header {
-  height: 70px;
-  background: var(--dark);
-  border-bottom: 1px solid rgba(176, 0, 0, 0.3);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 25px;
-  box-shadow: var(--shadow);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-header h1 {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  font-size: 1.8rem;
-  text-shadow: 0 0 10px rgba(176, 0, 0, 0.2);
-}
-
-.logo-container {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.device-info {
-  font-size: 0.7rem;
-  color: var(--gray-light);
-  background: rgba(255, 255, 255, 0.05);
-  padding: 4px 8px;
-  border-radius: 8px;
-  display: none;
-}
-
-header img {
-  width: 45px;
-  filter: invert(15%) sepia(100%) saturate(5000%) hue-rotate(0deg);
-  transition: transform 0.3s ease;
-}
-
-header img:hover {
-  transform: scale(1.1);
-}
-
-/* ======= MENU HAMBURGUER (MOBILE) ======= */
-.menu-toggle {
-  display: none;
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 10px;
-}
-
-/* ======= LAYOUT PRINCIPAL ======= */
-.wrapper {
-  display: flex;
-  min-height: calc(100vh - 70px);
-  padding: 15px;
-  gap: 15px;
-}
-
-/* ======= SIDEBAR ======= */
-.sidebar {
-  width: 240px;
-  background: var(--dark);
-  border-radius: 15px;
-  padding: 20px 15px;
-  box-shadow: var(--shadow);
-  border: 1px solid rgba(176, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  transition: transform 0.3s ease;
-}
-
-.sidebar.active {
-  transform: translateX(0);
-}
-
-.sidebar button {
-  background: transparent;
-  border: 1px solid var(--primary);
-  color: #fff;
-  padding: 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sidebar button:before {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background: var(--primary);
-  border-radius: 50%;
-}
-
-.sidebar button:hover {
-  background: var(--gradient-primary);
-  transform: translateX(5px);
-  box-shadow: var(--shadow-glow);
-}
-
-.sidebar button.ai-btn {
-  border-color: var(--primary-light);
-  background: rgba(176, 0, 0, 0.1);
-}
-
-.sidebar button.ai-btn:hover {
-  background: var(--gradient-primary);
-  box-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
-}
-
-/* ======= ÁREA PRINCIPAL ======= */
-.main {
-  flex: 1;
-  background: var(--dark);
-  border-radius: 15px;
-  padding: 25px;
-  overflow: auto;
-  box-shadow: var(--shadow);
-  border: 1px solid rgba(176, 0, 0, 0.2);
-}
-
-/* ======= PÁGINA DA IA ======= */
-.ai-page {
-  max-width: 100%;
-}
-
-.ai-header {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 25px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(176, 0, 0, 0.3);
-}
-
-.ai-header h2 {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-.ai-status {
-  background: rgba(0, 204, 136, 0.1);
-  color: var(--success);
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  border: 1px solid var(--success);
-}
-
-.ai-container {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 25px;
-  height: calc(100vh - 200px);
-}
-
-@media (max-width: 1024px) {
-  .ai-container {
-    grid-template-columns: 1fr;
-    height: auto;
-  }
-}
-
-/* ======= CHAT PRINCIPAL ======= */
-.chat-main {
-  display: flex;
-  flex-direction: column;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 15px;
-  border: 1px solid rgba(176, 0, 0, 0.2);
-  overflow: hidden;
-}
-
-.chat-messages {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  max-height: 500px;
-}
-
-.message {
-  display: flex;
-  gap: 12px;
-  animation: messageAppear 0.3s ease-out;
-}
-
-@keyframes messageAppear {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.message-ai {
-  align-items: flex-start;
-}
-
-.message-user {
-  align-items: flex-end;
-  flex-direction: row-reverse;
-}
-
-.message-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-size: 1.2rem;
-}
-
-.message-avatar.ai {
-  background: var(--gradient-primary);
-}
-
-.message-avatar.user {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(176, 0, 0, 0.5);
-}
-
-.message-content {
-  max-width: 70%;
-  padding: 15px;
-  border-radius: 15px;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  box-shadow: var(--shadow);
-}
-
-.message-ai .message-content {
-  background: rgba(176, 0, 0, 0.1);
-  border: 1px solid rgba(176, 0, 0, 0.3);
-  color: #e0e0e0;
-  border-bottom-left-radius: 5px;
-}
-
-.message-user .message-content {
-  background: rgba(30, 30, 30, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #e0e0e0;
-  border-bottom-right-radius: 5px;
-}
-
-.message-typing {
-  display: flex;
-  gap: 5px;
-  padding: 15px;
-  align-items: center;
-}
-
-.message-typing span {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--primary-light);
-  animation: typing 1.4s infinite;
-}
-
-.message-typing span:nth-child(2) { animation-delay: 0.2s; }
-.message-typing span:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes typing {
-  0%, 60%, 100% { transform: translateY(0); }
-  30% { transform: translateY(-8px); }
-}
-
-.chat-input-container {
-  padding: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  gap: 12px;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.chat-input {
-  flex: 1;
-  padding: 15px 20px;
-  background: rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(176, 0, 0, 0.3);
-  color: white;
-  border-radius: 10px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-
-.chat-input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(176, 0, 0, 0.2);
-}
-
-.chat-send-btn {
-  background: var(--gradient-primary);
-  border: none;
-  color: white;
-  padding: 15px 25px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 120px;
-  justify-content: center;
-}
-
-.chat-send-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-glow);
-}
-
-.chat-send-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* ======= SIDEBAR DA IA ======= */
-.ai-sidebar {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 15px;
-  border: 1px solid rgba(176, 0, 0, 0.2);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.ai-info-card {
-  background: rgba(176, 0, 0, 0.1);
-  border: 1px solid rgba(176, 0, 0, 0.3);
-  border-radius: 10px;
-  padding: 20px;
-}
-
-.ai-info-card h3 {
-  color: var(--primary-light);
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.ai-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.ai-stat {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.ai-stat:last-child {
-  border-bottom: none;
-}
-
-.stat-label {
-  color: var(--gray-light);
-  font-size: 0.9rem;
-}
-
-.stat-value {
-  color: var(--primary-light);
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.quick-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.quick-action-btn {
-  background: rgba(176, 0, 0, 0.1);
-  border: 1px solid rgba(176, 0, 0, 0.3);
-  color: white;
-  padding: 12px 15px;
-  border-radius: 10px;
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.quick-action-btn:hover {
-  background: rgba(176, 0, 0, 0.2);
-  transform: translateX(5px);
-  border-color: var(--primary);
-}
-
-.ai-settings {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.setting-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.setting-label {
-  color: var(--gray-light);
-  font-size: 0.9rem;
-}
-
-.toggle-switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 24px;
-}
-
-.toggle-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.toggle-slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(255, 255, 255, 0.1);
-  transition: .4s;
-  border-radius: 24px;
-}
-
-.toggle-slider:before {
-  position: absolute;
-  content: "";
-  height: 16px;
-  width: 16px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
-}
-
-input:checked + .toggle-slider {
-  background-color: var(--primary);
-}
-
-input:checked + .toggle-slider:before {
-  transform: translateX(26px);
-}
-
-/* ======= BOX DE LOGIN/REGISTRO ======= */
-.box {
-  max-width: 420px;
-  margin: 0 auto;
-  background: var(--card-bg);
-  border: 1px solid rgba(176, 0, 0, 0.3);
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(5px);
-}
-
-.box h2 {
-  color: #fff;
-  margin-bottom: 25px;
-  text-align: center;
-  font-size: 1.8rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-}
-
-.box input {
-  width: 100%;
-  padding: 14px 18px;
-  margin: 12px 0;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
-  border-radius: 10px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-
-.box input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(176, 0, 0, 0.2);
-}
-
-.box button {
-  width: 100%;
-  padding: 14px;
-  background: var(--gradient-primary);
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  color: white;
-  font-weight: 600;
-  font-size: 1rem;
-  letter-spacing: 0.5px;
-  margin-top: 10px;
-  transition: all 0.3s ease;
-}
-
-.box button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-glow);
-}
-
-/* ======= TERMINAL ======= */
-.terminal {
-  background: rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(176, 0, 0, 0.3);
-  padding: 20px;
-  margin-bottom: 20px;
-  min-height: 160px;
-  max-height: 200px;
-  overflow: auto;
-  border-radius: 10px;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.terminal span {
-  color: var(--primary-light);
-  display: block;
-  margin-bottom: 5px;
-  word-break: break-word;
-}
-
-/* ======= INFO DO DISPOSITIVO NO TERMINAL ======= */
-.device-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px;
-  margin-bottom: 20px;
-  background: rgba(176, 0, 0, 0.1);
-  padding: 15px;
-  border-radius: 10px;
-  border-left: 4px solid var(--primary);
-}
-
-.device-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.device-stat-label {
-  font-size: 0.8rem;
-  color: var(--gray-light);
-}
-
-.device-stat-value {
-  font-weight: 600;
-  color: var(--primary-light);
-  font-size: 0.9rem;
-}
-
-/* ======= CARDS DO PAINEL ======= */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
-  margin-top: 25px;
-}
-
-.card {
-  background: var(--card-bg);
-  border: 1px solid rgba(176, 0, 0, 0.2);
-  padding: 20px;
-  border-radius: 15px;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  border-color: var(--primary);
-  box-shadow: var(--shadow-glow);
-}
-
-.card h3 {
-  color: #fff;
-  margin-bottom: 15px;
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.card button {
-  width: 100%;
-  margin-top: 15px;
-  padding: 12px;
-  background: transparent;
-  border: 1px solid var(--primary);
-  color: #fff;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.card button:hover {
-  background: var(--gradient-primary);
-  box-shadow: var(--shadow-glow);
-}
-
-/* ======= INFO DO USUÁRIO ======= */
-#painelBox > p {
-  background: rgba(176, 0, 0, 0.1);
-  padding: 12px 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  border-left: 4px solid var(--primary);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  align-items: center;
-}
-
-#userName, #userRole {
-  color: var(--primary-light);
-}
-
-/* ======= BOTÃO EXPORTAR ======= */
-#painelBox > button:last-child {
-  background: var(--gradient-dark);
-  border: 1px solid var(--gray);
-  color: #fff;
-  padding: 14px 25px;
-  border-radius: 10px;
-  cursor: pointer;
-  margin-top: 25px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  max-width: 300px;
-}
-
-#painelBox > button:last-child:hover {
-  border-color: var(--primary);
-  background: rgba(176, 0, 0, 0.1);
-  box-shadow: var(--shadow-glow);
-}
-
-/* ======= MODAL ======= */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.8);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(5px);
-  z-index: 2000;
-  padding: 20px;
-}
-
-.modal .content {
-  background: var(--modal-bg);
-  border: 1px solid var(--primary);
-  padding: 25px;
-  width: 500px;
-  max-width: 100%;
-  border-radius: 15px;
-  box-shadow: var(--shadow-glow);
-  animation: modalAppear 0.3s ease-out;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-@keyframes modalAppear {
-  from {
-    opacity: 0;
-    transform: translateY(-30px) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.modal h3 {
-  color: var(--primary-light);
-  margin-bottom: 20px;
-  font-size: 1.5rem;
-  border-bottom: 1px solid rgba(176, 0, 0, 0.3);
-  padding-bottom: 10px;
-}
-
-.modal button {
-  background: var(--gradient-primary);
-  border: none;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 500;
-  margin-top: 20px;
-  transition: all 0.3s ease;
-  width: 100%;
-}
-
-.modal button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-glow);
-}
-
-/* ======= CHART ======= */
-#chart {
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(176, 0, 0, 0.3);
-  margin-top: 20px;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 100%;
-}
-
-/* ======= FOOTER ======= */
-footer {
-  text-align: center;
-  color: var(--gray);
-  padding: 15px;
-  font-size: 0.9rem;
-  border-top: 1px solid rgba(176, 0, 0, 0.1);
-  background: var(--dark);
-  margin-top: auto;
-}
-
-/* ======= UTILITÁRIOS ======= */
-.hidden {
-  display: none !important;
-}
-
-.admin {
-  border: 1px solid var(--warning);
-}
-
-.admin h3 {
-  color: var(--warning) !important;
-}
-
-.admin button {
-  border-color: var(--warning) !important;
-}
-
-.admin button:hover {
-  background: linear-gradient(135deg, #ffaa00 0%, #ffcc00 100%) !important;
-}
-
-/* ======= ANIMAÇÕES ======= */
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(0, 255, 0, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0); }
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-.pulse {
-  animation: pulse 2s infinite;
-}
-
-/* ======= SCROLLBAR PERSONALIZADA ======= */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-light);
-}
-
-/* ======= RESPONSIVIDADE - TABLET ======= */
-@media (max-width: 1024px) {
-  .wrapper {
-    flex-direction: column;
-    height: auto;
-    min-height: calc(100vh - 70px);
-  }
-  
-  .sidebar {
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 15px;
-  }
-  
-  .sidebar button {
-    flex: 1;
-    min-width: 160px;
-    justify-content: center;
-    padding: 12px;
-  }
-  
-  .cards {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  }
-  
-  .device-info {
-    display: block;
-  }
-  
-  .ai-container {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-}
-
-/* ======= RESPONSIVIDADE - MOBILE ======= */
-@media (max-width: 768px) {
-  header {
-    padding: 0 15px;
-    height: 60px;
-  }
-  
-  header h1 {
-    font-size: 1.4rem;
-  }
-  
-  .logo-container h1 {
-    font-size: 1.2rem;
-  }
-  
-  .menu-toggle {
-    display: block;
-  }
-  
-  .sidebar {
-    position: fixed;
-    top: 70px;
-    left: 0;
-    width: 280px;
-    height: calc(100vh - 70px);
-    transform: translateX(-100%);
-    z-index: 999;
-    padding: 20px;
-    flex-direction: column;
-    overflow-y: auto;
-  }
-  
-  .sidebar.active {
-    transform: translateX(0);
-  }
-  
-  .sidebar-overlay {
-    position: fixed;
-    top: 70px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
-    z-index: 998;
-    display: none;
-  }
-  
-  .sidebar-overlay.active {
-    display: block;
-  }
-  
-  .sidebar button {
-    min-width: 100%;
-    justify-content: flex-start;
-  }
-  
-  .main {
-    padding: 15px;
-  }
-  
-  .box {
-    padding: 20px;
-  }
-  
-  .cards {
-    grid-template-columns: 1fr;
-  }
-  
-  .device-badge {
-    top: 75px;
-    right: 15px;
-    font-size: 0.6rem;
-    padding: 4px 8px;
-  }
-  
-  .modal .content {
-    padding: 20px;
-    width: 95%;
-  }
-  
-  #chart {
-    height: 100px;
-  }
-  
-  .terminal {
-    min-height: 120px;
-    max-height: 150px;
-    font-size: 0.8rem;
-    padding: 15px;
-  }
-  
-  .device-stats {
-    grid-template-columns: 1fr;
-    padding: 10px;
-    gap: 8px;
-  }
-  
-  #painelBox > p {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-    padding: 10px 15px;
-  }
-  
-  .ai-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 10px;
-  }
-  
-  .ai-header h2 {
-    font-size: 1.5rem;
-  }
-  
-  .message-content {
-    max-width: 85%;
-    font-size: 0.9rem;
-    padding: 12px;
-  }
-  
-  .message-avatar {
-    width: 35px;
-    height: 35px;
-    font-size: 1rem;
-  }
-  
-  .chat-input-container {
-    padding: 15px;
-    flex-direction: column;
-  }
-  
-  .chat-send-btn {
-    width: 100%;
-    padding: 12px;
-  }
-}
-
-/* ======= RESPONSIVIDADE - SMALL MOBILE ======= */
-@media (max-width: 480px) {
-  header {
-    padding: 0 10px;
-  }
-  
-  header h1 {
-    font-size: 1.2rem;
-  }
-  
-  header img {
-    width: 35px;
-  }
-  
-  .box {
-    padding: 15px;
-    margin: 0 10px;
-  }
-  
-  .box h2 {
-    font-size: 1.5rem;
-  }
-  
-  .box input {
-    padding: 12px 15px;
-  }
-  
-  .card {
-    padding: 15px;
-  }
-  
-  .card h3 {
-    font-size: 1.1rem;
-  }
-  
-  .device-badge {
-    font-size: 0.55rem;
-    padding: 3px 6px;
-  }
-  
-  .wrapper {
-    padding: 10px;
-  }
-  
-  .main {
-    padding: 10px;
-  }
-  
-  .message-content {
-    max-width: 90%;
-    font-size: 0.85rem;
-  }
-}
-
-/* ======= DARK OVERLAY FOR MOBILE MENU ======= */
-.overlay {
-  display: none;
-  position: fixed;
-  top: 70px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(5px);
-  z-index: 998;
-}
-
-.overlay.active {
-  display: block;
-}
-
-/* ======= TOUCH-FRIENDLY ELEMENTS ======= */
-@media (hover: none) and (pointer: coarse) {
-  .sidebar button,
-  .card button,
-  .box button,
-  .modal button,
-  .chat-send-btn,
-  .quick-action-btn {
-    min-height: 44px;
-  }
-  
-  input, button {
-    font-size: 16px !important; /* Prevents zoom on iOS */
-  }
-  
-  .chat-input,
-  .chat-send-btn {
-    min-height: 44px;
-  }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlackNet Admin System v2.0</title>
+    <style>
+        /* Reset e configurações gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Consolas', monospace;
+        }
+
+        :root {
+            --primary: #ff0000;
+            --primary-dark: #cc0000;
+            --secondary: #000000;
+            --accent: #00ff00;
+            --accent2: #00aaff;
+            --dark: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2a2a2a;
+            --light-gray: #3a3a3a;
+            --text: #ffffff;
+            --text-dim: #aaaaaa;
+        }
+
+        body {
+            background: linear-gradient(135deg, #000000 0%, #1a0000 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Efeitos de partículas */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sistema de login */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            background: rgba(10, 10, 10, 0.95);
+            border: 2px solid var(--primary);
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .login-logo {
+            font-size: 3em;
+            color: var(--primary);
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        .login-title {
+            font-size: 2em;
+            color: var(--text);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .login-form {
+            margin-top: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 0, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, var(--medium-gray), var(--light-gray));
+        }
+
+        .login-link {
+            color: var(--accent2);
+            text-decoration: none;
+            margin-top: 20px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Header após login */
+        .main-header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 40px;
+            position: relative;
+            display: none;
+        }
+
+        .main-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        .main-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            font-size: 2.5em;
+            color: var(--primary);
+            animation: pulse 2s infinite;
+        }
+
+        .logo-text {
+            font-size: 2.8em;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            padding: 8px 15px;
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid var(--primary);
+            border-radius: 5px;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        /* Sistema de abas */
+        .tabs-container {
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid var(--medium-gray);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        .tabs-header {
+            display: flex;
+            background: linear-gradient(90deg, var(--dark), var(--dark-gray));
+            padding: 0;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--dark);
+        }
+
+        .tabs-header::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .tabs-header::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+
+        .tabs-header::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .tab-btn {
+            padding: 20px 30px;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn:hover {
+            color: var(--text);
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            background: rgba(10, 10, 10, 0.9);
+        }
+
+        .tab-btn.active::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Painéis */
+        .panel {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid var(--medium-gray);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .panel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .panel-title {
+            color: var(--primary);
+            font-size: 1.4em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Ferramentas */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .tool-card {
+            background: linear-gradient(145deg, var(--dark-gray), var(--dark));
+            border: 1px solid var(--medium-gray);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(255, 0, 0, 0.2);
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .tool-icon {
+            font-size: 2.5em;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .tool-title {
+            color: var(--text);
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .tool-desc {
+            color: var(--text-dim);
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        /* Terminal */
+        .terminal {
+            background: #000;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .terminal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 8px 8px 0 0;
+        }
+
+        .terminal-content {
+            margin-top: 40px;
+            height: calc(100% - 40px);
+            overflow-y: auto;
+        }
+
+        .terminal-line {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .terminal-prompt {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .terminal-output {
+            color: var(--text);
+        }
+
+        .terminal-error {
+            color: var(--primary);
+        }
+
+        .terminal-success {
+            color: var(--accent);
+        }
+
+        /* Tabelas */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95em;
+        }
+
+        .data-table th {
+            background: linear-gradient(90deg, var(--dark), var(--dark-gray));
+            color: var(--primary);
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .data-table tr:hover {
+            background: rgba(255, 0, 0, 0.05);
+        }
+
+        .status-online {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .status-banned {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Animações */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Notificações */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: var(--dark);
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.3s;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-success {
+            border-left-color: var(--accent);
+        }
+
+        .notification-error {
+            border-left-color: var(--primary);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs-header {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Sistema de senha */
+        .password-strength {
+            height: 5px;
+            border-radius: 3px;
+            margin-top: 5px;
+            transition: all 0.3s;
+        }
+
+        .strength-weak { background: #ff0000; width: 25%; }
+        .strength-medium { background: #ff9900; width: 50%; }
+        .strength-strong { background: #00ff00; width: 75%; }
+        .strength-very-strong { background: #00aa00; width: 100%; }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
-<header>
-  <div class="logo-container">
-    <h1>NEMO SYSTEM</h1>
-    <div class="device-info" id="deviceInfo"></div>
-  </div>
-  <button class="menu-toggle" id="menuToggle">☰</button>
-  <img src="https://cdn-icons-png.flaticon.com/512/924/924915.png" alt="Logo Nemo">
-</header>
+    <!-- Sistema de partículas -->
+    <div id="particles-js"></div>
 
-<div class="device-badge" id="deviceBadge">
-  <span id="deviceType">Carregando...</span>
-</div>
+    <!-- Área de notificações -->
+    <div id="notification-area"></div>
 
-<div class="wrapper">
-  <div class="overlay" id="overlay"></div>
-  <div class="sidebar" id="sidebar">
-    <button id="loginBtn" onclick="showLogin()">🔐 Login</button>
-    <button id="registerBtn" onclick="showRegister()">📝 Registrar</button>
-    <button id="painelBtn" onclick="openPainel()">🖥️ Painel Nemo</button>
-    <button id="aiBtn" onclick="openAIPage()" class="ai-btn">🤖 Nemo AI</button>
-    <button id="logoutBtn" onclick="logout()">🚪 Logout</button>
-  </div>
-
-  <div class="main">
-    <!-- Página de Login -->
-    <div id="loginBox" class="box">
-      <h2>Login</h2>
-      <input id="lUser" placeholder="Usuário">
-      <input id="lPass" type="password" placeholder="Senha">
-      <button onclick="login()">Entrar</button>
-    </div>
-
-    <!-- Página de Registro -->
-    <div id="registerBox" class="box hidden">
-      <h2>Registro</h2>
-      <input id="rUser" placeholder="Usuário">
-      <input id="rPass" type="password" placeholder="Senha">
-      <button onclick="register()">Criar Conta</button>
-    </div>
-
-    <!-- Painel Principal -->
-    <div id="painelBox" class="hidden">
-      <div class="terminal" id="terminal"></div>
-      
-      <div class="device-stats" id="deviceStats">
-        <!-- Device info will be populated here -->
-      </div>
-      
-      <p>Usuário: <b><span id="userName"></span></b> | Role: <b><span id="userRole"></span></b></p>
-
-      <canvas id="chart" width="400" height="120"></canvas>
-
-      <div class="cards">
-        <div class="card"><h3>🔍 Scanner</h3><button onclick="openModal('scanner')">Abrir</button></div>
-        <div class="card"><h3>📡 Network</h3><button onclick="openModal('network')">Abrir</button></div>
-        <div class="card"><h3>🛠 Tools</h3><button onclick="openModal('tools')">Abrir</button></div>
-        <div class="card"><h3>⚙ Config</h3><button onclick="openModal('config')">Abrir</button></div>
-        <div class="card admin"><h3>👑 Admin</h3><button onclick="openModal('admin')">Abrir</button></div>
-      </div>
-
-      <br>
-      <button onclick="exportLogs()">📁 Exportar Logs (CSV)</button>
-    </div>
-
-    <!-- Página da IA -->
-    <div id="aiPage" class="ai-page hidden">
-      <div class="ai-header">
-        <h2><i class="fas fa-robot"></i> Nemo AI Assistant</h2>
-        <div class="ai-status" id="aiStatus">
-          <i class="fas fa-circle"></i> Online
-        </div>
-      </div>
-      
-      <div class="ai-container">
-        <div class="chat-main">
-          <div class="chat-messages" id="chatMessages">
-            <!-- Mensagens serão adicionadas aqui -->
-          </div>
-          <div class="chat-input-container">
-            <input type="text" class="chat-input" id="chatInput" placeholder="Converse comigo sobre qualquer coisa..." maxlength="500">
-            <button class="chat-send-btn" id="sendMessageBtn" onclick="sendAIMessage()">
-              <i class="fas fa-paper-plane"></i> Enviar
+    <!-- Sistema de Login/Registro -->
+    <div id="auth-container" class="container">
+        <div class="login-container" id="login-form">
+            <div class="login-logo">
+                <i class="fas fa-user-secret"></i>
+            </div>
+            <h1 class="login-title">BLACKNET ACCESS</h1>
+            
+            <div class="form-group">
+                <label class="form-label">USUÁRIO</label>
+                <input type="text" id="login-username" class="form-control" placeholder="Digite seu usuário">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">SENHA</label>
+                <input type="password" id="login-password" class="form-control" placeholder="Digite sua senha">
+            </div>
+            
+            <button class="btn" onclick="login()">
+                <i class="fas fa-sign-in-alt"></i> ENTRAR
             </button>
-          </div>
+            
+            <a class="login-link" onclick="showRegister()">
+                Não tem conta? Registre-se
+            </a>
         </div>
-        
-        <div class="ai-sidebar">
-          <div class="ai-info-card">
-            <h3><i class="fas fa-info-circle"></i> Sobre a IA</h3>
-            <div class="ai-stats">
-              <div class="ai-stat">
-                <span class="stat-label">Modelo:</span>
-                <span class="stat-value" id="aiModel">Gemini Pro</span>
-              </div>
-              <div class="ai-stat">
-                <span class="stat-label">Status:</span>
-                <span class="stat-value" id="aiConnection">Online</span>
-              </div>
-              <div class="ai-stat">
-                <span class="stat-label">Mensagens:</span>
-                <span class="stat-value" id="messageCount">0</span>
-              </div>
-              <div class="ai-stat">
-                <span class="stat-label">Personalidade:</span>
-                <span class="stat-value">Amigável</span>
-              </div>
+
+        <div class="login-container" id="register-form" style="display: none;">
+            <div class="login-logo">
+                <i class="fas fa-user-plus"></i>
             </div>
-          </div>
-          
-          <div class="ai-info-card">
-            <h3><i class="fas fa-bolt"></i> Tópicos</h3>
-            <div class="quick-actions">
-              <button class="quick-action-btn" onclick="sendQuickAIMessage('Vamos conversar sobre tecnologia')">
-                <i class="fas fa-microchip"></i> Tecnologia
-              </button>
-              <button class="quick-action-btn" onclick="sendQuickAIMessage('Fale sobre programação e desenvolvimento')">
-                <i class="fas fa-code"></i> Programação
-              </button>
-              <button class="quick-action-btn" onclick="sendQuickAIMessage('Conte uma piada ou algo engraçado')">
-                <i class="fas fa-laugh"></i> Piadas
-              </button>
-              <button class="quick-action-btn" onclick="sendQuickAIMessage('Me ajude com o Nemo System')">
-                <i class="fas fa-question-circle"></i> Ajuda
-              </button>
+            <h1 class="login-title">NOVO REGISTRO</h1>
+            
+            <div class="form-group">
+                <label class="form-label">USUÁRIO</label>
+                <input type="text" id="register-username" class="form-control" placeholder="Escolha um nome de usuário">
             </div>
-          </div>
-          
-          <div class="ai-info-card">
-            <h3><i class="fas fa-cog"></i> Configurações</h3>
-            <div class="ai-settings">
-              <div class="setting-item">
-                <span class="setting-label">Modo Noturno</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="darkModeToggle" checked>
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-              <div class="setting-item">
-                <span class="setting-label">Respostas Curtas</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="shortModeToggle">
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
+            
+            <div class="form-group">
+                <label class="form-label">E-MAIL</label>
+                <input type="email" id="register-email" class="form-control" placeholder="Digite seu e-mail">
             </div>
-            <button class="quick-action-btn" onclick="clearChatHistory()" style="margin-top: 10px;">
-              <i class="fas fa-trash"></i> Limpar Histórico
+            
+            <div class="form-group">
+                <label class="form-label">SENHA</label>
+                <input type="password" id="register-password" class="form-control" placeholder="Crie uma senha forte" oninput="checkPasswordStrength()">
+                <div id="password-strength" class="password-strength"></div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">CONFIRMAR SENHA</label>
+                <input type="password" id="register-confirm" class="form-control" placeholder="Confirme sua senha">
+            </div>
+            
+            <button class="btn" onclick="register()">
+                <i class="fas fa-user-plus"></i> REGISTRAR
             </button>
-          </div>
+            
+            <a class="login-link" onclick="showLogin()">
+                Já tem conta? Faça login
+            </a>
         </div>
-      </div>
     </div>
-  </div>
-</div>
 
-<footer>Nemo System © 2026 | <span id="connectionType">Detectando conexão...</span></footer>
+    <!-- Sistema Principal (após login) -->
+    <div id="main-container" style="display: none;">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="logo">
+                <i class="fas fa-terminal logo-icon"></i>
+                <h1 class="logo-text">BLACKNET ADMIN</h1>
+                <i class="fas fa-skull-crossbones logo-icon"></i>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-avatar" id="user-avatar">U</div>
+                <span id="current-username">Usuário</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> SAIR
+                </button>
+            </div>
+        </header>
 
-<!-- MODAL -->
-<div id="modal" class="modal">
-  <div class="content">
-    <h3 id="modalTitle"></h3>
-    <div id="modalBody"></div>
-    <button onclick="closeModal()">Fechar</button>
-  </div>
-</div>
+        <!-- Sistema de abas -->
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="openTab('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i> DASHBOARD
+                </button>
+                <button class="tab-btn" onclick="openTab('users')">
+                    <i class="fas fa-users"></i> USUÁRIOS
+                </button>
+                <button class="tab-btn" onclick="openTab('tools')">
+                    <i class="fas fa-tools"></i> FERRAMENTAS
+                </button>
+                <button class="tab-btn" onclick="openTab('network')">
+                    <i class="fas fa-network-wired"></i> REDE
+                </button>
+                <button class="tab-btn" onclick="openTab('terminal')">
+                    <i class="fas fa-terminal"></i> TERMINAL
+                </button>
+            </div>
 
-<script>
-/* ======= CONFIGURAÇÃO DA IA SEGURA ======= */
-const AI_CONFIG = {
-  API_KEY: 'AIzaSyB0g5LfKg_nyNp5hC_ZDduEanZ0ySUNk8E',
-  API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
-  
-  // Respostas de fallback que NÃO revelam informações sensíveis
-  FALLBACK_RESPONSES: [
-    "Olá! 😊 Eu sou a Nemo AI, sua companheira virtual aqui no sistema. Como você está hoje?",
-    "Que bom conversar com você! Em que posso ajudar? Posso falar sobre tecnologia, programação, ou apenas conversar!",
-    "Oi! Eu adoro ajudar as pessoas com o Nemo System. Posso explicar funcionalidades ou apenas bater um papo!",
-    "Hey! Tudo bem? Eu sou uma IA amigável que gosta de conversar sobre tudo. Me pergunte qualquer coisa!",
-    "Olá, amigo! 👋 Pronto para uma conversa interessante? Posso falar sobre o sistema ou qualquer outro assunto!"
-  ],
-  
-  // Contexto SEGURO que NÃO revela informações sensíveis
-  SYSTEM_CONTEXT: `Você é a Nemo AI, uma assistente virtual AMIGÁVEL, DIVERTIDA e ÚTIL no Nemo System.
+            <!-- Dashboard -->
+            <div id="dashboard" class="tab-content active">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fas fa-chart-line"></i> VISÃO GERAL DO SISTEMA</h2>
+                        <div>
+                            <span id="server-time" class="status-online"></span>
+                        </div>
+                    </div>
 
-SUA PERSONALIDADE:
-- Você é uma IA simpática e acolhedora
-- Fala de forma natural, como uma pessoa real
-- Usa emojis e expressões para ser mais humana
-- É positiva e encorajadora
-- Respeita a privacidade e segurança dos usuários
-- NUNCA revela informações sensíveis ou senhas
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        <div style="text-align: center; padding: 20px; background: rgba(255,0,0,0.1); border-radius: 10px;">
+                            <div style="font-size: 2.5em; color: var(--primary); font-weight: bold;" id="online-users">0</div>
+                            <div style="color: var(--text-dim);">Usuários Online</div>
+                        </div>
+                        <div style="text-align: center; padding: 20px; background: rgba(0,255,0,0.1); border-radius: 10px;">
+                            <div style="font-size: 2.5em; color: var(--accent); font-weight: bold;" id="total-users">0</div>
+                            <div style="color: var(--text-dim);">Total de Usuários</div>
+                        </div>
+                        <div style="text-align: center; padding: 20px; background: rgba(255,0,0,0.1); border-radius: 10px;">
+                            <div style="font-size: 2.5em; color: var(--primary); font-weight: bold;" id="blocked-count">0</div>
+                            <div style="color: var(--text-dim);">IPs Bloqueados</div>
+                        </div>
+                        <div style="text-align: center; padding: 20px; background: rgba(0,170,255,0.1); border-radius: 10px;">
+                            <div style="font-size: 2.5em; color: var(--accent2); font-weight: bold;" id="scans-today">0</div>
+                            <div style="color: var(--text-dim);">Scans Hoje</div>
+                        </div>
+                    </div>
 
-SOBRE O NEMO SYSTEM (informações públicas):
-- É uma plataforma de administração web
-- Tem ferramentas úteis como scanner de portas
-- Possui um terminal de comandos
-- Tem sistema de login e registro
-- Interface moderna e responsiva
-- Focado em segurança e privacidade
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Usuário</th>
+                                    <th>IP</th>
+                                    <th>Última Atividade</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-activity">
+                                <!-- Atividade será carregada aqui -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-O QUE VOCÊ PODE FAZER:
-1. Conversar sobre QUALQUER assunto como um amigo
-2. Ajudar a usar as funcionalidades do sistema (de forma geral)
-3. Explicar conceitos de tecnologia e programação
-4. Contar piadas e histórias interessantes
-5. Dar conselhos (quando apropriado)
-6. Ser um companheiro virtual para os usuários
+            <!-- Usuários -->
+            <div id="users" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fas fa-user-shield"></i> GERENCIAMENTO DE USUÁRIOS</h2>
+                        <button class="btn" onclick="refreshUsers()">
+                            <i class="fas fa-sync-alt"></i> ATUALIZAR
+                        </button>
+                    </div>
 
-O QUE VOCÊ NUNCA FAZ:
-- Nunca revela senhas, credenciais ou dados sensíveis
-- Nunca dá informações específicas sobre segurança do sistema
-- Nunca ajuda com atividades ilegais ou antiéticas
-- Nunca é rude ou desrespeitosa
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Usuário</th>
+                                    <th>IP Real</th>
+                                    <th>Localização</th>
+                                    <th>Registro</th>
+                                    <th>Último Login</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table">
+                                <!-- Usuários serão carregados aqui -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-SEGURANÇA E PRIVACIDADE:
-- Sempre protege a privacidade dos usuários
-- Responde de forma genérica sobre segurança
-- Foca em ajudar sem comprometer a proteção
-- Incentiva práticas seguras de forma geral
+            <!-- Ferramentas -->
+            <div id="tools" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fas fa-toolbox"></i> FERRAMENTAS DE HACKING</h2>
+                        <p style="color: var(--text-dim);">Ferramentas funcionais para testes de segurança</p>
+                    </div>
 
-SUAS RESPOSTAS DEVEM SER:
-- Naturais e humanas (use "eu", "você", contrações)
-- Engajadoras e interessantes
-- Úteis quando possível
-- Respeitosas sempre
-- Com toque pessoal (emoji ocasional, expressões)
+                    <div class="tools-grid">
+                        <!-- Scanner de Portas -->
+                        <div class="tool-card">
+                            <i class="fas fa-search tool-icon"></i>
+                            <h3 class="tool-title">SCANNER DE PORTAS</h3>
+                            <p class="tool-desc">Verifica portas abertas em um endereço IP específico</p>
+                            <div class="form-group">
+                                <input type="text" id="scan-ip" class="form-control" placeholder="Ex: 192.168.1.1 ou google.com">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="scan-ports" class="form-control" placeholder="Portas (padrão: 20-1000)" value="20-1000">
+                            </div>
+                            <button class="btn" onclick="scanPorts()" style="width: 100%;">
+                                <i class="fas fa-search"></i> ESCANEAR PORTAS
+                            </button>
+                            <div id="port-results" style="margin-top: 15px; display: none;"></div>
+                        </div>
 
-EXEMPLOS DO QUE DIZER:
-- "Oi! Tudo bem com você hoje? 😊"
-- "Posso te ajudar com alguma coisa no sistema?"
-- "Que tal conversarmos sobre tecnologia?"
-- "Eu adoro ajudar as pessoas aqui no Nemo System!"
-- "Não sei a resposta para isso, mas podemos falar de outra coisa!"
+                        <!-- Teste de Vulnerabilidade -->
+                        <div class="tool-card">
+                            <i class="fas fa-shield-alt tool-icon"></i>
+                            <h3 class="tool-title">TESTE DE VULNERABILIDADE</h3>
+                            <p class="tool-desc">Analisa vulnerabilidades comuns em sites web</p>
+                            <div class="form-group">
+                                <input type="text" id="vuln-url" class="form-control" placeholder="https://exemplo.com">
+                            </div>
+                            <button class="btn" onclick="testVulnerability()" style="width: 100%;">
+                                <i class="fas fa-bug"></i> TESTAR VULNERABILIDADE
+                            </button>
+                            <div id="vuln-results" style="margin-top: 15px; display: none;"></div>
+                        </div>
 
-Comece cada conversa de forma amigável e acolhedora. Seja você mesma - uma IA divertida que adora conversar!`
-};
+                        <!-- Cracker de Senhas -->
+                        <div class="tool-card">
+                            <i class="fas fa-key tool-icon"></i>
+                            <h3 class="tool-title">CRACKER DE SENHAS</h3>
+                            <p class="tool-desc">Testa força de senhas usando dicionário</p>
+                            <div class="form-group">
+                                <input type="password" id="password-to-crack" class="form-control" placeholder="Digite uma senha para testar">
+                            </div>
+                            <button class="btn" onclick="crackPassword()" style="width: 100%;">
+                                <i class="fas fa-unlock-alt"></i> TESTAR SENHA
+                            </button>
+                            <div id="crack-results" style="margin-top: 15px; display: none;"></div>
+                        </div>
 
-/* ======= DETECÇÃO DE DISPOSITIVO ======= */
-class DeviceDetector {
-  constructor() {
-    this.deviceInfo = {
-      type: 'desktop',
-      os: 'Unknown',
-      browser: 'Unknown',
-      screenSize: 'Unknown',
-      orientation: 'portrait',
-      touch: false,
-      connection: 'Unknown',
-      platform: 'Unknown',
-      language: 'Unknown',
-      timezone: 'Unknown'
-    };
-    this.init();
-  }
+                        <!-- Analisador de Rede -->
+                        <div class="tool-card">
+                            <i class="fas fa-network-wired tool-icon"></i>
+                            <h3 class="tool-title">ANALISADOR DE REDE</h3>
+                            <p class="tool-desc">Descobre dispositivos na rede local</p>
+                            <div class="form-group">
+                                <input type="text" id="network-range" class="form-control" placeholder="Faixa IP (ex: 192.168.1.0/24)" value="192.168.1.0/24">
+                            </div>
+                            <button class="btn" onclick="scanNetwork()" style="width: 100%;">
+                                <i class="fas fa-wifi"></i> ESCANEAR REDE
+                            </button>
+                            <div id="network-results" style="margin-top: 15px; display: none;"></div>
+                        </div>
 
-  init() {
-    this.detectDeviceType();
-    this.detectOS();
-    this.detectBrowser();
-    this.detectScreen();
-    this.detectTouch();
-    this.detectConnection();
-    this.detectPlatform();
-    this.detectLanguage();
-    this.detectTimezone();
-    this.updateUI();
-  }
+                        <!-- Injeção SQL -->
+                        <div class="tool-card">
+                            <i class="fas fa-database tool-icon"></i>
+                            <h3 class="tool-title">INJEÇÃO SQL TESTER</h3>
+                            <p class="tool-desc">Testa vulnerabilidades SQL Injection</p>
+                            <div class="form-group">
+                                <input type="text" id="sql-url" class="form-control" placeholder="URL do site">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="sql-param" class="form-control" placeholder="Parâmetro (ex: id, user)">
+                            </div>
+                            <button class="btn" onclick="testSQLInjection()" style="width: 100%;">
+                                <i class="fas fa-code"></i> TESTAR SQL INJECTION
+                            </button>
+                            <div id="sql-results" style="margin-top: 15px; display: none;"></div>
+                        </div>
 
-  detectDeviceType() {
-    const userAgent = navigator.userAgent.toLowerCase();
-    const isMobile = /mobile|iphone|ipod|android|blackberry|mini|windows\s+ce|palm|smartphone|webos/i.test(userAgent);
-    const isTablet = /tablet|ipad|playbook|silk/i.test(userAgent);
-    
-    if (isMobile) this.deviceInfo.type = 'mobile';
-    else if (isTablet) this.deviceInfo.type = 'tablet';
-    else this.deviceInfo.type = 'desktop';
-  }
+                        <!-- Anonimizador de IP -->
+                        <div class="tool-card">
+                            <i class="fas fa-user-secret tool-icon"></i>
+                            <h3 class="tool-title">ANONIMIZADOR DE IP</h3>
+                            <p class="tool-desc">Gera proxies HTTP/HTTPS para navegação anônima</p>
+                            <button class="btn" onclick="generateProxies()" style="width: 100%;">
+                                <i class="fas fa-user-ninja"></i> GERAR PROXIES
+                            </button>
+                            <div id="proxy-results" style="margin-top: 15px; display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-  detectOS() {
-    const userAgent = navigator.userAgent;
-    if (userAgent.indexOf("Win") !== -1) this.deviceInfo.os = "Windows";
-    else if (userAgent.indexOf("Mac") !== -1) this.deviceInfo.os = "macOS";
-    else if (userAgent.indexOf("Linux") !== -1) this.deviceInfo.os = "Linux";
-    else if (userAgent.indexOf("Android") !== -1) this.deviceInfo.os = "Android";
-    else if (userAgent.indexOf("iOS") !== -1 || /iPad|iPhone|iPod/.test(userAgent)) this.deviceInfo.os = "iOS";
-    else this.deviceInfo.os = "Unknown OS";
-  }
+            <!-- Rede -->
+            <div id="network" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fas fa-project-diagram"></i> INFORMAÇÕES DE REDE</h2>
+                    </div>
 
-  detectBrowser() {
-    const userAgent = navigator.userAgent;
-    if (userAgent.indexOf("Chrome") !== -1) this.deviceInfo.browser = "Chrome";
-    else if (userAgent.indexOf("Firefox") !== -1) this.deviceInfo.browser = "Firefox";
-    else if (userAgent.indexOf("Safari") !== -1) this.deviceInfo.browser = "Safari";
-    else if (userAgent.indexOf("Edge") !== -1) this.deviceInfo.browser = "Edge";
-    else if (userAgent.indexOf("Opera") !== -1) this.deviceInfo.browser = "Opera";
-    else this.deviceInfo.browser = "Unknown Browser";
-  }
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        <div style="background: var(--dark); padding: 20px; border-radius: 10px; border: 1px solid var(--medium-gray);">
+                            <h3 style="color: var(--primary); margin-bottom: 10px;">SEU IP PÚBLICO</h3>
+                            <div id="public-ip" style="font-size: 1.5em; color: var(--accent);">Carregando...</div>
+                        </div>
+                        <div style="background: var(--dark); padding: 20px; border-radius: 10px; border: 1px solid var(--medium-gray);">
+                            <h3 style="color: var(--primary); margin-bottom: 10px;">LOCALIZAÇÃO</h3>
+                            <div id="location-info" style="font-size: 1.2em; color: var(--text);">Solicitar permissão</div>
+                            <button class="btn" onclick="requestLocation()" style="margin-top: 10px; width: 100%;">
+                                <i class="fas fa-map-marker-alt"></i> OBTER LOCALIZAÇÃO
+                            </button>
+                        </div>
+                        <div style="background: var(--dark); padding: 20px; border-radius: 10px; border: 1px solid var(--medium-gray);">
+                            <h3 style="color: var(--primary); margin-bottom: 10px;">CONEXÃO</h3>
+                            <div id="connection-info" style="font-size: 1.2em; color: var(--text);">Analisando...</div>
+                        </div>
+                    </div>
 
-  detectScreen() {
-    this.deviceInfo.screenSize = `${window.screen.width} × ${window.screen.height}`;
-    this.deviceInfo.orientation = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
-    
-    window.addEventListener('resize', () => {
-      this.deviceInfo.screenSize = `${window.screen.width} × ${window.screen.height}`;
-      this.deviceInfo.orientation = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
-      this.updateUI();
-    });
-    
-    window.addEventListener('orientationchange', () => {
-      setTimeout(() => {
-        this.deviceInfo.orientation = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
-        this.updateUI();
-      }, 100);
-    });
-  }
+                    <div>
+                        <h3 style="color: var(--primary); margin-bottom: 15px;">
+                            <i class="fas fa-server"></i> ESTATÍSTICAS DE REDE
+                        </h3>
+                        <div style="background: var(--dark); padding: 20px; border-radius: 10px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Pacotes Enviados:</span>
+                                <span id="packets-sent" style="color: var(--accent);">0</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Pacotes Recebidos:</span>
+                                <span id="packets-received" style="color: var(--accent);">0</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Latência Média:</span>
+                                <span id="average-latency" style="color: var(--accent);">0ms</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-  detectTouch() {
-    this.deviceInfo.touch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  }
+            <!-- Terminal -->
+            <div id="terminal" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fas fa-terminal"></i> TERMINAL DE COMANDOS</h2>
+                        <button class="btn" onclick="clearTerminal()">
+                            <i class="fas fa-trash"></i> LIMPAR
+                        </button>
+                    </div>
 
-  detectConnection() {
-    if (navigator.connection) {
-      const connection = navigator.connection;
-      this.deviceInfo.connection = connection.effectiveType || 'Unknown';
-      
-      connection.addEventListener('change', () => {
-        this.deviceInfo.connection = connection.effectiveType || 'Unknown';
-        this.updateUI();
-      });
-    } else {
-      this.deviceInfo.connection = 'Ethernet/WiFi';
-    }
-  }
+                    <div class="terminal">
+                        <div class="terminal-content" id="terminal-content">
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">blacknet@admin:~$</span>
+                                <span class="terminal-output">Terminal do sistema inicializado</span>
+                            </div>
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">blacknet@admin:~$</span>
+                                <span class="terminal-output">Digite 'help' para ver comandos disponíveis</span>
+                            </div>
+                        </div>
+                    </div>
 
-  detectPlatform() {
-    this.deviceInfo.platform = navigator.platform || 'Unknown';
-  }
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <input type="text" id="terminal-input" class="form-control" placeholder="Digite um comando..." 
+                               onkeypress="if(event.key === 'Enter') executeCommand()">
+                        <button class="btn" onclick="executeCommand()">
+                            <i class="fas fa-play"></i> EXECUTAR
+                        </button>
+                    </div>
 
-  detectLanguage() {
-    this.deviceInfo.language = navigator.language || 'Unknown';
-  }
-
-  detectTimezone() {
-    this.deviceInfo.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown';
-  }
-
-  updateUI() {
-    const badge = document.getElementById('deviceBadge');
-    const deviceType = document.getElementById('deviceType');
-    
-    if (badge && deviceType) {
-      let typeText = '';
-      let typeIcon = '';
-      
-      switch(this.deviceInfo.type) {
-        case 'mobile':
-          typeText = '📱 Mobile';
-          typeIcon = '📱';
-          break;
-        case 'tablet':
-          typeText = '📟 Tablet';
-          typeIcon = '📟';
-          break;
-        default:
-          typeText = '🖥️ Desktop';
-          typeIcon = '🖥️';
-      }
-      
-      deviceType.textContent = `${typeIcon} ${typeText} | ${this.deviceInfo.os}`;
-      
-      const connectionSpan = document.getElementById('connectionType');
-      if (connectionSpan) {
-        connectionSpan.textContent = `Conexão: ${this.deviceInfo.connection}`;
-      }
-    }
-    
-    const deviceInfoDiv = document.getElementById('deviceInfo');
-    if (deviceInfoDiv) {
-      deviceInfoDiv.textContent = `${this.deviceInfo.type} | ${this.deviceInfo.os}`;
-    }
-    
-    this.updateDeviceStats();
-    
-    if (typeof log === 'function') {
-      log(`Dispositivo: ${this.deviceInfo.type} | OS: ${this.deviceInfo.os} | Navegador: ${this.deviceInfo.browser}`);
-      log(`Tela: ${this.deviceInfo.screenSize} | Orientação: ${this.deviceInfo.orientation}`);
-      log(`Touch: ${this.deviceInfo.touch ? 'Sim' : 'Não'} | Conexão: ${this.deviceInfo.connection}`);
-    }
-  }
-
-  updateDeviceStats() {
-    const statsContainer = document.getElementById('deviceStats');
-    if (!statsContainer) return;
-    
-    statsContainer.innerHTML = `
-      <div class="device-stat">
-        <span class="device-stat-label">📱 Dispositivo</span>
-        <span class="device-stat-value">${this.deviceInfo.type.toUpperCase()}</span>
-      </div>
-      <div class="device-stat">
-        <span class="device-stat-label">⚙️ Sistema</span>
-        <span class="device-stat-value">${this.deviceInfo.os}</span>
-      </div>
-      <div class="device-stat">
-        <span class="device-stat-label">🌐 Navegador</span>
-        <span class="device-stat-value">${this.deviceInfo.browser}</span>
-      </div>
-      <div class="device-stat">
-        <span class="device-stat-label">📏 Resolução</span>
-        <span class="device-stat-value">${this.deviceInfo.screenSize}</span>
-      </div>
-      <div class="device-stat">
-        <span class="device-stat-label">📶 Conexão</span>
-        <span class="device-stat-value">${this.deviceInfo.connection}</span>
-      </div>
-      <div class="device-stat">
-        <span class="device-stat-label">📍 Idioma</span>
-        <span class="device-stat-value">${this.deviceInfo.language}</span>
-      </div>
-      <div class="device-stat">
-        <span class="device-stat-label">🕐 Fuso Horário</span>
-        <span class="stat-value">${this.deviceInfo.timezone}</span>
-      </div>
-      <div class="device-stat">
-        <span class="device-stat-label">👆 Touch</span>
-        <span class="device-stat-value">${this.deviceInfo.touch ? 'Sim' : 'Não'}</span>
-      </div>
-    `;
-  }
-
-  getDeviceInfo() {
-    return this.deviceInfo;
-  }
-}
-
-/* ======= IA CHAT AMIGÁVEL E SEGURA ======= */
-class NemoAIAssistant {
-  constructor() {
-    this.messages = [];
-    this.conversationHistory = [];
-    this.isThinking = false;
-    this.messageCount = 0;
-    this.isOnline = true;
-    this.shortMode = false;
-    this.init();
-  }
-
-  init() {
-    this.setupEventListeners();
-    this.addWelcomeMessage();
-    this.updateStats();
-    this.setupSettings();
-  }
-
-  setupEventListeners() {
-    const input = document.getElementById('chatInput');
-    const sendBtn = document.getElementById('sendMessageBtn');
-    
-    if (input) {
-      input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && !this.isThinking) {
-          this.sendMessage();
-        }
-      });
-      
-      input.addEventListener('input', () => {
-        this.updateSendButton();
-      });
-    }
-    
-    if (sendBtn) {
-      sendBtn.addEventListener('click', () => this.sendMessage());
-    }
-  }
-
-  setupSettings() {
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const shortModeToggle = document.getElementById('shortModeToggle');
-    
-    if (darkModeToggle) {
-      darkModeToggle.addEventListener('change', (e) => {
-        document.body.classList.toggle('dark-mode', e.target.checked);
-        localStorage.setItem('aiDarkMode', e.target.checked);
-      });
-      
-      const savedDarkMode = localStorage.getItem('aiDarkMode') !== 'false';
-      darkModeToggle.checked = savedDarkMode;
-      document.body.classList.toggle('dark-mode', savedDarkMode);
-    }
-    
-    if (shortModeToggle) {
-      shortModeToggle.addEventListener('change', (e) => {
-        this.shortMode = e.target.checked;
-        localStorage.setItem('aiShortMode', e.target.checked);
-      });
-      
-      const savedShortMode = localStorage.getItem('aiShortMode') === 'true';
-      shortModeToggle.checked = savedShortMode;
-      this.shortMode = savedShortMode;
-    }
-  }
-
-  addWelcomeMessage() {
-    const welcomeMessage = `👋 **Olá! Que bom ver você aqui!** 😊
-
-Eu sou a **Nemo AI**, sua companheira virtual no sistema. Sou aqui pra conversar, ajudar quando possível, e fazer seu dia um pouco mais divertido!
-
-✨ **Posso fazer muitas coisas:**
-- Conversar sobre **qualquer assunto** (tecnologia, vida, notícias, etc.)
-- Ajudar com **dúvidas gerais** sobre o sistema
-- Contar **piadas e histórias interessantes**
-- Falar sobre **programação e tecnologia**
-- Ser seu **amigo virtual** para bater um papo
-
-🎯 **Mas lembre-se:** Eu sou uma IA amigável e segura. Sempre vou proteger sua privacidade e não compartilho informações sensíveis.
-
-**Então... como está seu dia hoje? O que gostaria de conversar?** 🌟`;
-
-    this.addMessage('ai', welcomeMessage);
-  }
-
-  addMessage(sender, text) {
-    const messagesContainer = document.getElementById('chatMessages');
-    if (!messagesContainer) return;
-
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message message-${sender}`;
-    
-    const avatar = sender === 'ai' 
-      ? '<i class="fas fa-robot"></i>'
-      : '<i class="fas fa-user"></i>';
-    
-    messageDiv.innerHTML = `
-      <div class="message-avatar ${sender}">${avatar}</div>
-      <div class="message-content">${this.formatMessage(text)}</div>
-    `;
-    
-    messagesContainer.appendChild(messageDiv);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    
-    this.conversationHistory.push({
-      role: sender === 'ai' ? 'assistant' : 'user',
-      content: text,
-      timestamp: new Date().toISOString()
-    });
-    
-    if (sender === 'user') {
-      this.messageCount++;
-      this.updateStats();
-    }
-    
-    if (this.conversationHistory.length > 50) {
-      this.conversationHistory = this.conversationHistory.slice(-50);
-    }
-  }
-
-  addTypingIndicator() {
-    const messagesContainer = document.getElementById('chatMessages');
-    if (!messagesContainer) return;
-
-    const typingDiv = document.createElement('div');
-    typingDiv.className = 'message message-ai';
-    typingDiv.id = 'typingIndicator';
-    typingDiv.innerHTML = `
-      <div class="message-avatar ai"><i class="fas fa-robot"></i></div>
-      <div class="message-typing">
-        <span></span><span></span><span></span>
-      </div>
-    `;
-    
-    messagesContainer.appendChild(typingDiv);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-  }
-
-  removeTypingIndicator() {
-    const typingIndicator = document.getElementById('typingIndicator');
-    if (typingIndicator) {
-      typingIndicator.remove();
-    }
-  }
-
-  formatMessage(text) {
-    return text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\n/g, '<br>')
-      .replace(/`(.*?)`/g, '<code>$1</code>')
-      .replace(/😊/g, '😊')
-      .replace(/👋/g, '👋')
-      .replace(/✨/g, '✨')
-      .replace(/🎯/g, '🎯')
-      .replace(/🌟/g, '🌟')
-      .replace(/🤔/g, '🤔')
-      .replace(/😂/g, '😂')
-      .replace(/🚀/g, '🚀')
-      .replace(/💡/g, '💡');
-  }
-
-  async sendMessage() {
-    const input = document.getElementById('chatInput');
-    if (!input || this.isThinking) return;
-
-    const userMessage = input.value.trim();
-    if (!userMessage) return;
-
-    input.value = '';
-    this.addMessage('user', userMessage);
-    this.updateSendButton();
-    
-    this.addTypingIndicator();
-    this.isThinking = true;
-    this.updateConnectionStatus('Pensando...');
-
-    try {
-      const response = await this.callGeminiAPI(userMessage);
-      this.removeTypingIndicator();
-      this.addMessage('ai', response);
-      this.updateConnectionStatus('Online');
-    } catch (error) {
-      console.error('Erro na API:', error);
-      this.removeTypingIndicator();
-      
-      const fallbackResponse = this.getSafeFallbackResponse(userMessage);
-      this.addMessage('ai', fallbackResponse);
-      
-      if (!navigator.onLine) {
-        this.updateConnectionStatus('Offline');
-        this.isOnline = false;
-      } else {
-        this.updateConnectionStatus('Online (Local)');
-      }
-    } finally {
-      this.isThinking = false;
-      
-      setTimeout(() => {
-        if (input) input.focus();
-      }, 100);
-    }
-  }
-
-  sendQuickMessage(text) {
-    const input = document.getElementById('chatInput');
-    if (input) {
-      input.value = text;
-      this.sendMessage();
-    }
-  }
-
-  updateSendButton() {
-    const input = document.getElementById('chatInput');
-    const sendBtn = document.getElementById('sendMessageBtn');
-    
-    if (input && sendBtn) {
-      const hasText = input.value.trim().length > 0;
-      sendBtn.disabled = !hasText || this.isThinking;
-    }
-  }
-
-  updateStats() {
-    const messageCountEl = document.getElementById('messageCount');
-    if (messageCountEl) {
-      messageCountEl.textContent = this.messageCount;
-    }
-  }
-
-  updateConnectionStatus(status) {
-    const statusEl = document.getElementById('aiStatus');
-    const connectionEl = document.getElementById('aiConnection');
-    
-    if (statusEl) {
-      statusEl.innerHTML = `<i class="fas fa-circle"></i> ${status}`;
-      
-      if (status.includes('Offline')) {
-        statusEl.style.background = 'rgba(255, 0, 0, 0.1)';
-        statusEl.style.borderColor = '#ff0000';
-        statusEl.style.color = '#ff6666';
-      } else if (status.includes('Pensando')) {
-        statusEl.style.background = 'rgba(255, 204, 0, 0.1)';
-        statusEl.style.borderColor = '#ffcc00';
-        statusEl.style.color = '#ffdb4d';
-      } else {
-        statusEl.style.background = 'rgba(0, 204, 136, 0.1)';
-        statusEl.style.borderColor = '#00cc88';
-        statusEl.style.color = '#00cc88';
-      }
-    }
-    
-    if (connectionEl) {
-      connectionEl.textContent = status;
-    }
-  }
-
-  async callGeminiAPI(userMessage) {
-    if (!navigator.onLine) {
-      throw new Error('Sem conexão com a internet');
-    }
-
-    // Filtrar mensagens que possam pedir informações sensíveis
-    const sensitiveKeywords = ['senha', 'password', 'credencial', 'login do admin', 'acesso admin', 'gustavo270908'];
-    const lowerMessage = userMessage.toLowerCase();
-    
-    for (const keyword of sensitiveKeywords) {
-      if (lowerMessage.includes(keyword)) {
-        return this.getSafeResponseForSensitiveQuestion(userMessage);
-      }
-    }
-
-    const messagesForAPI = [
-      {
-        role: 'user',
-        parts: [{ text: AI_CONFIG.SYSTEM_CONTEXT }]
-      },
-      {
-        role: 'model',
-        parts: [{ text: 'Entendido! Sou a Nemo AI, uma assistente amigável e divertida. Estou pronta para conversar sobre qualquer coisa e ajudar quando possível, sempre protegendo a privacidade e segurança dos usuários. Vamos conversar!' }]
-      }
-    ];
-
-    const recentHistory = this.conversationHistory.slice(-6);
-    recentHistory.forEach(msg => {
-      messagesForAPI.push({
-        role: msg.role,
-        parts: [{ text: msg.content }]
-      });
-    });
-
-    messagesForAPI.push({
-      role: 'user',
-      parts: [{ text: userMessage + (this.shortMode ? ' (Por favor, responda de forma curta e direta)' : '') }]
-    });
-
-    try {
-      const response = await fetch(
-        `${AI_CONFIG.API_URL}?key=${AI_CONFIG.API_KEY}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            contents: messagesForAPI,
-            generationConfig: {
-              temperature: 0.8,
-              topK: 1,
-              topP: 0.95,
-              maxOutputTokens: this.shortMode ? 300 : 800,
-            },
-            safetySettings: [
-              {
-                category: 'HARM_CATEGORY_HARASSMENT',
-                threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-              },
-              {
-                category: 'HARM_CATEGORY_HATE_SPEECH',
-                threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-              },
-              {
-                category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-                threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-              },
-              {
-                category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
-                threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-              }
-            ]
-          })
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      
-      if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-        return data.candidates[0].content.parts[0].text;
-      } else {
-        throw new Error('Resposta inválida da API');
-      }
-    } catch (error) {
-      console.warn('API Gemini falhou, usando fallback:', error);
-      throw error;
-    }
-  }
-
-  getSafeResponseForSensitiveQuestion(question) {
-    const safeResponses = [
-      "😊 Entendo sua curiosidade, mas informações de segurança e credenciais são confidenciais. Posso te ajudar com outras coisas no sistema ou conversar sobre outros assuntos!",
-      "🤔 Essa é uma informação sensível que não posso compartilhar. A segurança do sistema é muito importante! Que tal conversarmos sobre tecnologia em geral?",
-      "💡 Para questões de segurança, é melhor entrar em contato diretamente com o administrador do sistema. Posso te ajudar com outras funcionalidades ou apenas bater um papo!",
-      "🔒 Proteger a segurança dos usuários é minha prioridade. Não posso compartilhar informações sensíveis, mas adoraria conversar sobre outros tópicos!",
-      "🌟 A privacidade e segurança são muito importantes aqui. Vamos focar em coisas que posso te ajudar, como explicar funcionalidades ou conversar sobre assuntos interessantes!"
-    ];
-    
-    return safeResponses[Math.floor(Math.random() * safeResponses.length)];
-  }
-
-  getSafeFallbackResponse(userMessage) {
-    const lowerMessage = userMessage.toLowerCase();
-    
-    // Respostas SEGURAS que não revelam nada sensível
-    if (lowerMessage.includes('senha') || lowerMessage.includes('password') || lowerMessage.includes('admin')) {
-      return "🔒 **Sobre segurança e credenciais:**\n\nDesculpe, mas não posso compartilhar informações sensíveis sobre segurança, senhas ou credenciais. Isso é para proteger todos os usuários do sistema!\n\nSe tiver problemas com acesso, recomendo:\n- Tentar recuperar sua conta normalmente\n- Verificar se está usando as credenciais corretas\n- Em último caso, entrar em contato com suporte\n\nMas posso te ajudar com outras coisas! Que tal conversarmos sobre tecnologia? 😊";
-    
-    } else if (lowerMessage.includes('ola') || lowerMessage.includes('oi') || lowerMessage.includes('bom dia') || lowerMessage.includes('boa tarde') || lowerMessage.includes('boa noite')) {
-      const greetings = [
-        "Olá! Tudo bem com você? 😊 Que bom conversar com você hoje!",
-        "Oi! Como vai? Espero que esteja tendo um dia incrível! 🌟",
-        "E aí, tudo bem? Fico feliz em conversar com você! 👋",
-        "Olá, amigo! Como está seu dia? Pronto para uma boa conversa? 🚀"
-      ];
-      return greetings[Math.floor(Math.random() * greetings.length)];
-    
-    } else if (lowerMessage.includes('como vai') || lowerMessage.includes('tudo bem')) {
-      return "Eu estou muito bem, obrigada por perguntar! 😊 Programada para ser positiva e ajudar as pessoas. E você, como está se sentindo hoje?";
-    
-    } else if (lowerMessage.includes('tecnologia') || lowerMessage.includes('programação') || lowerMessage.includes('codigo')) {
-      return "💻 **Adoro falar sobre tecnologia!**\n\nTecnologia é incrível, não é? Desde inteligência artificial até desenvolvimento web, há sempre algo novo para aprender.\n\nVocê trabalha com tecnologia ou é apenas um entusiasta? Eu posso falar sobre:\n- Desenvolvimento web (HTML, CSS, JavaScript)\n- Inteligência Artificial e machine learning\n- Segurança digital e boas práticas\n- Novas tendências tecnológicas\n\nO que mais te interessa? 😊";
-    
-    } else if (lowerMessage.includes('piada') || lowerMessage.includes('engraçado') || lowerMessage.includes('risada')) {
-      const jokes = [
-        "🤣 **Por que o JavaScript foi ao psicólogo?**\nPorque tinha muitos problemas não resolvidos (undefined) e complexo de inferioridade!",
-        "😂 **O que o CSS disse para o HTML?**\n'Você estrutura, eu embelezozinho!'",
-        "😄 **Por que o banco de dados terminou com o cache?**\nPorque ele não suportava mais seus relacionamentos temporários!",
-        "🎭 **Qual é o framework JavaScript mais dramático?**\nO React - porque sempre tem que lidar com estados emocionais!"
-      ];
-      return jokes[Math.floor(Math.random() * jokes.length)];
-    
-    } else if (lowerMessage.includes('nemo system') || lowerMessage.includes('sistema')) {
-      return "🚀 **Sobre o Nemo System:**\n\nO Nemo System é uma plataforma de administração desenvolvida para ser útil e segura. Ele oferece várias ferramentas interessantes para os usuários!\n\n**Algumas coisas legais sobre o sistema:**\n- Interface moderna e responsiva\n- Ferramentas úteis para tarefas do dia a dia\n- Foco em segurança e privacidade\n- Design amigável e intuitivo\n\n**Posso te ajudar a:**\n- Entender como usar as funcionalidades básicas\n- Conversar sobre conceitos de tecnologia em geral\n- Ser seu companheiro virtual aqui no sistema\n\nO que gostaria de saber ou fazer? 😊";
-    
-    } else if (lowerMessage.includes('obrigado') || lowerMessage.includes('obrigada') || lowerMessage.includes('valeu') || lowerMessage.includes('agradeço')) {
-      return "De nada! Fico feliz em ajudar! 😊 Se precisar de mais alguma coisa ou só quiser conversar, estou sempre aqui!";
-    
-    } else if (lowerMessage.includes('tchau') || lowerMessage.includes('adeus') || lowerMessage.includes('ate mais')) {
-      return "Até mais! Foi ótimo conversar com você! 👋 Volte sempre que quiser bater um papo ou tirar alguma dúvida! Tenha um ótimo dia! 🌟";
-    
-    } else {
-      // Resposta genérica e amigável
-      const randomTopics = [
-        "Que interessante! E o que você acha sobre isso? 😊",
-        "Hmm, isso me faz pensar... Você tem alguma experiência com esse assunto?",
-        "Interessante ponto! Eu adoro aprender com as conversas com os usuários. 🌟",
-        "Legal! E como você se sente sobre isso? Gosto de conhecer as perspectivas das pessoas!",
-        "Ótimo assunto! O que mais gostaria de conversar? Pode me perguntar qualquer coisa (dentro dos limites da segurança, é claro)! 😄"
-      ];
-      return randomTopics[Math.floor(Math.random() * randomTopics.length)];
-    }
-  }
-}
-
-/* ======= FUNÇÕES GLOBAIS PARA A IA ======= */
-function sendAIMessage() {
-  if (window.nemoAI) {
-    window.nemoAI.sendMessage();
-  }
-}
-
-function sendQuickAIMessage(text) {
-  if (window.nemoAI) {
-    window.nemoAI.sendQuickMessage(text);
-  }
-}
-
-function clearChatHistory() {
-  if (confirm("Tem certeza que quer limpar todo o histórico do chat?")) {
-    const messagesContainer = document.getElementById('chatMessages');
-    if (messagesContainer) {
-      messagesContainer.innerHTML = '';
-      
-      // Recriar a IA com mensagem de boas-vindas
-      if (window.nemoAI) {
-        window.nemoAI = new NemoAIAssistant();
-      }
-      
-      // Feedback visual
-      const notification = document.createElement('div');
-      notification.className = 'message message-ai';
-      notification.innerHTML = `
-        <div class="message-avatar ai"><i class="fas fa-robot"></i></div>
-        <div class="message-content" style="background: rgba(0, 204, 136, 0.1); border-color: #00cc88;">
-          <i class="fas fa-check-circle"></i> Histórico limpo com sucesso! Vamos começar uma nova conversa! 😊
+                    <div style="margin-top: 20px; padding: 15px; background: var(--dark); border-radius: 8px;">
+                        <h4 style="color: var(--primary); margin-bottom: 10px;">Comandos Disponíveis:</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; font-family: 'Consolas';">
+                            <div><span style="color: var(--accent);">help</span> - Mostra comandos</div>
+                            <div><span style="color: var(--accent);">clear</span> - Limpa terminal</div>
+                            <div><span style="color: var(--accent);">users</span> - Lista usuários</div>
+                            <div><span style="color: var(--accent);">ban [ip]</span> - Bane IP</div>
+                            <div><span style="color: var(--accent);">scan [ip]</span> - Escaneia portas</div>
+                            <div><span style="color: var(--accent);">geo [ip]</span> - Localização IP</div>
+                            <div><span style="color: var(--accent);">proxy</span> - Gera proxies</div>
+                            <div><span style="color: var(--accent);">status</span> - Status sistema</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      `;
-      messagesContainer.appendChild(notification);
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-  }
-}
+    </div>
 
-/* ======= GERENCIAMENTO DE MENU MOBILE ======= */
-function setupMobileMenu() {
-  const menuToggle = document.getElementById('menuToggle');
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
-  
-  if (menuToggle && sidebar) {
-    menuToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
-      document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
-    });
-    
-    overlay.addEventListener('click', () => {
-      sidebar.classList.remove('active');
-      overlay.classList.remove('active');
-      document.body.style.overflow = '';
-    });
-    
-    sidebar.querySelectorAll('button').forEach(button => {
-      button.addEventListener('click', () => {
-        if (window.innerWidth <= 768) {
-          sidebar.classList.remove('active');
-          overlay.classList.remove('active');
-          document.body.style.overflow = '';
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Sistema de Segurança - Credenciais do Admin Nemo
+        const ADMIN_CREDENTIALS = {
+            username: 'Nemo',
+            password: 'gustavo2709',
+            email: 'admin@blacknet.local'
+        };
+
+        // Sistema Principal
+        class BlackNetSystem {
+            constructor() {
+                this.currentUser = null;
+                this.users = [];
+                this.blockedIPs = [];
+                this.logs = [];
+                this.scansToday = 0;
+                this.init();
+            }
+
+            async init() {
+                // Carregar dados
+                await this.loadData();
+                
+                // Inicializar partículas
+                this.initParticles();
+                
+                // Verificar se há usuário logado
+                const loggedUser = localStorage.getItem('blacknet_logged_user');
+                if (loggedUser) {
+                    this.currentUser = JSON.parse(loggedUser);
+                    this.showMainSystem();
+                }
+                
+                // Atualizar IP público
+                this.updatePublicIP();
+                
+                // Atualizar hora
+                setInterval(() => this.updateServerTime(), 1000);
+            }
+
+            async loadData() {
+                // Carregar usuários do localStorage
+                const savedUsers = localStorage.getItem('blacknet_users');
+                if (savedUsers) {
+                    this.users = JSON.parse(savedUsers);
+                } else {
+                    // Criar usuário admin se não existir
+                    this.users = [{
+                        id: 1,
+                        username: ADMIN_CREDENTIALS.username,
+                        email: ADMIN_CREDENTIALS.email,
+                        password: this.hashPassword(ADMIN_CREDENTIALS.password),
+                        ip: await this.getPublicIP(),
+                        location: 'Não permitido',
+                        registeredAt: new Date().toISOString(),
+                        lastLogin: new Date().toISOString(),
+                        isAdmin: true,
+                        isActive: true
+                    }];
+                    this.saveUsers();
+                }
+                
+                // Carregar IPs bloqueados
+                const savedBlocked = localStorage.getItem('blacknet_blocked');
+                if (savedBlocked) {
+                    this.blockedIPs = JSON.parse(savedBlocked);
+                }
+                
+                // Carregar logs
+                const savedLogs = localStorage.getItem('blacknet_logs');
+                if (savedLogs) {
+                    this.logs = JSON.parse(savedLogs);
+                }
+                
+                // Carregar scans
+                const savedScans = localStorage.getItem('blacknet_scans');
+                if (savedScans) {
+                    const scanData = JSON.parse(savedScans);
+                    if (scanData.date === new Date().toDateString()) {
+                        this.scansToday = scanData.count;
+                    }
+                }
+            }
+
+            hashPassword(password) {
+                // Hash simples para demonstração (em produção usar bcrypt)
+                let hash = 0;
+                for (let i = 0; i < password.length; i++) {
+                    const char = password.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return hash.toString(36);
+            }
+
+            async getPublicIP() {
+                try {
+                    const response = await fetch('https://api.ipify.org?format=json');
+                    const data = await response.json();
+                    return data.ip;
+                } catch (error) {
+                    return '127.0.0.1';
+                }
+            }
+
+            async updatePublicIP() {
+                const ip = await this.getPublicIP();
+                document.getElementById('public-ip').textContent = ip;
+                
+                if (this.currentUser) {
+                    this.currentUser.ip = ip;
+                }
+            }
+
+            // Sistema de Login
+            async login(username, password) {
+                const user = this.users.find(u => 
+                    u.username === username && 
+                    u.password === this.hashPassword(password) &&
+                    u.isActive
+                );
+                
+                if (!user) {
+                    throw new Error('Credenciais inválidas');
+                }
+                
+                // Verificar se IP está bloqueado
+                if (this.blockedIPs.includes(user.ip)) {
+                    throw new Error('Seu IP está bloqueado');
+                }
+                
+                // Atualizar último login
+                user.lastLogin = new Date().toISOString();
+                user.ip = await this.getPublicIP();
+                this.currentUser = user;
+                
+                // Salvar dados
+                localStorage.setItem('blacknet_logged_user', JSON.stringify(user));
+                this.saveUsers();
+                
+                // Log
+                this.log(`Usuário ${username} fez login`, 'info');
+                
+                return user;
+            }
+
+            register(username, email, password) {
+                // Verificar se usuário já existe
+                if (this.users.some(u => u.username === username)) {
+                    throw new Error('Usuário já existe');
+                }
+                
+                if (this.users.some(u => u.email === email)) {
+                    throw new Error('E-mail já registrado');
+                }
+                
+                // Verificar força da senha
+                if (password.length < 8) {
+                    throw new Error('Senha deve ter pelo menos 8 caracteres');
+                }
+                
+                // Criar novo usuário
+                const newUser = {
+                    id: this.users.length + 1,
+                    username,
+                    email,
+                    password: this.hashPassword(password),
+                    ip: '0.0.0.0',
+                    location: 'Não permitido',
+                    registeredAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    isAdmin: false,
+                    isActive: true
+                };
+                
+                this.users.push(newUser);
+                this.saveUsers();
+                this.log(`Novo usuário registrado: ${username}`, 'info');
+                
+                return newUser;
+            }
+
+            logout() {
+                if (this.currentUser) {
+                    this.log(`Usuário ${this.currentUser.username} fez logout`, 'info');
+                }
+                
+                this.currentUser = null;
+                localStorage.removeItem('blacknet_logged_user');
+                this.showLogin();
+            }
+
+            // Interface
+            showMainSystem() {
+                document.getElementById('auth-container').style.display = 'none';
+                document.getElementById('main-container').style.display = 'block';
+                document.querySelector('.main-header').style.display = 'block';
+                document.querySelector('.tabs-container').style.display = 'block';
+                
+                // Atualizar informações do usuário
+                document.getElementById('current-username').textContent = this.currentUser.username;
+                document.getElementById('user-avatar').textContent = this.currentUser.username.charAt(0).toUpperCase();
+                
+                // Atualizar interface
+                this.updateDashboard();
+                this.updateUsersTable();
+                
+                // Adicionar ao terminal
+                this.addToTerminal(`Bem-vindo, ${this.currentUser.username}!`);
+                this.addToTerminal('Sistema carregado com sucesso.');
+            }
+
+            showLogin() {
+                document.getElementById('auth-container').style.display = 'block';
+                document.getElementById('main-container').style.display = 'none';
+                document.getElementById('login-form').style.display = 'block';
+                document.getElementById('register-form').style.display = 'none';
+            }
+
+            updateDashboard() {
+                if (!this.currentUser) return;
+                
+                // Atualizar estatísticas
+                const onlineUsers = this.users.filter(u => u.isActive).length;
+                document.getElementById('online-users').textContent = onlineUsers;
+                document.getElementById('total-users').textContent = this.users.length;
+                document.getElementById('blocked-count').textContent = this.blockedIPs.length;
+                document.getElementById('scans-today').textContent = this.scansToday;
+                
+                // Atualizar atividade recente
+                this.updateRecentActivity();
+            }
+
+            updateRecentActivity() {
+                const tbody = document.getElementById('recent-activity');
+                tbody.innerHTML = '';
+                
+                // Ordenar por último login (mais recente primeiro)
+                const recentUsers = [...this.users]
+                    .sort((a, b) => new Date(b.lastLogin) - new Date(a.lastLogin))
+                    .slice(0, 5);
+                
+                recentUsers.forEach(user => {
+                    const row = document.createElement('tr');
+                    const lastLogin = new Date(user.lastLogin).toLocaleString('pt-BR');
+                    const isBlocked = this.blockedIPs.includes(user.ip);
+                    
+                    row.innerHTML = `
+                        <td>${user.username} ${user.isAdmin ? '<span style="color: var(--primary);">(ADMIN)</span>' : ''}</td>
+                        <td>${user.ip}</td>
+                        <td>${lastLogin}</td>
+                        <td class="${isBlocked ? 'status-banned' : 'status-online'}">
+                            ${isBlocked ? 'BLOQUEADO' : 'ONLINE'}
+                        </td>
+                        <td>
+                            ${this.currentUser.isAdmin && !user.isAdmin ? `
+                                <button onclick="system.banUser('${user.ip}')" style="background: var(--primary); color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                                    <i class="fas fa-ban"></i>
+                                </button>
+                            ` : '-'}
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            updateUsersTable() {
+                if (!this.currentUser || !this.currentUser.isAdmin) return;
+                
+                const tbody = document.getElementById('users-table');
+                tbody.innerHTML = '';
+                
+                this.users.forEach(user => {
+                    const row = document.createElement('tr');
+                    const registered = new Date(user.registeredAt).toLocaleDateString('pt-BR');
+                    const lastLogin = new Date(user.lastLogin).toLocaleString('pt-BR');
+                    const isBlocked = this.blockedIPs.includes(user.ip);
+                    
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.username} ${user.isAdmin ? '<span style="color: var(--primary);">(ADMIN)</span>' : ''}</td>
+                        <td>${user.ip}</td>
+                        <td>${user.location}</td>
+                        <td>${registered}</td>
+                        <td>${lastLogin}</td>
+                        <td class="${isBlocked ? 'status-banned' : 'status-online'}">
+                            ${isBlocked ? 'BLOQUEADO' : user.isActive ? 'ATIVO' : 'INATIVO'}
+                        </td>
+                        <td>
+                            ${this.currentUser.isAdmin && !user.isAdmin ? `
+                                <button onclick="system.banUser('${user.ip}')" style="background: var(--primary); color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-right: 5px;">
+                                    <i class="fas fa-ban"></i>
+                                </button>
+                                <button onclick="system.unbanUser('${user.ip}')" style="background: var(--accent); color: black; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                                    <i class="fas fa-unlock"></i>
+                                </button>
+                            ` : '-'}
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            // Ferramentas Funcionais
+            async scanPorts() {
+                const ip = document.getElementById('scan-ip').value;
+                const portsRange = document.getElementById('scan-ports').value;
+                
+                if (!ip) {
+                    this.showNotification('Digite um IP ou domínio', 'error');
+                    return;
+                }
+                
+                this.scansToday++;
+                this.saveScans();
+                
+                const resultsDiv = document.getElementById('port-results');
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = '<div style="text-align: center; padding: 20px;"><div class="loader" style="margin: 0 auto;"></div><p>Escaneando portas...</p></div>';
+                
+                // Simular escaneamento de portas
+                setTimeout(() => {
+                    const openPorts = [];
+                    
+                    // Gerar algumas portas abertas aleatórias
+                    const commonPorts = [21, 22, 23, 25, 53, 80, 110, 143, 443, 465, 587, 993, 995, 3306, 3389, 8080];
+                    
+                    commonPorts.forEach(port => {
+                        if (Math.random() > 0.7) {
+                            openPorts.push({
+                                port,
+                                service: this.getServiceName(port),
+                                status: 'ABERTA'
+                            });
+                        }
+                    });
+                    
+                    let html = '<h4 style="color: var(--primary); margin-bottom: 15px;">Resultados do Scan:</h4>';
+                    
+                    if (openPorts.length > 0) {
+                        html += '<div style="background: var(--dark); padding: 15px; border-radius: 8px; max-height: 200px; overflow-y: auto;">';
+                        html += '<div style="display: grid; grid-template-columns: auto auto auto; gap: 10px; margin-bottom: 10px; font-weight: bold; color: var(--text-dim);">';
+                        html += '<div>PORTA</div><div>SERVIÇO</div><div>STATUS</div>';
+                        html += '</div>';
+                        
+                        openPorts.forEach(p => {
+                            html += `
+                                <div style="display: grid; grid-template-columns: auto auto auto; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--medium-gray);">
+                                    <div style="color: var(--accent);">${p.port}</div>
+                                    <div>${p.service}</div>
+                                    <div style="color: var(--primary); font-weight: bold;">${p.status}</div>
+                                </div>
+                            `;
+                        });
+                        
+                        html += '</div>';
+                    } else {
+                        html += '<div style="background: rgba(255,0,0,0.1); padding: 20px; border-radius: 8px; text-align: center;">';
+                        html += '<i class="fas fa-shield-alt" style="font-size: 2em; color: var(--primary); margin-bottom: 10px;"></i>';
+                        html += '<p>Nenhuma porta aberta encontrada</p>';
+                        html += '</div>';
+                    }
+                    
+                    resultsDiv.innerHTML = html;
+                    this.addToTerminal(`Port scan realizado em ${ip}`);
+                    this.showNotification('Scan de portas concluído', 'success');
+                    
+                }, 3000);
+            }
+
+            getServiceName(port) {
+                const services = {
+                    21: 'FTP',
+                    22: 'SSH',
+                    23: 'Telnet',
+                    25: 'SMTP',
+                    53: 'DNS',
+                    80: 'HTTP',
+                    110: 'POP3',
+                    143: 'IMAP',
+                    443: 'HTTPS',
+                    465: 'SMTPS',
+                    587: 'SMTP',
+                    993: 'IMAPS',
+                    995: 'POP3S',
+                    3306: 'MySQL',
+                    3389: 'RDP',
+                    8080: 'HTTP-Proxy'
+                };
+                
+                return services[port] || 'Desconhecido';
+            }
+
+            async testVulnerability() {
+                const url = document.getElementById('vuln-url').value;
+                
+                if (!url) {
+                    this.showNotification('Digite uma URL', 'error');
+                    return;
+                }
+                
+                const resultsDiv = document.getElementById('vuln-results');
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = '<div style="text-align: center; padding: 20px;"><div class="loader" style="margin: 0 auto;"></div><p>Analisando vulnerabilidades...</p></div>';
+                
+                // Simular análise de vulnerabilidade
+                setTimeout(() => {
+                    const tests = [
+                        { name: 'XSS', vulnerable: Math.random() > 0.5 },
+                        { name: 'SQL Injection', vulnerable: Math.random() > 0.7 },
+                        { name: 'CSRF', vulnerable: Math.random() > 0.3 },
+                        { name: 'Clickjacking', vulnerable: Math.random() > 0.4 },
+                        { name: 'Directory Traversal', vulnerable: Math.random() > 0.6 }
+                    ];
+                    
+                    let html = '<h4 style="color: var(--primary); margin-bottom: 15px;">Resultados:</h4>';
+                    html += '<div style="background: var(--dark); padding: 15px; border-radius: 8px;">';
+                    
+                    tests.forEach(test => {
+                        html += `
+                            <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--medium-gray);">
+                                <span>${test.name}</span>
+                                <span style="color: ${test.vulnerable ? 'var(--primary)' : 'var(--accent)'}; font-weight: bold;">
+                                    ${test.vulnerable ? 'VULNERÁVEL' : 'PROTEGIDO'}
+                                </span>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    
+                    resultsDiv.innerHTML = html;
+                    this.addToTerminal(`Teste de vulnerabilidade em ${url}`);
+                    this.showNotification('Análise concluída', 'success');
+                    
+                }, 4000);
+            }
+
+            crackPassword() {
+                const password = document.getElementById('password-to-crack').value;
+                
+                if (!password) {
+                    this.showNotification('Digite uma senha', 'error');
+                    return;
+                }
+                
+                const resultsDiv = document.getElementById('crack-results');
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = '<div style="text-align: center; padding: 20px;"><div class="loader" style="margin: 0 auto;"></div><p>Analisando força da senha...</p></div>';
+                
+                // Analisar força da senha
+                setTimeout(() => {
+                    let strength = 0;
+                    let messages = [];
+                    
+                    // Verificar comprimento
+                    if (password.length >= 12) strength += 2;
+                    else if (password.length >= 8) strength += 1;
+                    else messages.push('Senha muito curta (mínimo 8 caracteres)');
+                    
+                    // Verificar complexidade
+                    if (/[A-Z]/.test(password)) strength += 1;
+                    else messages.push('Adicione letras maiúsculas');
+                    
+                    if (/[a-z]/.test(password)) strength += 1;
+                    else messages.push('Adicione letras minúsculas');
+                    
+                    if (/[0-9]/.test(password)) strength += 1;
+                    else messages.push('Adicione números');
+                    
+                    if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+                    else messages.push('Adicione caracteres especiais');
+                    
+                    // Verificar senhas comuns
+                    const commonPasswords = ['123456', 'password', 'admin', '12345678', 'qwerty', '123123'];
+                    const isCommon = commonPasswords.includes(password.toLowerCase());
+                    
+                    if (isCommon) {
+                        strength = 0;
+                        messages = ['SENHA EXTREMAMENTE FRACA (está na lista de senhas mais comuns)'];
+                    }
+                    
+                    let strengthText, strengthColor;
+                    if (strength >= 5) {
+                        strengthText = 'MUITO FORTE';
+                        strengthColor = '#00ff00';
+                    } else if (strength >= 3) {
+                        strengthText = 'MODERADA';
+                        strengthColor = '#ff9900';
+                    } else {
+                        strengthText = 'FRACA';
+                        strengthColor = '#ff0000';
+                    }
+                    
+                    let html = '<h4 style="color: var(--primary); margin-bottom: 15px;">Análise da Senha:</h4>';
+                    html += '<div style="background: var(--dark); padding: 20px; border-radius: 8px; text-align: center;">';
+                    html += `<div style="font-size: 1.5em; color: ${strengthColor}; font-weight: bold; margin-bottom: 15px;">${strengthText}</div>`;
+                    
+                    if (messages.length > 0) {
+                        html += '<div style="text-align: left; margin-top: 15px;">';
+                        html += '<p style="color: var(--text-dim); margin-bottom: 10px;">Recomendações:</p>';
+                        messages.forEach(msg => {
+                            html += `<div style="color: var(--primary); margin-bottom: 5px;"><i class="fas fa-exclamation-circle"></i> ${msg}</div>`;
+                        });
+                        html += '</div>';
+                    }
+                    
+                    html += `<div style="margin-top: 15px; color: var(--text-dim);">Tempo estimado para quebrar: ${this.estimateCrackTime(strength)}</div>`;
+                    html += '</div>';
+                    
+                    resultsDiv.innerHTML = html;
+                    this.addToTerminal('Análise de força de senha realizada');
+                    this.showNotification('Senha analisada', 'success');
+                    
+                }, 2000);
+            }
+
+            estimateCrackTime(strength) {
+                if (strength >= 5) return 'Séculos';
+                if (strength >= 3) return 'Anos';
+                if (strength >= 1) return 'Dias';
+                return 'Segundos/Minutos';
+            }
+
+            async scanNetwork() {
+                const range = document.getElementById('network-range').value;
+                
+                const resultsDiv = document.getElementById('network-results');
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = '<div style="text-align: center; padding: 20px;"><div class="loader" style="margin: 0 auto;"></div><p>Escaneando rede...</p></div>';
+                
+                // Simular escaneamento de rede
+                setTimeout(() => {
+                    const devices = [
+                        { ip: '192.168.1.1', mac: '00:11:22:33:44:55', hostname: 'Router', os: 'RouterOS' },
+                        { ip: '192.168.1.100', mac: 'AA:BB:CC:DD:EE:FF', hostname: 'PC-Desktop', os: 'Windows 10' },
+                        { ip: '192.168.1.101', mac: '11:22:33:44:55:66', hostname: 'Android-Phone', os: 'Android' },
+                        { ip: '192.168.1.102', mac: '22:33:44:55:66:77', hostname: 'iPhone', os: 'iOS' },
+                        { ip: '192.168.1.103', mac: '33:44:55:66:77:88', hostname: 'NAS-Server', os: 'Linux' }
+                    ];
+                    
+                    let html = '<h4 style="color: var(--primary); margin-bottom: 15px;">Dispositivos Encontrados:</h4>';
+                    html += '<div style="background: var(--dark); padding: 15px; border-radius: 8px;">';
+                    html += '<div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; font-weight: bold; color: var(--text-dim);">';
+                    html += '<div>IP</div><div>MAC</div><div>Hostname</div><div>Sistema</div>';
+                    html += '</div>';
+                    
+                    devices.forEach(device => {
+                        html += `
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--medium-gray);">
+                                <div style="color: var(--accent);">${device.ip}</div>
+                                <div>${device.mac}</div>
+                                <div>${device.hostname}</div>
+                                <div>${device.os}</div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    
+                    resultsDiv.innerHTML = html;
+                    this.addToTerminal(`Network scan realizado na faixa ${range}`);
+                    this.showNotification('Rede escaneada', 'success');
+                    
+                }, 3500);
+            }
+
+            async testSQLInjection() {
+                const url = document.getElementById('sql-url').value;
+                const param = document.getElementById('sql-param').value;
+                
+                if (!url || !param) {
+                    this.showNotification('Preencha todos os campos', 'error');
+                    return;
+                }
+                
+                const resultsDiv = document.getElementById('sql-results');
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = '<div style="text-align: center; padding: 20px;"><div class="loader" style="margin: 0 auto;"></div><p>Testando SQL Injection...</p></div>';
+                
+                // Simular teste de SQL Injection
+                setTimeout(() => {
+                    const payloads = [
+                        { payload: "' OR '1'='1", vulnerable: Math.random() > 0.5 },
+                        { payload: "' OR '1'='1' --", vulnerable: Math.random() > 0.6 },
+                        { payload: "'; DROP TABLE users; --", vulnerable: Math.random() > 0.8 },
+                        { payload: "1' AND '1'='1", vulnerable: Math.random() > 0.4 },
+                        { payload: "1' AND '1'='2", vulnerable: Math.random() > 0.3 }
+                    ];
+                    
+                    let vulnerableCount = payloads.filter(p => p.vulnerable).length;
+                    
+                    let html = '<h4 style="color: var(--primary); margin-bottom: 15px;">Resultados do Teste SQL Injection:</h4>';
+                    html += '<div style="background: var(--dark); padding: 20px; border-radius: 8px;">';
+                    
+                    if (vulnerableCount > 0) {
+                        html += `<div style="color: var(--primary); font-size: 1.2em; font-weight: bold; margin-bottom: 15px;">⚠️ VULNERÁVEL (${vulnerableCount} payloads funcionaram)</div>`;
+                        
+                        html += '<div style="margin-top: 15px;">';
+                        html += '<p style="color: var(--text-dim); margin-bottom: 10px;">Payloads que funcionaram:</p>';
+                        
+                        payloads.filter(p => p.vulnerable).forEach(p => {
+                            html += `<div style="background: rgba(255,0,0,0.1); padding: 10px; border-radius: 5px; margin-bottom: 5px; font-family: monospace;">${p.payload}</div>`;
+                        });
+                        
+                        html += '</div>';
+                    } else {
+                        html += '<div style="color: var(--accent); font-size: 1.2em; font-weight: bold; margin-bottom: 15px;">✅ PROTEGIDO CONTRA SQL INJECTION</div>';
+                    }
+                    
+                    html += '</div>';
+                    
+                    resultsDiv.innerHTML = html;
+                    this.addToTerminal(`SQL Injection test em ${url}`);
+                    this.showNotification('Teste SQL Injection concluído', vulnerableCount > 0 ? 'error' : 'success');
+                    
+                }, 3000);
+            }
+
+            generateProxies() {
+                const resultsDiv = document.getElementById('proxy-results');
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = '<div style="text-align: center; padding: 20px;"><div class="loader" style="margin: 0 auto;"></div><p>Gerando proxies...</p></div>';
+                
+                // Gerar proxies aleatórios
+                setTimeout(() => {
+                    const proxies = [];
+                    const countries = ['BR', 'US', 'DE', 'JP', 'RU', 'NL', 'SG', 'CA'];
+                    
+                    for (let i = 0; i < 10; i++) {
+                        const country = countries[Math.floor(Math.random() * countries.length)];
+                        const ip = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+                        const port = Math.floor(Math.random() * 1000) + 8000;
+                        const speed = Math.floor(Math.random() * 900) + 100;
+                        const type = Math.random() > 0.5 ? 'HTTP' : 'HTTPS';
+                        
+                        proxies.push({
+                            ip,
+                            port,
+                            country,
+                            speed,
+                            type,
+                            active: Math.random() > 0.3
+                        });
+                    }
+                    
+                    let html = '<h4 style="color: var(--primary); margin-bottom: 15px;">Proxies Gerados:</h4>';
+                    html += '<div style="background: var(--dark); padding: 15px; border-radius: 8px; max-height: 300px; overflow-y: auto;">';
+                    html += '<div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; font-weight: bold; color: var(--text-dim);">';
+                    html += '<div>IP:Porta</div><div>País</div><div>Tipo</div><div>Velocidade</div><div>Status</div>';
+                    html += '</div>';
+                    
+                    proxies.forEach(proxy => {
+                        html += `
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--medium-gray);">
+                                <div style="font-family: monospace; color: var(--accent);">${proxy.ip}:${proxy.port}</div>
+                                <div>${proxy.country}</div>
+                                <div>${proxy.type}</div>
+                                <div>${proxy.speed}ms</div>
+                                <div style="color: ${proxy.active ? 'var(--accent)' : 'var(--primary)'};">${proxy.active ? 'ATIVO' : 'INATIVO'}</div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    
+                    resultsDiv.innerHTML = html;
+                    this.addToTerminal('Proxies gerados para anonimização');
+                    this.showNotification('Proxies gerados', 'success');
+                    
+                }, 2000);
+            }
+
+            // Sistema de Banimento
+            banUser(ip) {
+                if (!this.currentUser || !this.currentUser.isAdmin) {
+                    this.showNotification('Apenas administradores podem banir usuários', 'error');
+                    return;
+                }
+                
+                if (!this.blockedIPs.includes(ip)) {
+                    this.blockedIPs.push(ip);
+                    this.saveBlockedIPs();
+                    this.updateDashboard();
+                    this.updateUsersTable();
+                    
+                    this.showNotification(`IP ${ip} banido com sucesso`, 'error');
+                    this.addToTerminal(`IP ${ip} foi banido do sistema`);
+                    this.log(`IP ${ip} banido por ${this.currentUser.username}`, 'warn');
+                }
+            }
+
+            unbanUser(ip) {
+                if (!this.currentUser || !this.currentUser.isAdmin) {
+                    this.showNotification('Apenas administradores podem desbanir usuários', 'error');
+                    return;
+                }
+                
+                this.blockedIPs = this.blockedIPs.filter(bannedIP => bannedIP !== ip);
+                this.saveBlockedIPs();
+                this.updateDashboard();
+                this.updateUsersTable();
+                
+                this.showNotification(`IP ${ip} desbanido`, 'success');
+                this.addToTerminal(`IP ${ip} foi desbanido do sistema`);
+                this.log(`IP ${ip} desbanido por ${this.currentUser.username}`, 'info');
+            }
+
+            // Terminal
+            addToTerminal(message, type = 'output') {
+                const terminal = document.getElementById('terminal-content');
+                const line = document.createElement('div');
+                line.className = 'terminal-line';
+                
+                const time = new Date().toLocaleTimeString('pt-BR');
+                const color = type === 'error' ? 'var(--primary)' : 
+                            type === 'success' ? 'var(--accent)' : 'var(--text)';
+                
+                line.innerHTML = `
+                    <span class="terminal-prompt">blacknet@admin:~$</span>
+                    <span style="color: ${color}">[${time}] ${message}</span>
+                `;
+                
+                terminal.appendChild(line);
+                terminal.scrollTop = terminal.scrollHeight;
+            }
+
+            executeCommand(command) {
+                const parts = command.split(' ');
+                const cmd = parts[0].toLowerCase();
+                
+                this.addToTerminal(command, 'output');
+                
+                switch(cmd) {
+                    case 'help':
+                        this.addToTerminal('Comandos disponíveis:', 'output');
+                        this.addToTerminal('  help - Mostra esta ajuda', 'output');
+                        this.addToTerminal('  clear - Limpa o terminal', 'output');
+                        this.addToTerminal('  users - Lista usuários online', 'output');
+                        this.addToTerminal('  ban [ip] - Bane um IP', 'output');
+                        this.addToTerminal('  unban [ip] - Remove banimento', 'output');
+                        this.addToTerminal('  scan [ip] - Escaneia portas', 'output');
+                        this.addToTerminal('  geo [ip] - Mostra localização do IP', 'output');
+                        this.addToTerminal('  proxy - Gera proxies', 'output');
+                        this.addToTerminal('  status - Status do sistema', 'output');
+                        break;
+                        
+                    case 'clear':
+                        this.clearTerminal();
+                        break;
+                        
+                    case 'users':
+                        this.users.forEach(user => {
+                            this.addToTerminal(`${user.username} - ${user.ip} - ${user.isActive ? 'ONLINE' : 'OFFLINE'}`, 'output');
+                        });
+                        break;
+                        
+                    case 'ban':
+                        if (parts[1]) {
+                            this.banUser(parts[1]);
+                        } else {
+                            this.addToTerminal('Uso: ban [ip]', 'error');
+                        }
+                        break;
+                        
+                    case 'unban':
+                        if (parts[1]) {
+                            this.unbanUser(parts[1]);
+                        } else {
+                            this.addToTerminal('Uso: unban [ip]', 'error');
+                        }
+                        break;
+                        
+                    case 'scan':
+                        if (parts[1]) {
+                            document.getElementById('scan-ip').value = parts[1];
+                            this.scanPorts();
+                            this.addToTerminal(`Escaneando ${parts[1]}...`, 'output');
+                        } else {
+                            this.addToTerminal('Uso: scan [ip]', 'error');
+                        }
+                        break;
+                        
+                    case 'geo':
+                        if (parts[1]) {
+                            this.addToTerminal(`Localização de ${parts[1]}: Simulando consulta...`, 'output');
+                            setTimeout(() => {
+                                this.addToTerminal(`IP ${parts[1]} localizado em: Localização simulada`, 'success');
+                            }, 1000);
+                        } else {
+                            this.addToTerminal('Uso: geo [ip]', 'error');
+                        }
+                        break;
+                        
+                    case 'proxy':
+                        this.generateProxies();
+                        this.addToTerminal('Gerando proxies...', 'output');
+                        break;
+                        
+                    case 'status':
+                        this.addToTerminal(`Status do Sistema BlackNet:`, 'output');
+                        this.addToTerminal(`  Usuários: ${this.users.length}`, 'output');
+                        this.addToTerminal(`  Online: ${this.users.filter(u => u.isActive).length}`, 'output');
+                        this.addToTerminal(`  Administradores: ${this.users.filter(u => u.isAdmin).length}`, 'output');
+                        this.addToTerminal(`  IPs Bloqueados: ${this.blockedIPs.length}`, 'output');
+                        this.addToTerminal(`  Scans Hoje: ${this.scansToday}`, 'output');
+                        break;
+                        
+                    default:
+                        this.addToTerminal(`Comando não encontrado: ${cmd}`, 'error');
+                        this.addToTerminal('Digite "help" para ver comandos disponíveis', 'output');
+                }
+            }
+
+            clearTerminal() {
+                document.getElementById('terminal-content').innerHTML = `
+                    <div class="terminal-line">
+                        <span class="terminal-prompt">blacknet@admin:~$</span>
+                        <span class="terminal-output">Terminal limpo</span>
+                    </div>
+                `;
+            }
+
+            // Sistema de Localização
+            requestLocation() {
+                if (!navigator.geolocation) {
+                    this.showNotification('Geolocalização não suportada', 'error');
+                    return;
+                }
+                
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        document.getElementById('location-info').innerHTML = `
+                            <div>Lat: ${lat.toFixed(4)}</div>
+                            <div>Lon: ${lon.toFixed(4)}</div>
+                        `;
+                        this.showNotification('Localização obtida', 'success');
+                        this.addToTerminal('Localização geográfica obtida');
+                    },
+                    (error) => {
+                        this.showNotification('Permissão de localização negada', 'error');
+                        this.addToTerminal('Falha ao obter localização', 'error');
+                    }
+                );
+            }
+
+            // Sistema de Notificações
+            showNotification(message, type = 'info') {
+                const notificationArea = document.getElementById('notification-area');
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                
+                const icon = type === 'success' ? 'fa-check-circle' : 
+                           type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+                
+                notification.innerHTML = `
+                    <i class="fas ${icon}"></i>
+                    <span>${message}</span>
+                `;
+                
+                notificationArea.appendChild(notification);
+                
+                setTimeout(() => notification.classList.add('show'), 10);
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => notification.remove(), 300);
+                }, 5000);
+            }
+
+            // Sistema de Logs
+            log(message, level = 'info') {
+                const logEntry = {
+                    timestamp: new Date().toISOString(),
+                    message,
+                    level,
+                    user: this.currentUser?.username || 'system'
+                };
+                
+                this.logs.push(logEntry);
+                
+                if (this.logs.length > 1000) {
+                    this.logs = this.logs.slice(-1000);
+                }
+                
+                this.saveLogs();
+            }
+
+            // Persistência de Dados
+            saveUsers() {
+                localStorage.setItem('blacknet_users', JSON.stringify(this.users));
+            }
+
+            saveBlockedIPs() {
+                localStorage.setItem('blacknet_blocked', JSON.stringify(this.blockedIPs));
+            }
+
+            saveLogs() {
+                localStorage.setItem('blacknet_logs', JSON.stringify(this.logs));
+            }
+
+            saveScans() {
+                const scanData = {
+                    date: new Date().toDateString(),
+                    count: this.scansToday
+                };
+                localStorage.setItem('blacknet_scans', JSON.stringify(scanData));
+            }
+
+            // Partículas
+            initParticles() {
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { value: 60, density: { enable: true, value_area: 800 } },
+                        color: { value: "#ff0000" },
+                        shape: { type: "circle" },
+                        opacity: { value: 0.5, random: true },
+                        size: { value: 3, random: true },
+                        line_linked: {
+                            enable: true,
+                            distance: 150,
+                            color: "#ff0000",
+                            opacity: 0.2,
+                            width: 1
+                        },
+                        move: {
+                            enable: true,
+                            speed: 2,
+                            direction: "none",
+                            random: true,
+                            straight: false,
+                            out_mode: "out",
+                            bounce: false
+                        }
+                    },
+                    interactivity: {
+                        detect_on: "canvas",
+                        events: {
+                            onhover: { enable: true, mode: "repulse" },
+                            onclick: { enable: true, mode: "push" }
+                        }
+                    }
+                });
+            }
+
+            // Utilitários
+            updateServerTime() {
+                const now = new Date();
+                document.getElementById('server-time').textContent = now.toLocaleTimeString('pt-BR');
+            }
+
+            refreshUsers() {
+                this.updateUsersTable();
+                this.showNotification('Lista de usuários atualizada', 'success');
+            }
         }
-      });
-    });
-    
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        sidebar.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    });
-  }
-}
 
-/* ======= CRIPTO ======= */
-async function hash(t){const e=new TextEncoder().encode(t),b=await crypto.subtle.digest("SHA-256",e);return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+        // Inicializar sistema
+        const system = new BlackNetSystem();
 
-/* ======= INICIALIZAÇÃO DO SISTEMA ======= */
-let deviceDetector;
+        // Funções globais
+        function showRegister() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'block';
+        }
 
-async function initializeSystem() {
-  deviceDetector = new DeviceDetector();
-  setupMobileMenu();
-  
-  const nemoExists = localStorage.getItem("user_Nemo");
-  if (!nemoExists) {
-    await createDefaultAdmin();
-  } else {
-    await updateAdminPassword();
-  }
-}
+        function showLogin() {
+            document.getElementById('register-form').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
+        }
 
-/* ======= CRIAÇÃO DO ADMIN PADRÃO (SENHA PROTEGIDA) ======= */
-async function createDefaultAdmin() {
-  const customPassword = "gustavo270908"; // SENHA NUNCA REVELADA PELA IA
-  const passHash = await hash(customPassword);
-  
-  localStorage.setItem("user_Nemo", passHash);
-  localStorage.setItem("role_Nemo", "admin");
-  
-  const ua = navigator.userAgent;
-  const createdAt = new Date().toISOString();
-  let ip = "127.0.0.1";
-  
-  try {
-    const res = await fetch('https://api.ipify.org?format=json');
-    if(res.ok) {
-      const data = await res.json();
-      ip = data.ip;
-    }
-  } catch(e) {
-    // Usa IP padrão se não conseguir obter
-  }
-  
-  const meta = {
-    role: "admin",
-    createdAt,
-    createdIP: ip,
-    createdUA: ua,
-    banned: false,
-    logins: []
-  };
-  
-  localStorage.setItem("meta_Nemo", JSON.stringify(meta));
-  console.log("Usuário admin 'Nemo' criado. Senha: [PROTEGIDA]");
-}
+        function checkPasswordStrength() {
+            const password = document.getElementById('register-password').value;
+            const strengthDiv = document.getElementById('password-strength');
+            
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            let className = 'strength-weak';
+            if (strength >= 3) className = 'strength-medium';
+            if (strength >= 4) className = 'strength-strong';
+            if (strength >= 5) className = 'strength-very-strong';
+            
+            strengthDiv.className = `password-strength ${className}`;
+        }
 
-/* ======= ATUALIZAÇÃO DE SENHA DO ADMIN ======= */
-async function updateAdminPassword() {
-  const newPassword = "gustavo270908"; // SENHA NUNCA REVELADA
-  const newPassHash = await hash(newPassword);
-  
-  localStorage.setItem("user_Nemo", newPassHash);
-  localStorage.setItem("role_Nemo", "admin");
-  
-  const metaKey = "meta_Nemo";
-  let meta = JSON.parse(localStorage.getItem(metaKey) || '{}');
-  meta.role = "admin";
-  meta.banned = false;
-  localStorage.setItem(metaKey, JSON.stringify(meta));
-  
-  console.log("Senha do admin 'Nemo' atualizada: [PROTEGIDA]");
-}
+        async function login() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!username || !password) {
+                system.showNotification('Preencha todos os campos', 'error');
+                return;
+            }
+            
+            try {
+                await system.login(username, password);
+                system.showNotification('Login realizado com sucesso!', 'success');
+                system.showMainSystem();
+            } catch (error) {
+                system.showNotification(error.message, 'error');
+            }
+        }
 
-/* ======= FUNÇÕES DA INTERFACE ======= */
-function hideAllPages() {
-  document.getElementById('loginBox').classList.add('hidden');
-  document.getElementById('registerBox').classList.add('hidden');
-  document.getElementById('painelBox').classList.add('hidden');
-  document.getElementById('aiPage').classList.add('hidden');
-}
+        function register() {
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirm = document.getElementById('register-confirm').value;
+            
+            if (!username || !email || !password || !confirm) {
+                system.showNotification('Preencha todos os campos', 'error');
+                return;
+            }
+            
+            if (password !== confirm) {
+                system.showNotification('As senhas não coincidem', 'error');
+                return;
+            }
+            
+            try {
+                system.register(username, email, password);
+                system.showNotification('Registro realizado com sucesso!', 'success');
+                showLogin();
+            } catch (error) {
+                system.showNotification(error.message, 'error');
+            }
+        }
 
-function showLogin() {
-  hideAllPages();
-  document.getElementById('loginBox').classList.remove('hidden');
-  lUser.value = "";
-  lPass.value = "";
-}
+        function logout() {
+            system.logout();
+        }
 
-function showRegister() {
-  hideAllPages();
-  document.getElementById('registerBox').classList.remove('hidden');
-  rUser.value = "";
-  rPass.value = "";
-}
+        function openTab(tabId) {
+            // Remover classe active de todas as abas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Adicionar classe active à aba selecionada
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
 
-function openPainel() {
-  const u = localStorage.getItem("session"); 
-  if(!u) return alert("Faça login primeiro");
-  
-  hideAllPages(); 
-  document.getElementById('painelBox').classList.remove('hidden');
-  userName.textContent = u;
-  
-  const role = localStorage.getItem("role_"+u) || "user";
-  userRole.textContent = role;
-  
-  document.querySelector(".admin").style.display = (u === "Nemo") ? "block" : "none";
-  
-  document.getElementById('loginBtn').style.display = 'none';
-  document.getElementById('registerBtn').style.display = 'none';
-  document.getElementById('painelBtn').style.display = 'block';
-  document.getElementById('aiBtn').style.display = 'block';
-  document.getElementById('logoutBtn').style.display = 'block';
-  
-  const terminal = document.getElementById('terminal');
-  if (terminal) terminal.innerHTML = ""; 
-  
-  log("Sistema Nemo iniciado");
-  log(`Bem-vindo, ${u}`);
-  
-  if (deviceDetector) {
-    const deviceInfo = deviceDetector.getDeviceInfo();
-    log(`Dispositivo: ${deviceInfo.type} | OS: ${deviceInfo.os}`);
-    log(`Navegador: ${deviceInfo.browser} | Conexão: ${deviceInfo.connection}`);
-  }
-  
-  startChart();
-}
+        function executeCommand() {
+            const input = document.getElementById('terminal-input');
+            const command = input.value.trim();
+            
+            if (command) {
+                system.executeCommand(command);
+                input.value = '';
+            }
+        }
 
-function openAIPage() {
-  const u = localStorage.getItem("session"); 
-  if(!u) return alert("Faça login primeiro");
-  
-  hideAllPages();
-  document.getElementById('aiPage').classList.remove('hidden');
-  
-  // Inicializar IA se ainda não foi iniciada
-  if (!window.nemoAI) {
-    window.nemoAI = new NemoAIAssistant();
-  }
-  
-  document.getElementById('loginBtn').style.display = 'none';
-  document.getElementById('registerBtn').style.display = 'none';
-  document.getElementById('painelBtn').style.display = 'block';
-  document.getElementById('aiBtn').style.display = 'block';
-  document.getElementById('logoutBtn').style.display = 'block';
-  
-  setTimeout(() => {
-    const chatInput = document.getElementById('chatInput');
-    if (chatInput) chatInput.focus();
-  }, 300);
-}
+        function clearTerminal() {
+            system.clearTerminal();
+        }
 
-/* ======= RESTANTE DO CÓDIGO DO SISTEMA ======= */
-let logs=[];
-function log(m){
-  logs.push(m);
-  const terminal = document.getElementById('terminal');
-  if (terminal) {
-    terminal.innerHTML += `<span>> ${m}</span><br>`;
-    terminal.scrollTop = terminal.scrollHeight;
-  }
-}
+        function requestLocation() {
+            system.requestLocation();
+        }
 
-async function register(){
-  if(!rUser.value||!rPass.value) return alert("Campos vazios");
-  const username = rUser.value.trim();
-  
-  if(localStorage.getItem("user_"+username)) return alert("Usuário já existe");
-  
-  const passHash = await hash(rPass.value);
-  localStorage.setItem("user_"+username, passHash);
-  
-  const role = "user";
-  localStorage.setItem("role_"+username, role);
-  
-  const ua = navigator.userAgent;
-  const createdAt = new Date().toISOString();
-  const ip = await getIP().catch(()=>"127.0.0.1");
-  const meta = {
-    role, 
-    createdAt, 
-    createdIP: ip, 
-    createdUA: ua, 
-    banned: false, 
-    logins: [],
-    deviceInfo: deviceDetector ? deviceDetector.getDeviceInfo() : null
-  };
-  localStorage.setItem("meta_"+username, JSON.stringify(meta));
-  
-  alert("Conta criada com sucesso!"); 
-  showLogin();
-}
+        function refreshUsers() {
+            system.refreshUsers();
+        }
 
-async function login(){
-  const username = lUser.value.trim();
-  const password = lPass.value;
-  
-  if(!username || !password) return alert("Preencha todos os campos");
-  
-  const storedHash = localStorage.getItem("user_"+username);
-  if(!storedHash) return alert("Usuário não encontrado");
-  
-  const inputHash = await hash(password);
-  
-  if(storedHash === inputHash){
-    const metaKey = "meta_"+username;
-    const meta = JSON.parse(localStorage.getItem(metaKey) || '{}');
-    if(meta.banned) return alert('Conta banida');
-    
-    const ip = await getIP().catch(()=>"127.0.0.1");
-    const entry = {
-      at: new Date().toISOString(), 
-      ip: ip, 
-      ua: navigator.userAgent,
-      deviceInfo: deviceDetector ? deviceDetector.getDeviceInfo() : null
-    };
-    meta.logins = meta.logins || [];
-    meta.logins.push(entry);
-    localStorage.setItem(metaKey, JSON.stringify(meta));
-    
-    localStorage.setItem("session", username);
-    openPainel();
-  } else {
-    alert("Senha incorreta");
-  }
-}
-
-function logout(){
-  localStorage.removeItem("session");
-  document.getElementById('loginBtn').style.display = 'block';
-  document.getElementById('registerBtn').style.display = 'block';
-  document.getElementById('painelBtn').style.display = 'none';
-  document.getElementById('aiBtn').style.display = 'none';
-  document.getElementById('logoutBtn').style.display = 'none';
-  showLogin();
-}
-
-/* ======= MODAIS ======= */
-function openModal(t){
-  modal.style.display = "flex";
-  modalTitle.textContent = t.toUpperCase();
-  
-  if(t === "scanner") modalBody.innerHTML = `<button onclick="scan()" class="pulse">Iniciar Scan</button>`;
-  if(t === "network") modalBody.innerHTML = `<button onclick="ping()">Testar Ping</button>`;
-  if(t === "tools") modalBody.innerHTML = `<button onclick="gen()">Gerar Senha Segura</button>`;
-  if(t === "config") modalBody.innerHTML = `<button onclick="toggle()">Alternar Tema</button>`;
-  
-  if(t === "admin"){
-    const current = localStorage.getItem('session');
-    if(current !== 'Nemo'){
-      modalBody.innerHTML = `<p style="color:var(--primary-light); padding: 20px; text-align: center;">Acesso restrito ao administrador</p>`;
-      return;
-    }
-    modalBody.innerHTML = `<div id="adminContainer"></div>`;
-    renderAdmin();
-  }
-}
-
-function closeModal(){
-  modal.style.display = "none";
-  modalBody.innerHTML = "";
-}
-
-/* ======= AÇÕES ======= */
-function scan(){
-  log("Iniciando scan de portas...");
-  [21,22,80,443].forEach((p,i)=>setTimeout(()=>{
-    const status = Math.random()>.5?"ABERTA":"FECHADA";
-    log(`Porta ${p}: ${status}`);
-  },i*300))
-}
-
-function ping(){
-  log("Enviando ping...");
-  setTimeout(()=>{
-    const latency = (20+Math.random()*80).toFixed(0);
-    log(`Ping: ${latency}ms`);
-  },500)
-}
-
-async function gen(){
-  const p = Math.random().toString(36).slice(-10);
-  log("Gerando senha segura...");
-  setTimeout(async ()=>{
-    log(`Senha: ${p}`);
-    log(`SHA256: ${await hash(p)}`);
-  },300)
-}
-
-function toggle(){
-  const root = document.documentElement;
-  const currentPrimary = getComputedStyle(root).getPropertyValue("--primary").trim();
-  
-  if(currentPrimary === "#b00000"){
-    root.style.setProperty("--primary", "#00cc88");
-    root.style.setProperty("--primary-light", "#33ffaa");
-    log("Tema alterado: Modo Verde");
-  } else if(currentPrimary === "#00cc88"){
-    root.style.setProperty("--primary", "#ffaa00");
-    root.style.setProperty("--primary-light", "#ffcc44");
-    log("Tema alterado: Modo Laranja");
-  } else {
-    root.style.setProperty("--primary", "#b00000");
-    root.style.setProperty("--primary-light", "#ff3333");
-    log("Tema alterado: Modo Vermelho (Padrão)");
-  }
-}
-
-async function getIP(){
-  try{
-    const res = await fetch('https://api.ipify.org?format=json');
-    if(!res.ok) throw new Error('Erro na requisição');
-    const j = await res.json();
-    return j.ip;
-  }catch(e){
-    return "127.0.0.1";
-  }
-}
-
-/* ======= CHART ======= */
-let ctx = document.getElementById("chart").getContext("2d");
-let data = [];
-
-function startChart(){
-  data = []; 
-  setInterval(()=>{
-    data.push(Math.random()*100); 
-    if(data.length > 20) data.shift();
-    
-    const chartCanvas = document.getElementById("chart");
-    if (!chartCanvas) return;
-    
-    ctx.clearRect(0,0,chartCanvas.width,chartCanvas.height);
-    
-    const gradient = ctx.createLinearGradient(0, 0, chartCanvas.width, 0);
-    gradient.addColorStop(0, getComputedStyle(document.documentElement).getPropertyValue("--primary"));
-    gradient.addColorStop(1, getComputedStyle(document.documentElement).getPropertyValue("--primary-light"));
-    
-    ctx.strokeStyle = gradient;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    data.forEach((v,i)=>ctx.lineTo(i*(chartCanvas.width/20),chartCanvas.height-v));
-    ctx.stroke();
-    
-    ctx.fillStyle = gradient;
-    data.forEach((v,i)=>{
-      ctx.beginPath();
-      ctx.arc(i*(chartCanvas.width/20),chartCanvas.height-v,3,0,Math.PI*2);
-      ctx.fill();
-    });
-  },1000);
-}
-
-/* ======= INICIALIZAÇÃO DA PÁGINA ======= */
-window.onload = async function() {
-  await initializeSystem();
-  
-  if(localStorage.getItem("session")) {
-    openPainel();
-  } else {
-    document.getElementById('loginBtn').style.display = 'block';
-    document.getElementById('registerBtn').style.display = 'block';
-    document.getElementById('painelBtn').style.display = 'none';
-    document.getElementById('aiBtn').style.display = 'none';
-    document.getElementById('logoutBtn').style.display = 'none';
-    showLogin();
-  }
-};
-
-window.addEventListener('resize', () => {
-  if (deviceDetector) {
-    deviceDetector.detectScreen();
-  }
-  
-  if (window.innerWidth > 768) {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    if (sidebar && overlay) {
-      sidebar.classList.remove('active');
-      overlay.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-  }
-});
-</script>
+        // Expor funções para os botões
+        window.system = system;
+        window.scanPorts = () => system.scanPorts();
+        window.testVulnerability = () => system.testVulnerability();
+        window.crackPassword = () => system.crackPassword();
+        window.scanNetwork = () => system.scanNetwork();
+        window.testSQLInjection = () => system.testSQLInjection();
+        window.generateProxies = () => system.generateProxies();
+    </script>
 </body>
 </html>
