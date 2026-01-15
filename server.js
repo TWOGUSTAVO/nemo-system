@@ -1,3 +1,4 @@
+// server.js - Mantido igual
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -14,7 +15,7 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Proxy route for CEP (avoid CORS issues)
+// Proxy route for CEP
 app.get('/api/cep/:cep', async (req, res) => {
     try {
         const { cep } = req.params;
@@ -76,7 +77,7 @@ app.get('/api/ibge/municipios/:uf', async (req, res) => {
         
         if (ibgeCache.has(uf)) {
             const cached = ibgeCache.get(uf);
-            if (Date.now() - cached.timestamp < 3600000) { // 1 hour cache
+            if (Date.now() - cached.timestamp < 3600000) {
                 return res.json(cached.data);
             }
         }
