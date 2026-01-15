@@ -3,844 +3,739 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscar Dados - BlackNet</title>
+    <title>APIs de Segurança - BlackNet</title>
     <style>
-        /* Reset e configurações */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Consolas', 'Monaco', monospace;
-        }
-
-        :root {
-            --primary: #ff0000;
-            --primary-dark: #cc0000;
-            --secondary: #000000;
-            --accent: #00ff00;
-            --accent2: #00aaff;
-            --danger: #ff5555;
-            --warning: #ffaa00;
-            --safe: #55ff55;
-            --dark: #0a0a0a;
-            --dark-gray: #1a1a1a;
-            --medium-gray: #2a2a2a;
-            --light-gray: #3a3a3a;
-            --text: #ffffff;
-            --text-dim: #aaaaaa;
-        }
-
-        body {
-            background: linear-gradient(135deg, #000000 0%, #1a0000 100%);
-            color: var(--text);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Header */
-        .main-header {
-            text-align: center;
-            padding: 30px 0;
+        /* Estilos do dashboard aqui (similar aos anteriores) */
+        /* Adicionar apenas os estilos específicos para as APIs */
+        
+        .api-category {
             margin-bottom: 40px;
-            border-bottom: 2px solid var(--primary);
-            position: relative;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--medium-gray);
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
+        .category-title {
+            color: var(--primary);
+            font-size: 1.8em;
             margin-bottom: 20px;
-        }
-
-        .logo-text {
-            font-size: 2.8em;
-            font-weight: bold;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
-        }
-
-        /* Sistema de abas */
-        .tabs-container {
-            background: rgba(10, 10, 10, 0.95);
-            border: 1px solid var(--medium-gray);
-            border-radius: 15px;
-            overflow: hidden;
-            margin-bottom: 30px;
-        }
-
-        .tabs-header {
-            display: flex;
-            background: linear-gradient(90deg, var(--dark), var(--dark-gray));
-            padding: 0;
-            overflow-x: auto;
-        }
-
-        .tab-btn {
-            padding: 20px 30px;
-            background: transparent;
-            border: none;
-            color: var(--text-dim);
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 10px;
-            white-space: nowrap;
-            position: relative;
         }
 
-        .tab-btn:hover {
-            color: var(--text);
-            background: rgba(255, 0, 0, 0.1);
-        }
-
-        .tab-btn.active {
-            color: var(--primary);
-            background: rgba(10, 10, 10, 0.9);
-        }
-
-        .tab-btn.active::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--primary);
-        }
-
-        .tab-content {
-            display: none;
-            padding: 30px;
-        }
-
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.3s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Painéis de ferramentas */
-        .tool-panel {
+        .api-docs {
             background: rgba(20, 20, 20, 0.9);
             border: 1px solid var(--medium-gray);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+            display: none;
         }
 
-        .tool-header {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 2px solid var(--medium-gray);
-        }
-
-        .tool-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            color: white;
-        }
-
-        .tool-header h2 {
-            font-size: 2rem;
-            color: var(--text);
-            margin-bottom: 0.5rem;
-        }
-
-        .tool-header p {
-            color: var(--text-dim);
-        }
-
-        /* Formulários */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
+        .api-docs.active {
             display: block;
-            margin-bottom: 8px;
-            color: var(--text);
+        }
+
+        .docs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .docs-title {
+            color: var(--accent);
+            font-size: 1.2em;
             font-weight: bold;
         }
 
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
+        .docs-content {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        .api-key-input {
             background: rgba(30, 30, 30, 0.8);
             border: 1px solid var(--medium-gray);
             border-radius: 8px;
+            padding: 10px;
             color: var(--text);
-            font-size: 1em;
+            width: 100%;
+            margin-bottom: 10px;
         }
 
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
-        }
-
-        /* Botões */
-        .btn {
-            padding: 12px 24px;
-            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+        .test-btn {
+            background: linear-gradient(45deg, var(--accent), #00aa00);
             color: white;
             border: none;
             border-radius: 8px;
-            font-weight: bold;
+            padding: 8px 15px;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-
-        .btn-safe {
-            background: linear-gradient(45deg, var(--safe), #00aa00);
-        }
-
-        .btn-warning {
-            background: linear-gradient(45deg, var(--warning), #cc8800);
-        }
-
-        .btn-danger {
-            background: linear-gradient(45deg, var(--danger), #cc0000);
-        }
-
-        /* Resultados */
-        .results-container {
-            margin-top: 20px;
-            padding: 20px;
-            background: var(--dark);
-            border-radius: 8px;
-            border: 1px solid var(--medium-gray);
-            max-height: 400px;
-            overflow-y: auto;
-            display: none;
-        }
-
-        .results-container.show {
-            display: block;
-            animation: slideDown 0.3s;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Status */
-        .status-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            font-weight: bold;
-        }
-
-        .status-safe {
-            background: rgba(0, 255, 0, 0.2);
-            color: var(--safe);
-        }
-
-        .status-warning {
-            background: rgba(255, 170, 0, 0.2);
-            color: var(--warning);
-        }
-
-        .status-danger {
-            background: rgba(255, 85, 85, 0.2);
-            color: var(--danger);
-        }
-
-        /* Input Group */
-        .input-group {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .input-group input,
-        .input-group select {
-            flex: 1;
-            min-width: 250px;
-            padding: 12px;
-            background: rgba(30, 30, 30, 0.8);
-            border: 1px solid var(--medium-gray);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 1em;
-        }
-
-        /* Quick Navigation */
-        .quick-nav {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-top: 2rem;
-        }
-
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text);
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-        }
-
-        .nav-btn:hover {
-            background: rgba(255, 0, 0, 0.2);
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .input-group {
-                flex-direction: column;
-            }
-            
-            .input-group input,
-            .input-group select {
-                min-width: 100%;
-            }
-            
-            .tabs-header {
-                flex-direction: column;
-            }
-            
-            .tab-btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-
-        /* Footer */
-        .footer {
-            border-top: 2px solid var(--primary);
-            padding: 30px 0;
-            margin-top: 50px;
-            text-align: center;
-        }
-
-        .footer p {
-            color: var(--text-dim);
-        }
-
-        /* Loader */
-        .loader {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid var(--medium-gray);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            font-size: 0.9em;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Incluir estilos do dashboard -->
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="main-header">
-            <div class="logo">
-                <i class="fas fa-terminal" style="color: var(--primary); font-size: 2em;"></i>
-                <h1 class="logo-text">BUSCAR DADOS</h1>
-                <i class="fas fa-server" style="color: var(--primary); font-size: 2em;"></i>
+    <!-- Sidebar similar ao dashboard -->
+    <!-- Main content -->
+    <div class="main-content">
+        <div class="header">
+            <h1><i class="fas fa-code"></i> APIs de Segurança</h1>
+            <div style="color: var(--text-dim); font-size: 0.9em;">
+                <span id="apiCount">8 APIs disponíveis</span>
             </div>
-            <p style="color: var(--text-dim);">Ferramentas de consulta de dados públicos com conformidade legal</p>
+        </div>
+
+        <!-- API Categories -->
+        
+        <!-- 1. Reconhecimento -->
+        <div class="api-category">
+            <h2 class="category-title">
+                <i class="fas fa-search"></i> 🌍 Reconhecimento
+            </h2>
             
-            <!-- Quick Navigation -->
-            <div class="quick-nav">
-                <a href="#cep" class="nav-btn"><i class="fas fa-map-marker-alt"></i> CEP</a>
-                <a href="#cnpj" class="nav-btn"><i class="fas fa-building"></i> CNPJ</a>
-                <a href="#municipios" class="nav-btn"><i class="fas fa-city"></i> Municípios</a>
-                <a href="#redes-sociais" class="nav-btn"><i class="fas fa-hashtag"></i> Redes Sociais</a>
-                <a href="#verificacao" class="nav-btn"><i class="fas fa-user-check"></i> Verificação</a>
-                <a href="#internacional" class="nav-btn"><i class="fas fa-globe"></i> Internacional</a>
-            </div>
-        </header>
-
-        <!-- Sistema de abas -->
-        <div class="tabs-container">
-            <div class="tabs-header">
-                <button class="tab-btn active" onclick="openTab('cep')">
-                    <i class="fas fa-map-marked-alt"></i> CEP
-                </button>
-                <button class="tab-btn" onclick="openTab('cnpj')">
-                    <i class="fas fa-building"></i> CNPJ
-                </button>
-                <button class="tab-btn" onclick="openTab('municipios')">
-                    <i class="fas fa-city"></i> MUNICÍPIOS
-                </button>
-                <button class="tab-btn" onclick="openTab('redes-sociais')">
-                    <i class="fas fa-hashtag"></i> REDES SOCIAIS
-                </button>
-                <button class="tab-btn" onclick="openTab('verificacao')">
-                    <i class="fas fa-user-check"></i> VERIFICAÇÃO
-                </button>
-                <button class="tab-btn" onclick="openTab('internacional')">
-                    <i class="fas fa-globe"></i> INTERNACIONAL
-                </button>
-            </div>
-
-            <!-- CEP Tool -->
-            <div id="cep" class="tab-content active">
-                <div class="tool-panel">
-                    <div class="tool-header">
-                        <div class="tool-icon">
-                            <i class="fas fa-map-marked-alt"></i>
-                        </div>
-                        <div>
-                            <h2>Consulta de CEP</h2>
-                            <p>Busque endereços por Código de Endereçamento Postal</p>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input type="text" id="cep-input" class="form-control" placeholder="Digite o CEP (ex: 01001000)" maxlength="9">
-                            <button onclick="consultarCEP()" class="btn btn-safe">
-                                <i class="fas fa-search"></i> Buscar
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div id="cep-results" class="results-container"></div>
-                    
-                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,0,0,0.1); border-radius: 8px;">
-                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Sobre esta API</h4>
-                        <p style="color: var(--text-dim);">Utiliza a API pública dos Correios para consulta de CEP. Dados oficiais e atualizados.</p>
-                        <code style="color: var(--accent); font-family: monospace;">https://viacep.com.br/ws/{cep}/json/</code>
-                    </div>
+            <div class="tool-card" id="shodan">
+                <i class="fas fa-search tool-icon"></i>
+                <h3 class="tool-title">Shodan</h3>
+                <p class="tool-desc">Motor de busca para dispositivos IoT, servidores, câmeras, roteadores e serviços expostos na internet.</p>
+                
+                <div class="tool-tags">
+                    <span class="tag">IoT</span>
+                    <span class="tag">Servidores</span>
+                    <span class="tag">Recon</span>
                 </div>
-            </div>
-
-            <!-- CNPJ Tool -->
-            <div id="cnpj" class="tab-content">
-                <div class="tool-panel">
-                    <div class="tool-header">
-                        <div class="tool-icon">
-                            <i class="fas fa-building"></i>
-                        </div>
-                        <div>
-                            <h2>Consulta de CNPJ</h2>
-                            <p>Dados cadastrais de empresas brasileiras</p>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input type="text" id="cnpj-input" class="form-control" placeholder="Digite o CNPJ (ex: 00.000.000/0001-00)">
-                            <button onclick="consultarCNPJ()" class="btn btn-safe">
-                                <i class="fas fa-search"></i> Buscar
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div id="cnpj-results" class="results-container"></div>
-                    
-                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,0,0,0.1); border-radius: 8px;">
-                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Sobre esta API</h4>
-                        <p style="color: var(--text-dim);">API pública da Receita Federal para consulta de dados cadastrais de CNPJ.</p>
-                        <code style="color: var(--accent); font-family: monospace;">https://receitaws.com.br/v1/cnpj/{cnpj}</code>
-                    </div>
+                
+                <div style="margin-top: 15px;">
+                    <input type="password" class="api-key-input" id="shodanKey" placeholder="Chave da API Shodan">
+                    <button class="test-btn" onclick="testShodanAPI()">
+                        <i class="fas fa-play"></i> Testar Conexão
+                    </button>
                 </div>
-            </div>
+                
+                <button class="action-btn view" onclick="toggleDocs('shodanDocs')" style="margin-top: 10px;">
+                    <i class="fas fa-book"></i> Ver Documentação
+                </button>
+                
+                <div id="shodanDocs" class="api-docs">
+                    <div class="docs-header">
+                        <div class="docs-title">Documentação Shodan API</div>
+                        <button class="modal-close" onclick="toggleDocs('shodanDocs')">&times;</button>
+                    </div>
+                    <div class="docs-content">
+                        <pre>
+Endpoint: https://api.shodan.io/shodan/host/search
+Método: GET
+Parâmetros:
+  - query: Termo de busca
+  - key: Sua chave API
 
-            <!-- Municípios Tool -->
-            <div id="municipios" class="tab-content">
-                <div class="tool-panel">
-                    <div class="tool-header">
-                        <div class="tool-icon">
-                            <i class="fas fa-city"></i>
-                        </div>
-                        <div>
-                            <h2>Consulta de Municípios</h2>
-                            <p>Dados do IBGE sobre cidades brasileiras</p>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="input-group">
-                            <select id="uf-select" class="form-control" onchange="carregarMunicipios()">
-                                <option value="">Selecione um estado...</option>
-                                <option value="SP">São Paulo</option>
-                                <option value="RJ">Rio de Janeiro</option>
-                                <option value="MG">Minas Gerais</option>
-                                <option value="RS">Rio Grande do Sul</option>
-                                <option value="PR">Paraná</option>
-                                <option value="SC">Santa Catarina</option>
-                                <option value="BA">Bahia</option>
-                                <option value="CE">Ceará</option>
-                                <option value="PE">Pernambuco</option>
-                            </select>
-                            <select id="municipio-select" class="form-control" disabled>
-                                <option value="">Selecione um município...</option>
-                            </select>
-                            <button onclick="consultarMunicipio()" class="btn btn-safe">
-                                <i class="fas fa-search"></i> Buscar
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div id="municipio-results" class="results-container"></div>
-                    
-                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,0,0,0.1); border-radius: 8px;">
-                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Sobre esta API</h4>
-                        <p style="color: var(--text-dim);">API oficial do IBGE para dados geográficos e estatísticos dos municípios brasileiros.</p>
-                        <code style="color: var(--accent); font-family: monospace;">https://servicodados.ibge.gov.br/api/v1/localidades/municipios</code>
-                    </div>
-                </div>
-            </div>
+Exemplo:
+  GET /shodan/host/search?key=SUA_CHAVE&query=apache
 
-            <!-- Redes Sociais Tool -->
-            <div id="redes-sociais" class="tab-content">
-                <div class="tool-panel">
-                    <div class="tool-header">
-                        <div class="tool-icon">
-                            <i class="fas fa-hashtag"></i>
-                        </div>
-                        <div>
-                            <h2>Busca em Redes Sociais</h2>
-                            <p>Busca por perfis públicos em plataformas sociais</p>
-                        </div>
-                    </div>
-                    
-                    <div style="padding: 15px; background: rgba(255,170,0,0.1); border-radius: 8px; margin-bottom: 20px;">
-                        <p style="color: var(--warning);">
-                            <i class="fas fa-exclamation-circle"></i> 
-                            Esta ferramenta busca apenas informações publicamente disponíveis. Respeitamos a privacidade dos usuários.
-                        </p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input type="text" id="social-input" class="form-control" placeholder="Digite nome de usuário ou termo de busca">
-                            <select id="social-platform" class="form-control">
-                                <option value="twitter">Twitter/X</option>
-                                <option value="github">GitHub</option>
-                                <option value="instagram">Instagram (público)</option>
-                                <option value="linkedin">LinkedIn (público)</option>
-                            </select>
-                            <button onclick="buscarRedeSocial()" class="btn btn-safe">
-                                <i class="fas fa-search"></i> Buscar
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div id="social-results" class="results-container"></div>
-                    
-                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,0,0,0.1); border-radius: 8px;">
-                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Informações Legais</h4>
-                        <p style="color: var(--text-dim);">Esta ferramenta utiliza apenas APIs oficiais ou busca pública de dados. Não acessamos informações privadas.</p>
-                    </div>
-                </div>
-            </div>
+Limites:
+  - Free: 1 requisição/segundo
+  - Resultados: Primeiras 100 páginas
 
-            <!-- Verificação Corporativa -->
-            <div id="verificacao" class="tab-content">
-                <div class="tool-panel">
-                    <div class="tool-header">
-                        <div class="tool-icon">
-                            <i class="fas fa-user-check"></i>
-                        </div>
-                        <div>
-                            <h2>Verificação Corporativa</h2>
-                            <p>Ferramentas para verificação de identidade com consentimento</p>
-                        </div>
-                    </div>
-                    
-                    <div style="padding: 20px; background: rgba(0,170,255,0.1); border-radius: 8px; margin-bottom: 20px;">
-                        <h4 style="color: var(--accent2); margin-bottom: 10px;">
-                            <i class="fas fa-file-contract"></i> Termo de Consentimento
-                        </h4>
-                        <p style="color: var(--text); margin-bottom: 15px;">
-                            Para usar ferramentas de verificação, é necessário consentimento explícito:
-                        </p>
-                        
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: flex; align-items: flex-start; gap: 10px; color: var(--text); cursor: pointer;">
-                                <input type="checkbox" id="consent-checkbox" style="margin-top: 3px;">
-                                <span>Eu concordo em fornecer meus dados para verificação e autorizo o processamento conforme a LGPD</span>
-                            </label>
-                        </div>
-                        
-                        <textarea id="verification-data" class="form-control" placeholder='{"nome": "João Silva", "cpf": "000.000.000-00", "finalidade": "verificação de identidade"}' rows="4" style="margin-bottom: 15px;"></textarea>
-                        
-                        <button onclick="processarVerificacao()" class="btn btn-safe" disabled id="verify-btn">
-                            <i class="fas fa-check-circle"></i> Processar Verificação
-                        </button>
-                    </div>
-                    
-                    <div id="verification-results" class="results-container"></div>
-                    
-                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,0,0,0.1); border-radius: 8px;">
-                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Conformidade LGPD</h4>
-                        <p style="color: var(--text-dim);">Todas as verificações seguem os artigos 7º e 8º da LGPD, garantindo consentimento explícito e finalidade específica.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dados Internacionais -->
-            <div id="internacional" class="tab-content">
-                <div class="tool-panel">
-                    <div class="tool-header">
-                        <div class="tool-icon">
-                            <i class="fas fa-globe-americas"></i>
-                        </div>
-                        <div>
-                            <h2>Dados Internacionais</h2>
-                            <p>APIs públicas de outros países</p>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <h4 style="color: var(--text); margin-bottom: 10px;">Selecione um país para consulta:</h4>
-                        <div class="input-group">
-                            <button class="btn" onclick="consultarPais('us')" style="flex: 1;">
-                                <i class="fas fa-flag-usa"></i> Estados Unidos
-                            </button>
-                            <button class="btn" onclick="consultarPais('eu')" style="flex: 1;">
-                                <i class="fas fa-flag-eu"></i> União Europeia
-                            </button>
-                            <button class="btn" onclick="consultarPais('uk')" style="flex: 1;">
-                                <i class="fas fa-flag-uk"></i> Reino Unido
-                            </button>
-                            <button class="btn" onclick="consultarPais('ca')" style="flex: 1;">
-                                <i class="fas fa-flag"></i> Canadá
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div id="international-results" class="results-container"></div>
-                    
-                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,0,0,0.1); border-radius: 8px;">
-                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-info-circle"></i> APIs Internacionais</h4>
-                        <p style="color: var(--text-dim);">Esta seção demonstra APIs públicas de dados abertos de diversos países, sempre dentro da legalidade local.</p>
+Documentação oficial: https://developer.shodan.io/api
+                        </pre>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <p>&copy; 2024 BlackNet. Desenvolvido para fins educacionais e demonstrativos.</p>
-            <p style="margin-top: 10px;">
-                <a href="index.html" class="nav-btn" style="padding: 5px 15px; font-size: 0.9em;">
-                    <i class="fas fa-home"></i> Voltar para Home
-                </a>
-            </p>
-        </footer>
+        <!-- 2. Threat Intelligence -->
+        <div class="api-category">
+            <h2 class="category-title">
+                <i class="fas fa-virus"></i> ⚠️ Threat Intelligence
+            </h2>
+            
+            <div class="tool-card" id="virustotal">
+                <i class="fas fa-shield-virus tool-icon"></i>
+                <h3 class="tool-title">VirusTotal</h3>
+                <p class="tool-desc">Analise URLs, arquivos e hashes em mais de 70 antivírus simultaneamente. Detecção de malware e ameaças.</p>
+                
+                <div class="tool-tags">
+                    <span class="tag">Malware</span>
+                    <span class="tag">Análise</span>
+                    <span class="tag">Scan</span>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <input type="password" class="api-key-input" id="virustotalKey" placeholder="Chave da API VirusTotal">
+                    <button class="test-btn" onclick="testVirusTotalAPI()">
+                        <i class="fas fa-play"></i> Testar Conexão
+                    </button>
+                </div>
+                
+                <button class="action-btn view" onclick="toggleDocs('virustotalDocs')" style="margin-top: 10px;">
+                    <i class="fas fa-book"></i> Ver Documentação
+                </button>
+                
+                <div id="virustotalDocs" class="api-docs">
+                    <div class="docs-header">
+                        <div class="docs-title">Documentação VirusTotal API</div>
+                        <button class="modal-close" onclick="toggleDocs('virustotalDocs')">&times;</button>
+                    </div>
+                    <div class="docs-content">
+                        <pre>
+Endpoint: https://www.virustotal.com/api/v3
+Métodos disponíveis:
+  - /urls (POST): Analisar URL
+  - /files (POST): Upload de arquivo
+  - /analyses/{id} (GET): Obter resultado
+
+Headers obrigatórios:
+  x-apikey: SUA_CHAVE_VIRUSTOTAL
+
+Limites:
+  - Free: 500 requisições/dia
+  - 4 requisições/minuto
+
+Documentação: https://developers.virustotal.com/reference
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. OSINT -->
+        <div class="api-category">
+            <h2 class="category-title">
+                <i class="fas fa-user-secret"></i> 🔍 OSINT
+            </h2>
+            
+            <div class="tool-card" id="hibp">
+                <i class="fas fa-shield-alt tool-icon"></i>
+                <h3 class="tool-title">Have I Been Pwned</h3>
+                <p class="tool-desc">Verifique se emails, senhas ou nomes de usuário foram comprometidos em vazamentos de dados públicos.</p>
+                
+                <div class="tool-tags">
+                    <span class="tag">Privacidade</span>
+                    <span class="tag">Vazamentos</span>
+                    <span class="tag">Segurança</span>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <input type="text" class="api-key-input" id="hibpEmail" placeholder="Email para verificar">
+                    <button class="test-btn" onclick="testHIBPAPI()">
+                        <i class="fas fa-play"></i> Verificar Email
+                    </button>
+                </div>
+                
+                <button class="action-btn view" onclick="toggleDocs('hibpDocs')" style="margin-top: 10px;">
+                    <i class="fas fa-book"></i> Ver Documentação
+                </button>
+                
+                <div id="hibpDocs" class="api-docs">
+                    <div class="docs-header">
+                        <div class="docs-title">Documentação HIBP API</div>
+                        <button class="modal-close" onclick="toggleDocs('hibpDocs')">&times;</button>
+                    </div>
+                    <div class="docs-content">
+                        <pre>
+Endpoints:
+  - Email: https://haveibeenpwned.com/api/v3/breachedaccount/{email}
+  - Senhas: https://api.pwnedpasswords.com/range/{first5Hash}
+
+Headers:
+  - hibp-api-key: SUA_CHAVE (opcional)
+  - User-Agent: SeuApp/1.0
+
+Exemplo sem chave (rate limitado):
+  GET /breachedaccount/test@example.com
+  Retorna: Lista de vazamentos
+
+Para senhas (k-Anonymity):
+  - Hash SHA-1 da senha
+  - Enviar primeiros 5 chars
+  - Comparar localmente
+
+Documentação: https://haveibeenpwned.com/API/v3
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Análise de Malware -->
+        <div class="api-category">
+            <h2 class="category-title">
+                <i class="fas fa-biohazard"></i> 🧪 Análise de Malware
+            </h2>
+            
+            <div class="tool-card" id="hybrid">
+                <i class="fas fa-microscope tool-icon"></i>
+                <h3 class="tool-title">Hybrid Analysis</h3>
+                <p class="tool-desc">Sandbox para análise comportamental de malware. Analisa arquivos executáveis em ambiente controlado.</p>
+                
+                <div class="tool-tags">
+                    <span class="tag">Sandbox</span>
+                    <span class="tag">Malware</span>
+                    <span class="tag">Análise</span>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <input type="password" class="api-key-input" id="hybridKey" placeholder="Chave da API Hybrid Analysis">
+                    <button class="test-btn" onclick="testHybridAPI()">
+                        <i class="fas fa-play"></i> Testar Conexão
+                    </button>
+                </div>
+                
+                <button class="action-btn view" onclick="toggleDocs('hybridDocs')" style="margin-top: 10px;">
+                    <i class="fas fa-book"></i> Ver Documentação
+                </button>
+                
+                <div id="hybridDocs" class="api-docs">
+                    <div class="docs-header">
+                        <div class="docs-title">Documentação Hybrid Analysis</div>
+                        <button class="modal-close" onclick="toggleDocs('hybridDocs')">&times;</button>
+                    </div>
+                    <div class="docs-content">
+                        <pre>
+Endpoint: https://www.hybrid-analysis.com/api/v2
+Métodos principais:
+  - /submit/url (POST): Analisar URL
+  - /submit/file (POST): Upload de arquivo
+  - /report/{id} (GET): Obter relatório
+
+Headers obrigatórios:
+  api-key: SUA_CHAVE
+  user-agent: Falcon Sandbox
+  accept: application/json
+
+Limites:
+  - Community: 10 análises/dia
+  - Tamanho arquivo: 100MB
+
+Ambientes disponíveis:
+  - Windows 10 64-bit
+  - Android
+  - Linux
+
+Documentação: https://www.hybrid-analysis.com/docs/api/v2
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Criptografia -->
+        <div class="api-category">
+            <h2 class="category-title">
+                <i class="fas fa-lock"></i> 🔐 Criptografia
+            </h2>
+            
+            <div class="tool-card">
+                <i class="fas fa-key tool-icon"></i>
+                <h3 class="tool-title">Have I Been Encrypted?</h3>
+                <p class="tool-desc">Verifique a força de senhas usando técnica de k-Anonymity. Nunca envia a senha completa.</p>
+                
+                <div class="tool-tags">
+                    <span class="tag">Senhas</span>
+                    <span class="tag">Segurança</span>
+                    <span class="tag">Hash</span>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <input type="password" class="api-key-input" id="passwordCheck" placeholder="Senha para verificar">
+                    <button class="test-btn" onclick="checkPasswordStrength()">
+                        <i class="fas fa-play"></i> Verificar Senha
+                    </button>
+                </div>
+                
+                <div id="passwordResult" style="margin-top: 10px; padding: 10px; border-radius: 5px; display: none;"></div>
+            </div>
+        </div>
+
+        <!-- 6. Rede & Infraestrutura -->
+        <div class="api-category">
+            <h2 class="category-title">
+                <i class="fas fa-network-wired"></i> 📡 Rede & Infraestrutura
+            </h2>
+            
+            <div class="tool-card">
+                <i class="fas fa-map-marker-alt tool-icon"></i>
+                <h3 class="tool-title">BGPView</h3>
+                <p class="tool-desc">Informações de roteamento BGP, ASN, prefixos IP e dados de infraestrutura de rede global.</p>
+                
+                <div class="tool-tags">
+                    <span class="tag">BGP</span>
+                    <span class="tag">ASN</span>
+                    <span class="tag">Rede</span>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <input type="text" class="api-key-input" id="bgpQuery" placeholder="ASN ou IP (ex: AS15169)">
+                    <button class="test-btn" onclick="testBGPViewAPI()">
+                        <i class="fas fa-play"></i> Consultar
+                    </button>
+                </div>
+                
+                <button class="action-btn view" onclick="toggleDocs('bgpDocs')" style="margin-top: 10px;">
+                    <i class="fas fa-book"></i> Ver Documentação
+                </button>
+                
+                <div id="bgpDocs" class="api-docs">
+                    <div class="docs-header">
+                        <div class="docs-title">Documentação BGPView API</div>
+                        <button class="modal-close" onclick="toggleDocs('bgpDocs')">&times;</button>
+                    </div>
+                    <div class="docs-content">
+                        <pre>
+Endpoint: https://api.bgpview.io
+Métodos gratuitos:
+  - /asn/{asn} (GET): Dados do ASN
+  - /ip/{ip} (GET): Dados do IP
+  - /asn/{asn}/prefixes (GET): Prefixos do ASN
+
+Exemplo:
+  GET /asn/15169
+  Retorna: Google LLC, IPv4: 8.8.8.0/24, etc.
+
+Limites:
+  - Rate limit: 60 requisições/minuto
+  - Sem chave necessária
+
+Documentação: https://bgpview.docs.apiary.io
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. CTFs & Treinamento -->
+        <div class="api-category">
+            <h2 class="category-title">
+                <i class="fas fa-flag"></i> 🎮 CTFs & Treinamento
+            </h2>
+            
+            <div class="tool-card">
+                <i class="fas fa-trophy tool-icon"></i>
+                <h3 class="tool-title">CTFtime</h3>
+                <p class="tool-desc">Informações sobre competições CTF (Capture The Flag) ao redor do mundo. Calendário e resultados.</p>
+                
+                <div class="tool-tags">
+                    <span class="tag">CTF</span>
+                    <span class="tag">Competições</span>
+                    <span class="tag">Treinamento</span>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <button class="test-btn" onclick="loadCTFEvents()">
+                        <i class="fas fa-play"></i> Carregar Próximos CTFs
+                    </button>
+                </div>
+                
+                <div id="ctfResults" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+
+        <!-- 8. Utilitários -->
+        <div class="api-category">
+            <h2 class="category-title">
+                <i class="fas fa-tools"></i> 🛠️ Utilitários
+            </h2>
+            
+            <div class="tool-card">
+                <i class="fas fa-hashtag tool-icon"></i>
+                <h3 class="tool-title">Hash Calculator</h3>
+                <p class="tool-desc">Calcule hashes em múltiplos algoritmos (MD5, SHA-1, SHA-256, SHA-512) localmente no navegador.</p>
+                
+                <div class="tool-tags">
+                    <span class="tag">Hash</span>
+                    <span class="tag">Criptografia</span>
+                    <span class="tag">Ferramenta</span>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <input type="text" class="api-key-input" id="hashInput" placeholder="Texto para calcular hash">
+                    <select class="api-key-input" id="hashAlgorithm" style="margin-top: 10px;">
+                        <option value="SHA-256">SHA-256</option>
+                        <option value="SHA-512">SHA-512</option>
+                        <option value="SHA-1">SHA-1</option>
+                        <option value="MD5">MD5</option>
+                    </select>
+                    <button class="test-btn" onclick="calculateHash()">
+                        <i class="fas fa-play"></i> Calcular Hash
+                    </button>
+                </div>
+                
+                <div id="hashResult" style="margin-top: 10px; font-family: monospace; word-break: break-all;"></div>
+            </div>
+        </div>
+
     </div>
 
-    <script src="api.js"></script>
+    <script src="auth.js"></script>
     <script>
-        // Sistema de abas
-        function openTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
-        // Ativar/desativar botão de verificação
-        document.getElementById('consent-checkbox').addEventListener('change', function() {
-            document.getElementById('verify-btn').disabled = !this.checked;
-        });
-
-        // Mascara para CEP
-        document.getElementById('cep-input').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 5) {
-                value = value.substring(0,5) + '-' + value.substring(5,8);
-            }
-            e.target.value = value;
-        });
-
-        // Mascara para CNPJ
-        document.getElementById('cnpj-input').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 12) {
-                value = value.substring(0,2) + '.' + value.substring(2,5) + '.' + 
-                        value.substring(5,8) + '/' + value.substring(8,12) + '-' + 
-                        value.substring(12,14);
-            } else if (value.length > 8) {
-                value = value.substring(0,2) + '.' + value.substring(2,5) + '.' + 
-                        value.substring(5,8) + '/' + value.substring(8);
-            } else if (value.length > 5) {
-                value = value.substring(0,2) + '.' + value.substring(2,5) + '.' + 
-                        value.substring(5);
-            } else if (value.length > 2) {
-                value = value.substring(0,2) + '.' + value.substring(2);
-            }
-            e.target.value = value;
-        });
-
-        // Scroll suave para âncoras
-        document.querySelectorAll('.nav-btn[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                openTab(targetId.substring(1));
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Helper function para mostrar resultados
-        function showResults(elementId, content) {
-            const element = document.getElementById(elementId);
-            element.innerHTML = content;
-            element.classList.add('show');
-        }
-
-        // Funções modificadas para usar o novo estilo
-        async function consultarCEP() {
-            const cepInput = document.getElementById('cep-input');
-            const cep = cepInput.value.replace(/\D/g, '');
-            
-            if (cep.length !== 8) {
-                showResults('cep-results', '<div style="color: var(--danger); padding: 20px; text-align: center;">CEP inválido. Digite 8 números.</div>');
+        // Verificar autenticação
+        async function checkAuth() {
+            const token = localStorage.getItem('auth_token');
+            if (!token) {
+                window.location.href = 'index.html';
                 return;
             }
             
             try {
-                showResults('cep-results', '<div style="padding: 20px; text-align: center;"><div class="loader"></div> Buscando CEP...</div>');
-                
-                // Usar a API do servidor local
-                const response = await fetch(`/api/cep/${cep}`);
-                const data = await response.json();
-                
-                if (data.error) {
-                    throw new Error(data.error);
+                const response = await auth.verifyToken(token);
+                if (!response.valid) {
+                    throw new Error('Token inválido');
                 }
-                
-                let html = '<div style="padding: 20px;">';
-                html += '<h3 style="color: var(--primary); margin-bottom: 15px; border-bottom: 1px solid var(--medium-gray); padding-bottom: 10px;">Resultado da Consulta</h3>';
-                html += '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">';
-                
-                html += `<div style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px;">
-                    <strong>CEP:</strong> ${formatCEP(data.cep || cep)}
-                </div>`;
-                
-                html += `<div style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px;">
-                    <strong>Logradouro:</strong> ${data.logradouro || 'Não informado'}
-                </div>`;
-                
-                html += `<div style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px;">
-                    <strong>Bairro:</strong> ${data.bairro || 'Não informado'}
-                </div>`;
-                
-                html += `<div style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px;">
-                    <strong>Cidade:</strong> ${data.localidade || 'Não informado'}
-                </div>`;
-                
-                html += `<div style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px;">
-                    <strong>Estado:</strong> ${data.uf || 'Não informado'}
-                </div>`;
-                
-                html += `<div style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px;">
-                    <strong>DDD:</strong> ${data.ddd || 'Não informado'}
-                </div>`;
-                
-                html += '</div>';
-                html += '<div style="margin-top: 15px;">';
-                html += `<button onclick="copyToClipboard('${JSON.stringify(data)}')" class="btn" style="margin-right: 10px;">
-                    <i class="fas fa-copy"></i> Copiar Resultado
-                </button>`;
-                html += '</div>';
-                html += '</div>';
-                
-                showResults('cep-results', html);
-                
             } catch (error) {
-                showResults('cep-results', `<div style="color: var(--danger); padding: 20px; text-align: center;">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <h4>Erro na Consulta</h4>
-                    <p>${error.message}</p>
-                    <p>Verifique se o CEP está correto e tente novamente.</p>
-                </div>`);
+                window.location.href = 'index.html';
             }
         }
 
-        // Função formatCEP
-        function formatCEP(cep) {
-            return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
+        function toggleDocs(docId) {
+            const doc = document.getElementById(docId);
+            doc.classList.toggle('active');
         }
 
-        // Função copyToClipboard
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Texto copiado para a área de transferência!');
-            }).catch(err => {
-                console.error('Erro ao copiar: ', err);
-            });
+        // Testar APIs
+        async function testShodanAPI() {
+            const key = document.getElementById('shodanKey').value;
+            if (!key) {
+                alert('Insira a chave da API Shodan');
+                return;
+            }
+            
+            try {
+                // Testar conexão básica
+                const response = await fetch(`https://api.shodan.io/api-info?key=${key}`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert('Chave inválida: ' + data.error);
+                } else {
+                    alert('Conexão bem-sucedida! Plan: ' + (data.plan || 'Free'));
+                }
+            } catch (error) {
+                alert('Erro ao conectar: ' + error.message);
+            }
         }
 
-        // Abrir a primeira aba por padrão
+        async function testVirusTotalAPI() {
+            const key = document.getElementById('virustotalKey').value;
+            if (!key) {
+                alert('Insira a chave da API VirusTotal');
+                return;
+            }
+            
+            try {
+                const response = await fetch('https://www.virustotal.com/api/v3/ping', {
+                    headers: {
+                        'x-apikey': key
+                    }
+                });
+                
+                if (response.status === 200) {
+                    alert('Conexão bem-sucedida! API VirusTotal funcionando.');
+                } else {
+                    alert('Chave inválida ou limite excedido');
+                }
+            } catch (error) {
+                alert('Erro ao conectar: ' + error.message);
+            }
+        }
+
+        async function testHIBPAPI() {
+            const email = document.getElementById('hibpEmail').value;
+            if (!email) {
+                alert('Insira um email para verificar');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email)}`, {
+                    headers: {
+                        'User-Agent': 'BlackNet-Security-Tools'
+                    }
+                });
+                
+                if (response.status === 200) {
+                    const breaches = await response.json();
+                    alert(`Email encontrado em ${breaches.length} vazamentos!`);
+                } else if (response.status === 404) {
+                    alert('Email NÃO encontrado em vazamentos conhecidos. ✓');
+                } else {
+                    alert('Erro na consulta: ' + response.status);
+                }
+            } catch (error) {
+                alert('Erro ao verificar: ' + error.message);
+            }
+        }
+
+        async function checkPasswordStrength() {
+            const password = document.getElementById('passwordCheck').value;
+            if (!password) {
+                alert('Insira uma senha para verificar');
+                return;
+            }
+            
+            // Calcular hash SHA-1
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+            
+            // Usar k-Anonymity (primeiros 5 chars)
+            const prefix = hashHex.substring(0, 5);
+            const suffix = hashHex.substring(5);
+            
+            try {
+                const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
+                const data = await response.text();
+                
+                const results = data.split('\n');
+                const found = results.some(line => line.startsWith(suffix));
+                
+                const resultDiv = document.getElementById('passwordResult');
+                if (found) {
+                    resultDiv.style.background = 'rgba(255, 0, 0, 0.2)';
+                    resultDiv.style.color = 'var(--danger)';
+                    resultDiv.style.border = '1px solid var(--danger)';
+                    resultDiv.innerHTML = `
+                        <strong><i class="fas fa-exclamation-triangle"></i> SENHA COMPROMETIDA</strong><br>
+                        Esta senha foi encontrada em vazamentos de dados públicos.
+                        Recomendação: Troque imediatamente.
+                    `;
+                } else {
+                    resultDiv.style.background = 'rgba(0, 255, 0, 0.2)';
+                    resultDiv.style.color = 'var(--safe)';
+                    resultDiv.style.border = '1px solid var(--safe)';
+                    resultDiv.innerHTML = `
+                        <strong><i class="fas fa-check-circle"></i> SENHA SEGURA</strong><br>
+                        Esta senha não foi encontrada em vazamentos conhecidos.
+                        Pontuação de força: ${calculatePasswordScore(password)}/100
+                    `;
+                }
+                resultDiv.style.display = 'block';
+                
+            } catch (error) {
+                alert('Erro ao verificar senha: ' + error.message);
+            }
+        }
+
+        function calculatePasswordScore(password) {
+            let score = 0;
+            
+            // Comprimento
+            if (password.length >= 8) score += 20;
+            if (password.length >= 12) score += 10;
+            if (password.length >= 16) score += 10;
+            
+            // Caracteres diversos
+            if (/[A-Z]/.test(password)) score += 10;
+            if (/[a-z]/.test(password)) score += 10;
+            if (/[0-9]/.test(password)) score += 10;
+            if (/[^A-Za-z0-9]/.test(password)) score += 10;
+            
+            // Não é palavra comum
+            const common = ['password', '123456', 'qwerty', 'admin', 'letmein'];
+            if (!common.some(word => password.toLowerCase().includes(word))) {
+                score += 20;
+            }
+            
+            return Math.min(score, 100);
+        }
+
+        async function testBGPViewAPI() {
+            const query = document.getElementById('bgpQuery').value;
+            if (!query) {
+                alert('Insira um ASN ou IP para consultar');
+                return;
+            }
+            
+            try {
+                let url = `https://api.bgpview.io`;
+                if (query.startsWith('AS') || /^\d+$/.test(query)) {
+                    const asn = query.replace('AS', '');
+                    url += `/asn/${asn}`;
+                } else {
+                    url += `/ip/${query}`;
+                }
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.status === 'ok') {
+                    alert('Consulta realizada com sucesso!\nVerifique o console para detalhes.');
+                    console.log('BGPView Result:', data);
+                } else {
+                    alert('Erro na consulta: ' + (data.status_message || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Erro ao consultar: ' + error.message);
+            }
+        }
+
+        async function loadCTFEvents() {
+            try {
+                const response = await fetch('https://ctftime.org/api/v1/events/?limit=5');
+                const events = await response.json();
+                
+                const container = document.getElementById('ctfResults');
+                container.innerHTML = '';
+                
+                events.forEach(event => {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.style.cssText = 'padding: 10px; margin-bottom: 10px; background: rgba(255,0,0,0.1); border-radius: 8px;';
+                    
+                    const start = new Date(event.start);
+                    const end = new Date(event.finish);
+                    
+                    eventDiv.innerHTML = `
+                        <strong>${event.title}</strong><br>
+                        <small>${start.toLocaleDateString('pt-BR')} - ${end.toLocaleDateString('pt-BR')}</small><br>
+                        <small>Organizador: ${event.organizers.map(o => o.name).join(', ')}</small>
+                    `;
+                    
+                    container.appendChild(eventDiv);
+                });
+                
+            } catch (error) {
+                alert('Erro ao carregar CTFs: ' + error.message);
+            }
+        }
+
+        async function calculateHash() {
+            const input = document.getElementById('hashInput').value;
+            const algorithm = document.getElementById('hashAlgorithm').value;
+            
+            if (!input) {
+                alert('Insira um texto para calcular o hash');
+                return;
+            }
+            
+            try {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(input);
+                const hashBuffer = await crypto.subtle.digest(algorithm, data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                
+                document.getElementById('hashResult').innerHTML = `
+                    <strong>${algorithm}:</strong><br>
+                    <code style="color: var(--accent);">${hashHex}</code>
+                `;
+                
+            } catch (error) {
+                alert('Erro ao calcular hash: ' + error.message);
+            }
+        }
+
+        // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
-            openTab('cep');
+            checkAuth();
         });
     </script>
 </body>
