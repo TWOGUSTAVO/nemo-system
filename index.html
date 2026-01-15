@@ -3,257 +3,845 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberSecurity Tools - Ferramentas de Segurança Digital</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Buscar Dados - BlackNet</title>
+    <style>
+        /* Reset e configurações */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        :root {
+            --primary: #ff0000;
+            --primary-dark: #cc0000;
+            --secondary: #000000;
+            --accent: #00ff00;
+            --accent2: #00aaff;
+            --danger: #ff5555;
+            --warning: #ffaa00;
+            --safe: #55ff55;
+            --dark: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2a2a2a;
+            --light-gray: #3a3a3a;
+            --text: #ffffff;
+            --text-dim: #aaaaaa;
+        }
+
+        body {
+            background: linear-gradient(135deg, #000000 0%, #1a0000 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .main-header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--primary);
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .logo-text {
+            font-size: 2.8em;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+        }
+
+        /* Sistema de abas */
+        .tabs-container {
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid var(--medium-gray);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .tabs-header {
+            display: flex;
+            background: linear-gradient(90deg, var(--dark), var(--dark-gray));
+            padding: 0;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 20px 30px;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: var(--text);
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            background: rgba(10, 10, 10, 0.9);
+        }
+
+        .tab-btn.active::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Painéis de ferramentas */
+        .tool-panel {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid var(--medium-gray);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--medium-gray);
+        }
+
+        .tool-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .tool-header h2 {
+            font-size: 2rem;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-header p {
+            color: var(--text-dim);
+        }
+
+        /* Formulários */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1em;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+
+        /* Botões */
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-safe {
+            background: linear-gradient(45deg, var(--safe), #00aa00);
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, var(--warning), #cc8800);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, var(--danger), #cc0000);
+        }
+
+        /* Resultados */
+        .results-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--dark);
+            border-radius: 8px;
+            border: 1px solid var(--medium-gray);
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .results-container.show {
+            display: block;
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Status */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .status-safe {
+            background: rgba(0, 255, 0, 0.2);
+            color: var(--safe);
+        }
+
+        .status-warning {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+        }
+
+        .status-danger {
+            background: rgba(255, 85, 85, 0.2);
+            color: var(--danger);
+        }
+
+        /* Input Group */
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .input-group input,
+        .input-group select {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px;
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1em;
+        }
+
+        /* Quick Navigation */
+        .quick-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 0, 0, 0.2);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-group input,
+            .input-group select {
+                min-width: 100%;
+            }
+            
+            .tabs-header {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 2px solid var(--primary);
+            padding: 30px 0;
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .footer p {
+            color: var(--text-dim);
+        }
+
+        /* Loader */
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--medium-gray);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔒</text></svg>">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-container">
+    <div class="container">
+        <!-- Header -->
+        <header class="main-header">
             <div class="logo">
-                <i class="fas fa-shield-alt"></i>
-                <span>Cyber<span class="logo-highlight">Tools</span></span>
+                <i class="fas fa-terminal" style="color: var(--primary); font-size: 2em;"></i>
+                <h1 class="logo-text">BUSCAR DADOS</h1>
+                <i class="fas fa-server" style="color: var(--primary); font-size: 2em;"></i>
             </div>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link active"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="buscar-dados.html" class="nav-link"><i class="fas fa-search"></i> Buscar Dados</a></li>
-                <li><a href="#ferramentas" class="nav-link"><i class="fas fa-tools"></i> Ferramentas</a></li>
-                <li><a href="#sobre" class="nav-link"><i class="fas fa-info-circle"></i> Sobre</a></li>
-                <li><a href="#contato" class="nav-link"><i class="fas fa-envelope"></i> Contato</a></li>
-            </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+            <p style="color: var(--text-dim);">Ferramentas de consulta de dados públicos com conformidade legal</p>
+            
+            <!-- Quick Navigation -->
+            <div class="quick-nav">
+                <a href="#cep" class="nav-btn"><i class="fas fa-map-marker-alt"></i> CEP</a>
+                <a href="#cnpj" class="nav-btn"><i class="fas fa-building"></i> CNPJ</a>
+                <a href="#municipios" class="nav-btn"><i class="fas fa-city"></i> Municípios</a>
+                <a href="#redes-sociais" class="nav-btn"><i class="fas fa-hashtag"></i> Redes Sociais</a>
+                <a href="#verificacao" class="nav-btn"><i class="fas fa-user-check"></i> Verificação</a>
+                <a href="#internacional" class="nav-btn"><i class="fas fa-globe"></i> Internacional</a>
+            </div>
+        </header>
+
+        <!-- Sistema de abas -->
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="openTab('cep')">
+                    <i class="fas fa-map-marked-alt"></i> CEP
+                </button>
+                <button class="tab-btn" onclick="openTab('cnpj')">
+                    <i class="fas fa-building"></i> CNPJ
+                </button>
+                <button class="tab-btn" onclick="openTab('municipios')">
+                    <i class="fas fa-city"></i> MUNICÍPIOS
+                </button>
+                <button class="tab-btn" onclick="openTab('redes-sociais')">
+                    <i class="fas fa-hashtag"></i> REDES SOCIAIS
+                </button>
+                <button class="tab-btn" onclick="openTab('verificacao')">
+                    <i class="fas fa-user-check"></i> VERIFICAÇÃO
+                </button>
+                <button class="tab-btn" onclick="openTab('internacional')">
+                    <i class="fas fa-globe"></i> INTERNACIONAL
+                </button>
+            </div>
+
+            <!-- CEP Tool -->
+            <div id="cep" class="tab-content active">
+                <div class="tool-panel">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <div>
+                            <h2>Consulta de CEP</h2>
+                            <p>Busque endereços por Código de Endereçamento Postal</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" id="cep-input" class="form-control" placeholder="Digite o CEP (ex: 01001000)" maxlength="9">
+                            <button onclick="consultarCEP()" class="btn btn-safe">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="cep-results" class="results-container"></div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,0,0,0.1); border-radius: 8px;">
+                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Sobre esta API</h4>
+                        <p style="color: var(--text-dim);">Utiliza a API pública dos Correios para consulta de CEP. Dados oficiais e atualizados.</p>
+                        <code style="color: var(--accent); font-family: monospace;">https://viacep.com.br/ws/{cep}/json/</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CNPJ Tool -->
+            <div id="cnpj" class="tab-content">
+                <div class="tool-panel">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div>
+                            <h2>Consulta de CNPJ</h2>
+                            <p>Dados cadastrais de empresas brasileiras</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" id="cnpj-input" class="form-control" placeholder="Digite o CNPJ (ex: 00.000.000/0001-00)">
+                            <button onclick="consultarCNPJ()" class="btn btn-safe">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="cnpj-results" class="results-container"></div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,0,0,0.1); border-radius: 8px;">
+                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Sobre esta API</h4>
+                        <p style="color: var(--text-dim);">API pública da Receita Federal para consulta de dados cadastrais de CNPJ.</p>
+                        <code style="color: var(--accent); font-family: monospace;">https://receitaws.com.br/v1/cnpj/{cnpj}</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Municípios Tool -->
+            <div id="municipios" class="tab-content">
+                <div class="tool-panel">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-city"></i>
+                        </div>
+                        <div>
+                            <h2>Consulta de Municípios</h2>
+                            <p>Dados do IBGE sobre cidades brasileiras</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <select id="uf-select" class="form-control" onchange="carregarMunicipios()">
+                                <option value="">Selecione um estado...</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="PR">Paraná</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="PE">Pernambuco</option>
+                            </select>
+                            <select id="municipio-select" class="form-control" disabled>
+                                <option value="">Selecione um município...</option>
+                            </select>
+                            <button onclick="consultarMunicipio()" class="btn btn-safe">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="municipio-results" class="results-container"></div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,0,0,0.1); border-radius: 8px;">
+                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Sobre esta API</h4>
+                        <p style="color: var(--text-dim);">API oficial do IBGE para dados geográficos e estatísticos dos municípios brasileiros.</p>
+                        <code style="color: var(--accent); font-family: monospace;">https://servicodados.ibge.gov.br/api/v1/localidades/municipios</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Redes Sociais Tool -->
+            <div id="redes-sociais" class="tab-content">
+                <div class="tool-panel">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-hashtag"></i>
+                        </div>
+                        <div>
+                            <h2>Busca em Redes Sociais</h2>
+                            <p>Busca por perfis públicos em plataformas sociais</p>
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 15px; background: rgba(255,170,0,0.1); border-radius: 8px; margin-bottom: 20px;">
+                        <p style="color: var(--warning);">
+                            <i class="fas fa-exclamation-circle"></i> 
+                            Esta ferramenta busca apenas informações publicamente disponíveis. Respeitamos a privacidade dos usuários.
+                        </p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" id="social-input" class="form-control" placeholder="Digite nome de usuário ou termo de busca">
+                            <select id="social-platform" class="form-control">
+                                <option value="twitter">Twitter/X</option>
+                                <option value="github">GitHub</option>
+                                <option value="instagram">Instagram (público)</option>
+                                <option value="linkedin">LinkedIn (público)</option>
+                            </select>
+                            <button onclick="buscarRedeSocial()" class="btn btn-safe">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="social-results" class="results-container"></div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,0,0,0.1); border-radius: 8px;">
+                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Informações Legais</h4>
+                        <p style="color: var(--text-dim);">Esta ferramenta utiliza apenas APIs oficiais ou busca pública de dados. Não acessamos informações privadas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verificação Corporativa -->
+            <div id="verificacao" class="tab-content">
+                <div class="tool-panel">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div>
+                            <h2>Verificação Corporativa</h2>
+                            <p>Ferramentas para verificação de identidade com consentimento</p>
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 20px; background: rgba(0,170,255,0.1); border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="color: var(--accent2); margin-bottom: 10px;">
+                            <i class="fas fa-file-contract"></i> Termo de Consentimento
+                        </h4>
+                        <p style="color: var(--text); margin-bottom: 15px;">
+                            Para usar ferramentas de verificação, é necessário consentimento explícito:
+                        </p>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: flex; align-items: flex-start; gap: 10px; color: var(--text); cursor: pointer;">
+                                <input type="checkbox" id="consent-checkbox" style="margin-top: 3px;">
+                                <span>Eu concordo em fornecer meus dados para verificação e autorizo o processamento conforme a LGPD</span>
+                            </label>
+                        </div>
+                        
+                        <textarea id="verification-data" class="form-control" placeholder='{"nome": "João Silva", "cpf": "000.000.000-00", "finalidade": "verificação de identidade"}' rows="4" style="margin-bottom: 15px;"></textarea>
+                        
+                        <button onclick="processarVerificacao()" class="btn btn-safe" disabled id="verify-btn">
+                            <i class="fas fa-check-circle"></i> Processar Verificação
+                        </button>
+                    </div>
+                    
+                    <div id="verification-results" class="results-container"></div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,0,0,0.1); border-radius: 8px;">
+                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Conformidade LGPD</h4>
+                        <p style="color: var(--text-dim);">Todas as verificações seguem os artigos 7º e 8º da LGPD, garantindo consentimento explícito e finalidade específica.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dados Internacionais -->
+            <div id="internacional" class="tab-content">
+                <div class="tool-panel">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-globe-americas"></i>
+                        </div>
+                        <div>
+                            <h2>Dados Internacionais</h2>
+                            <p>APIs públicas de outros países</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: var(--text); margin-bottom: 10px;">Selecione um país para consulta:</h4>
+                        <div class="input-group">
+                            <button class="btn" onclick="consultarPais('us')" style="flex: 1;">
+                                <i class="fas fa-flag-usa"></i> Estados Unidos
+                            </button>
+                            <button class="btn" onclick="consultarPais('eu')" style="flex: 1;">
+                                <i class="fas fa-flag-eu"></i> União Europeia
+                            </button>
+                            <button class="btn" onclick="consultarPais('uk')" style="flex: 1;">
+                                <i class="fas fa-flag-uk"></i> Reino Unido
+                            </button>
+                            <button class="btn" onclick="consultarPais('ca')" style="flex: 1;">
+                                <i class="fas fa-flag"></i> Canadá
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="international-results" class="results-container"></div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,0,0,0.1); border-radius: 8px;">
+                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-info-circle"></i> APIs Internacionais</h4>
+                        <p style="color: var(--text-dim);">Esta seção demonstra APIs públicas de dados abertos de diversos países, sempre dentro da legalidade local.</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Ferramentas de <span class="highlight">Cybersegurança</span> Legal</h1>
-            <p class="hero-subtitle">Consulte dados públicos e APIs oficiais dentro da conformidade com LGPD e leis internacionais</p>
-            <div class="hero-buttons">
-                <a href="buscar-dados.html" class="btn-primary">
-                    <i class="fas fa-play-circle"></i> Começar a Buscar
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 BlackNet. Desenvolvido para fins educacionais e demonstrativos.</p>
+            <p style="margin-top: 10px;">
+                <a href="index.html" class="nav-btn" style="padding: 5px 15px; font-size: 0.9em;">
+                    <i class="fas fa-home"></i> Voltar para Home
                 </a>
-                <a href="#ferramentas" class="btn-secondary">
-                    <i class="fas fa-list"></i> Ver Ferramentas
-                </a>
-            </div>
-        </div>
-        <div class="hero-image">
-            <div class="floating-icon">
-                <i class="fas fa-database"></i>
-            </div>
-            <div class="floating-icon">
-                <i class="fas fa-search"></i>
-            </div>
-            <div class="floating-icon">
-                <i class="fas fa-shield-check"></i>
-            </div>
-        </div>
-    </section>
+            </p>
+        </footer>
+    </div>
 
-    <!-- Legal Warning -->
-    <section class="legal-warning">
-        <div class="warning-container">
-            <div class="warning-icon">
-                <i class="fas fa-balance-scale"></i>
-            </div>
-            <div class="warning-content">
-                <h3><i class="fas fa-exclamation-triangle"></i> Conformidade Legal Total</h3>
-                <p>Todas as ferramentas utilizam apenas APIs públicas, dados abertos ou exigem consentimento explícito. 
-                   Respeitamos integralmente a <strong>LGPD</strong>, <strong>GDPR</strong> e demais leis de proteção de dados.</p>
-            </div>
-        </div>
-    </section>
+    <script src="api.js"></script>
+    <script>
+        // Sistema de abas
+        function openTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
 
-    <!-- Features Grid -->
-    <section id="ferramentas" class="features">
-        <h2 class="section-title">Ferramentas Disponíveis</h2>
-        <p class="section-subtitle">Selecione uma categoria para começar</p>
-        
-        <div class="features-grid">
-            <!-- Feature 1 -->
-            <div class="feature-card" onclick="window.location.href='buscar-dados.html#cep'">
-                <div class="feature-icon">
-                    <i class="fas fa-map-marked-alt"></i>
-                </div>
-                <h3>CEP e Endereços</h3>
-                <p>Consulta de CEP, endereços completos e dados geográficos via API pública dos Correios</p>
-                <div class="feature-tags">
-                    <span class="tag">API Pública</span>
-                    <span class="tag">Gratuito</span>
-                </div>
-            </div>
+        // Ativar/desativar botão de verificação
+        document.getElementById('consent-checkbox').addEventListener('change', function() {
+            document.getElementById('verify-btn').disabled = !this.checked;
+        });
 
-            <!-- Feature 2 -->
-            <div class="feature-card" onclick="window.location.href='buscar-dados.html#cnpj'">
-                <div class="feature-icon">
-                    <i class="fas fa-building"></i>
-                </div>
-                <h3>Consulta CNPJ</h3>
-                <p>Dados cadastrais de empresas brasileiras através da Receita Federal</p>
-                <div class="feature-tags">
-                    <span class="tag">Oficial</span>
-                    <span class="tag">Atualizado</span>
-                </div>
-            </div>
+        // Mascara para CEP
+        document.getElementById('cep-input').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 5) {
+                value = value.substring(0,5) + '-' + value.substring(5,8);
+            }
+            e.target.value = value;
+        });
 
-            <!-- Feature 3 -->
-            <div class="feature-card" onclick="window.location.href='buscar-dados.html#municipios'">
-                <div class="feature-icon">
-                    <i class="fas fa-city"></i>
-                </div>
-                <h3>Municípios IBGE</h3>
-                <p>Dados estatísticos e geográficos de todos os municípios brasileiros</p>
-                <div class="feature-tags">
-                    <span class="tag">IBGE</span>
-                    <span class="tag">Dados Abertos</span>
-                </div>
-            </div>
+        // Mascara para CNPJ
+        document.getElementById('cnpj-input').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 12) {
+                value = value.substring(0,2) + '.' + value.substring(2,5) + '.' + 
+                        value.substring(5,8) + '/' + value.substring(8,12) + '-' + 
+                        value.substring(12,14);
+            } else if (value.length > 8) {
+                value = value.substring(0,2) + '.' + value.substring(2,5) + '.' + 
+                        value.substring(5,8) + '/' + value.substring(8);
+            } else if (value.length > 5) {
+                value = value.substring(0,2) + '.' + value.substring(2,5) + '.' + 
+                        value.substring(5);
+            } else if (value.length > 2) {
+                value = value.substring(0,2) + '.' + value.substring(2);
+            }
+            e.target.value = value;
+        });
 
-            <!-- Feature 4 -->
-            <div class="feature-card" onclick="window.location.href='buscar-dados.html#redes-sociais'">
-                <div class="feature-icon">
-                    <i class="fas fa-hashtag"></i>
-                </div>
-                <h3>Redes Sociais</h3>
-                <p>Busca por perfis públicos em redes sociais (apenas dados públicos)</p>
-                <div class="feature-tags">
-                    <span class="tag">Público</span>
-                    <span class="tag">Legal</span>
-                </div>
-            </div>
-
-            <!-- Feature 5 -->
-            <div class="feature-card" onclick="window.location.href='buscar-dados.html#verificacao'">
-                <div class="feature-icon">
-                    <i class="fas fa-user-check"></i>
-                </div>
-                <h3>Verificação Corporativa</h3>
-                <p>Ferramentas para verificação de identidade com consentimento</p>
-                <div class="feature-tags">
-                    <span class="tag">LGPD</span>
-                    <span class="tag">Consentimento</span>
-                </div>
-            </div>
-
-            <!-- Feature 6 -->
-            <div class="feature-card" onclick="window.location.href='buscar-dados.html#internacional'">
-                <div class="feature-icon">
-                    <i class="fas fa-globe-americas"></i>
-                </div>
-                <h3>Dados Internacionais</h3>
-                <p>APIs públicas de outros países (dentro da legalidade local)</p>
-                <div class="feature-tags">
-                    <span class="tag">Global</span>
-                    <span class="tag">Regulado</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="sobre" class="about">
-        <div class="about-container">
-            <div class="about-content">
-                <h2>Sobre Este Projeto</h2>
-                <p>Este portal foi desenvolvido para demonstrar como é possível utilizar dados públicos e APIs oficiais de maneira ética e legal para fins de cybersegurança e pesquisa.</p>
+        // Scroll suave para âncoras
+        document.querySelectorAll('.nav-btn[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
                 
-                <div class="principles">
-                    <div class="principle">
-                        <i class="fas fa-gavel"></i>
-                        <h4>Conformidade Legal</h4>
-                        <p>Todas as ferramentas seguem rigorosamente as leis de proteção de dados.</p>
-                    </div>
-                    <div class="principle">
-                        <i class="fas fa-user-shield"></i>
-                        <h4>Ética Digital</h4>
-                        <p>Priorizamos a privacidade e segurança dos dados em todas as consultas.</p>
-                    </div>
-                    <div class="principle">
-                        <i class="fas fa-chart-line"></i>
-                        <h4>Transparência</h4>
-                        <p>Todo o código fonte é documentado e as fontes de dados são claramente identificadas.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="about-image">
-                <div class="code-snippet">
-                    <pre><code>// Exemplo de consulta ética
-async function consultaEtica(dados) {
-  // 1. Verificar consentimento
-  if (!dados.consentimento) {
-    throw new Error("Consentimento necessário");
-  }
-  
-  // 2. Usar apenas APIs públicas
-  const resultado = await apiPublica(dados);
-  
-  // 3. Retornar apenas dados permitidos
-  return filtrarDadosPublicos(resultado);
-}</code></pre>
-                </div>
-            </div>
-        </div>
-    </section>
+                openTab(targetId.substring(1));
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
 
-    <!-- Footer -->
-    <footer id="contato" class="footer">
-        <div class="footer-container">
-            <div class="footer-section">
-                <h3>CyberTools</h3>
-                <p>Ferramentas de segurança digital dentro da conformidade legal.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-discord"></i></a>
-                </div>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Links Rápidos</h3>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="buscar-dados.html">Buscar Dados</a></li>
-                    <li><a href="#ferramentas">Ferramentas</a></li>
-                    <li><a href="#sobre">Sobre</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Legal</h3>
-                <ul>
-                    <li><a href="#">Termos de Uso</a></li>
-                    <li><a href="#">Política de Privacidade</a></li>
-                    <li><a href="#">LGPD</a></li>
-                    <li><a href="#">Cookies</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Contato</h3>
-                <p><i class="fas fa-envelope"></i> contato@cybertools.dev</p>
-                <p><i class="fas fa-phone"></i> (11) 99999-9999</p>
-                <p><i class="fas fa-map-marker-alt"></i> São Paulo, SP</p>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2024 CyberTools. Todos os direitos reservados. Desenvolvido com <i class="fas fa-heart"></i> para a comunidade de segurança.</p>
-            <p class="disclaimer">Este site é para fins educacionais e demonstrativos. Consulte sempre um advogado para questões legais específicas.</p>
-        </div>
-    </footer>
+        // Helper function para mostrar resultados
+        function showResults(elementId, content) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = content;
+            element.classList.add('show');
+        }
 
-    <script src="script.js"></script>
+        // Funções modificadas para usar o novo estilo
+        async function consultarCEP() {
+            const cepInput = document.getElementById('cep-input');
+            const cep = cepInput.value.replace(/\D/g, '');
+            
+            if (cep.length !== 8) {
+                showResults('cep-results', '<div style="color: var(--danger); padding: 20px; text-align: center;">CEP inválido. Digite 8 números.</div>');
+                return;
+            }
+            
+            try {
+                showResults('cep-results', '<div style="padding: 20px; text-align: center;"><div class="loader"></div> Buscando CEP...</div>');
+                
+                // Usar a API do servidor local
+                const response = await fetch(`/api/cep/${cep}`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                let html = '<div style="padding: 20px;">';
+                html += '<h3 style="color: var(--primary); margin-bottom: 15px; border-bottom: 1px solid var(--medium-gray); padding-bottom: 10px;">Resultado da Consulta</h3>';
+                html += '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">';
+                
+                html += `<div style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                    <strong>CEP:</strong> ${formatCEP(data.cep || cep)}
+                </div>`;
+                
+                html += `<div style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                    <strong>Logradouro:</strong> ${data.logradouro || 'Não informado'}
+                </div>`;
+                
+                html += `<div style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                    <strong>Bairro:</strong> ${data.bairro || 'Não informado'}
+                </div>`;
+                
+                html += `<div style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                    <strong>Cidade:</strong> ${data.localidade || 'Não informado'}
+                </div>`;
+                
+                html += `<div style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                    <strong>Estado:</strong> ${data.uf || 'Não informado'}
+                </div>`;
+                
+                html += `<div style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                    <strong>DDD:</strong> ${data.ddd || 'Não informado'}
+                </div>`;
+                
+                html += '</div>';
+                html += '<div style="margin-top: 15px;">';
+                html += `<button onclick="copyToClipboard('${JSON.stringify(data)}')" class="btn" style="margin-right: 10px;">
+                    <i class="fas fa-copy"></i> Copiar Resultado
+                </button>`;
+                html += '</div>';
+                html += '</div>';
+                
+                showResults('cep-results', html);
+                
+            } catch (error) {
+                showResults('cep-results', `<div style="color: var(--danger); padding: 20px; text-align: center;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h4>Erro na Consulta</h4>
+                    <p>${error.message}</p>
+                    <p>Verifique se o CEP está correto e tente novamente.</p>
+                </div>`);
+            }
+        }
+
+        // Função formatCEP
+        function formatCEP(cep) {
+            return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
+        }
+
+        // Função copyToClipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Texto copiado para a área de transferência!');
+            }).catch(err => {
+                console.error('Erro ao copiar: ', err);
+            });
+        }
+
+        // Abrir a primeira aba por padrão
+        document.addEventListener('DOMContentLoaded', function() {
+            openTab('cep');
+        });
+    </script>
 </body>
 </html>
