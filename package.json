@@ -1,7 +1,7 @@
 {
-  "name": "cybersecurity-tools",
+  "name": "blacknet-tools",
   "version": "1.0.0",
-  "description": "Ferramentas de consulta de dados públicos com conformidade legal",
+  "description": "Ferramentas de consulta de dados públicos com interface BlackNet",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -11,10 +11,10 @@
     "cybersecurity",
     "data",
     "api",
-    "lgpd",
-    "privacy"
+    "hacking",
+    "tools"
   ],
-  "author": "CyberTools",
+  "author": "BlackNet",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
