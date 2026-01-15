@@ -1,6 +1,4 @@
-/* styles.css atualizado com tema BlackNet */
-
-/* Reset e Configurações Gerais */
+/* RESET E CONFIGURAÇÕES GERAIS */
 * {
     margin: 0;
     padding: 0;
@@ -32,55 +30,5 @@ body {
     line-height: 1.6;
 }
 
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/* Links rápidos */
-.quick-nav {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin: 20px 0;
-}
-
-.nav-btn {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text);
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-}
-
-.nav-btn:hover {
-    background: rgba(255, 0, 0, 0.2);
-    transform: translateY(-2px);
-}
-
-/* Utilitários */
-.highlight {
-    color: var(--primary);
-}
-
-/* Animações */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+/* TODO O RESTANTE DO CSS DO TEMA BLACKNET */
+/* Copiar TODO o conteúdo dos estilos do dashboard e admin */
