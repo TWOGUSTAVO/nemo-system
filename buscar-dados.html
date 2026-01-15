@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Dados - CyberSecurity Tools</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>Cyber<span class="logo-highlight">Tools</span></span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="buscar-dados.html" class="nav-link active"><i class="fas fa-search"></i> Buscar Dados</a></li>
+                <li><a href="index.html#ferramentas" class="nav-link"><i class="fas fa-tools"></i> Ferramentas</a></li>
+                <li><a href="index.html#sobre" class="nav-link"><i class="fas fa-info-circle"></i> Sobre</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Header -->
+    <section class="search-header">
+        <div class="search-header-content">
+            <h1><i class="fas fa-search"></i> Buscar Dados</h1>
+            <p>Selecione uma ferramenta abaixo para realizar consultas legais</p>
+            
+            <!-- Quick Navigation -->
+            <div class="quick-nav">
+                <a href="#cep" class="nav-btn"><i class="fas fa-map-marker-alt"></i> CEP</a>
+                <a href="#cnpj" class="nav-btn"><i class="fas fa-building"></i> CNPJ</a>
+                <a href="#municipios" class="nav-btn"><i class="fas fa-city"></i> Municípios</a>
+                <a href="#redes-sociais" class="nav-btn"><i class="fas fa-hashtag"></i> Redes Sociais</a>
+                <a href="#verificacao" class="nav-btn"><i class="fas fa-user-check"></i> Verificação</a>
+                <a href="#internacional" class="nav-btn"><i class="fas fa-globe"></i> Internacional</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tool Sections -->
+    <div class="tools-container">
+        <!-- CEP Tool -->
+        <section id="cep" class="tool-section">
+            <div class="tool-header">
+                <div class="tool-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div>
+                    <h2>Consulta de CEP</h2>
+                    <p>Busque endereços por Código de Endereçamento Postal</p>
+                </div>
+            </div>
+            
+            <div class="tool-body">
+                <div class="input-group">
+                    <input type="text" id="cep-input" placeholder="Digite o CEP (ex: 01001000)" maxlength="9">
+                    <button onclick="consultarCEP()" class="btn-primary">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+                
+                <div class="results-container">
+                    <div id="cep-result" class="results">
+                        <div class="placeholder">
+                            <i class="fas fa-map"></i>
+                            <p>Os resultados da busca aparecerão aqui</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="api-info">
+                    <h4><i class="fas fa-info-circle"></i> Sobre esta API</h4>
+                    <p>Utiliza a API pública dos Correios para consulta de CEP. Dados oficiais e atualizados.</p>
+                    <code>https://viacep.com.br/ws/{cep}/json/</code>
+                </div>
+            </div>
+        </section>
+
+        <!-- CNPJ Tool -->
+        <section id="cnpj" class="tool-section">
+            <div class="tool-header">
+                <div class="tool-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div>
+                    <h2>Consulta de CNPJ</h2>
+                    <p>Dados cadastrais de empresas brasileiras</p>
+                </div>
+            </div>
+            
+            <div class="tool-body">
+                <div class="input-group">
+                    <input type="text" id="cnpj-input" placeholder="Digite o CNPJ (ex: 00.000.000/0001-00)">
+                    <button onclick="consultarCNPJ()" class="btn-primary">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+                
+                <div class="results-container">
+                    <div id="cnpj-result" class="results">
+                        <div class="placeholder">
+                            <i class="fas fa-briefcase"></i>
+                            <p>Informações da empresa aparecerão aqui</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="api-info">
+                    <h4><i class="fas fa-info-circle"></i> Sobre esta API</h4>
+                    <p>API pública da Receita Federal para consulta de dados cadastrais de CNPJ.</p>
+                    <code>https://receitaws.com.br/v1/cnpj/{cnpj}</code>
+                </div>
+            </div>
+        </section>
+
+        <!-- Municípios Tool -->
+        <section id="municipios" class="tool-section">
+            <div class="tool-header">
+                <div class="tool-icon">
+                    <i class="fas fa-city"></i>
+                </div>
+                <div>
+                    <h2>Consulta de Municípios</h2>
+                    <p>Dados do IBGE sobre cidades brasileiras</p>
+                </div>
+            </div>
+            
+            <div class="tool-body">
+                <div class="input-group">
+                    <select id="uf-select" onchange="carregarMunicipios()">
+                        <option value="">Selecione um estado...</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                        <option value="PR">Paraná</option>
+                        <option value="SC">Santa Catarina</option>
+                        <option value="BA">Bahia</option>
+                        <option value="CE">Ceará</option>
+                        <option value="PE">Pernambuco</option>
+                    </select>
+                    <select id="municipio-select" disabled>
+                        <option value="">Selecione um município...</option>
+                    </select>
+                    <button onclick="consultarMunicipio()" class="btn-primary">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+                
+                <div class="results-container">
+                    <div id="municipio-result" class="results">
+                        <div class="placeholder">
+                            <i class="fas fa-chart-bar"></i>
+                            <p>Dados do município aparecerão aqui</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="api-info">
+                    <h4><i class="fas fa-info-circle"></i> Sobre esta API</h4>
+                    <p>API oficial do IBGE para dados geográficos e estatísticos dos municípios brasileiros.</p>
+                    <code>https://servicodados.ibge.gov.br/api/v1/localidades/municipios</code>
+                </div>
+            </div>
+        </section>
+
+        <!-- Redes Sociais Tool -->
+        <section id="redes-sociais" class="tool-section">
+            <div class="tool-header">
+                <div class="tool-icon">
+                    <i class="fas fa-hashtag"></i>
+                </div>
+                <div>
+                    <h2>Busca em Redes Sociais</h2>
+                    <p>Busca por perfis públicos em plataformas sociais</p>
+                </div>
+            </div>
+            
+            <div class="tool-body">
+                <div class="consent-warning">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Esta ferramenta busca apenas informações publicamente disponíveis. Respeitamos a privacidade dos usuários.</p>
+                </div>
+                
+                <div class="input-group">
+                    <input type="text" id="social-input" placeholder="Digite nome de usuário ou termo de busca">
+                    <select id="social-platform">
+                        <option value="twitter">Twitter/X</option>
+                        <option value="github">GitHub</option>
+                        <option value="instagram">Instagram (público)</option>
+                        <option value="linkedin">LinkedIn (público)</option>
+                    </select>
+                    <button onclick="buscarRedeSocial()" class="btn-primary">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+                
+                <div class="results-container">
+                    <div id="social-result" class="results">
+                        <div class="placeholder">
+                            <i class="fas fa-users"></i>
+                            <p>Resultados da busca em redes sociais aparecerão aqui</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="api-info">
+                    <h4><i class="fas fa-info-circle"></i> Informações Legais</h4>
+                    <p>Esta ferramenta utiliza apenas APIs oficiais ou busca pública de dados. Não acessamos informações privadas.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Verificação Corporativa -->
+        <section id="verificacao" class="tool-section">
+            <div class="tool-header">
+                <div class="tool-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div>
+                    <h2>Verificação Corporativa</h2>
+                    <p>Ferramentas para verificação de identidade com consentimento</p>
+                </div>
+            </div>
+            
+            <div class="tool-body">
+                <div class="consent-box">
+                    <h4><i class="fas fa-file-contract"></i> Termo de Consentimento</h4>
+                    <p>Para usar ferramentas de verificação, é necessário consentimento explícito:</p>
+                    
+                    <div class="consent-form">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="consent-checkbox">
+                            <span>Eu concordo em fornecer meus dados para verificação e autorizo o processamento conforme a LGPD</span>
+                        </label>
+                        
+                        <textarea id="verification-data" placeholder='{"nome": "João Silva", "cpf": "000.000.000-00", "finalidade": "verificação de identidade"}' rows="4"></textarea>
+                        
+                        <button onclick="processarVerificacao()" class="btn-primary" disabled id="verify-btn">
+                            <i class="fas fa-check-circle"></i> Processar Verificação
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="results-container">
+                    <div id="verification-result" class="results">
+                        <div class="placeholder">
+                            <i class="fas fa-id-card"></i>
+                            <p>Resultado da verificação aparecerá aqui</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="api-info">
+                    <h4><i class="fas fa-info-circle"></i> Conformidade LGPD</h4>
+                    <p>Todas as verificações seguem os artigos 7º e 8º da LGPD, garantindo consentimento explícito e finalidade específica.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dados Internacionais -->
+        <section id="internacional" class="tool-section">
+            <div class="tool-header">
+                <div class="tool-icon">
+                    <i class="fas fa-globe-americas"></i>
+                </div>
+                <div>
+                    <h2>Dados Internacionais</h2>
+                    <p>APIs públicas de outros países</p>
+                </div>
+            </div>
+            
+            <div class="tool-body">
+                <div class="country-selector">
+                    <h4>Selecione um país para consulta:</h4>
+                    <div class="country-buttons">
+                        <button class="country-btn" onclick="consultarPais('us')">
+                            <i class="fas fa-flag-usa"></i> Estados Unidos
+                        </button>
+                        <button class="country-btn" onclick="consultarPais('eu')">
+                            <i class="fas fa-flag-eu"></i> União Europeia
+                        </button>
+                        <button class="country-btn" onclick="consultarPais('uk')">
+                            <i class="fas fa-flag-uk"></i> Reino Unido
+                        </button>
+                        <button class="country-btn" onclick="consultarPais('ca')">
+                            <i class="fas fa-flag"></i> Canadá
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="results-container">
+                    <div id="international-result" class="results">
+                        <div class="placeholder">
+                            <i class="fas fa-globe"></i>
+                            <p>Selecione um país para ver APIs públicas disponíveis</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="api-info">
+                    <h4><i class="fas fa-info-circle"></i> APIs Internacionais</h4>
+                    <p>Esta seção demonstra APIs públicas de dados abertos de diversos países, sempre dentro da legalidade local.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>CyberTools</h3>
+                <p>Ferramentas de segurança digital dentro da conformidade legal.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Links Rápidos</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="buscar-dados.html">Buscar Dados</a></li>
+                    <li><a href="index.html#ferramentas">Ferramentas</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 CyberTools. Desenvolvido para fins educacionais e demonstrativos.</p>
+        </div>
+    </footer>
+
+    <script src="api.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Ativar/desativar botão de verificação
+        document.getElementById('consent-checkbox').addEventListener('change', function() {
+            document.getElementById('verify-btn').disabled = !this.checked;
+        });
+
+        // Mascara para CEP
+        document.getElementById('cep-input').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 5) {
+                value = value.substring(0,5) + '-' + value.substring(5,8);
+            }
+            e.target.value = value;
+        });
+
+        // Mascara para CNPJ
+        document.getElementById('cnpj-input').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 12) {
+                value = value.substring(0,2) + '.' + value.substring(2,5) + '.' + 
+                        value.substring(5,8) + '/' + value.substring(8,12) + '-' + 
+                        value.substring(12,14);
+            } else if (value.length > 8) {
+                value = value.substring(0,2) + '.' + value.substring(2,5) + '.' + 
+                        value.substring(5,8) + '/' + value.substring(8);
+            } else if (value.length > 5) {
+                value = value.substring(0,2) + '.' + value.substring(2,5) + '.' + 
+                        value.substring(5);
+            } else if (value.length > 2) {
+                value = value.substring(0,2) + '.' + value.substring(2);
+            }
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>
