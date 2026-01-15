@@ -9,27 +9,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <i class="fas fa-shield-alt"></i>
-                <span>Cyber<span class="logo-highlight">Tools</span></span>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="buscar-dados.html" class="nav-link active"><i class="fas fa-search"></i> Buscar Dados</a></li>
-                <li><a href="index.html#ferramentas" class="nav-link"><i class="fas fa-tools"></i> Ferramentas</a></li>
-                <li><a href="index.html#sobre" class="nav-link"><i class="fas fa-info-circle"></i> Sobre</a></li>
-            </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </div>
-    </nav>
+<!-- ADICIONAR ISSO NO INÍCIO DO BODY -->
+<div class="sidebar">
+    <div class="logo">
+        <div class="logo-text">BLACKNET</div>
+        <div style="font-size: 0.8em; color: var(--text-dim);">Ferramentas</div>
+    </div>
 
+    <div class="user-info">
+        <div class="user-name" id="currentUserName">Visitante</div>
+        <div class="user-role">
+            <i class="fas fa-user"></i>
+            <span>Visitante</span>
+        </div>
+    </div>
+
+    <ul class="nav-menu">
+        <li class="nav-item">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Login</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="buscar-dados.html" class="nav-link active">
+                <i class="fas fa-search"></i>
+                <span>Ferramentas Públicas</span>
+            </a>
+        </li>
+        <li class="nav-item" id="apiNav" style="display: none;">
+            <a href="api.html" class="nav-link">
+                <i class="fas fa-code"></i>
+                <span>APIs de Segurança</span>
+            </a>
+        </li>
+        <li class="nav-item" id="dashboardNav" style="display: none;">
+            <a href="dashboard.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div class="main-content">
+    <!-- MANTER TODO O CONTEÚDO ATUAL AQUI -->
     <!-- Search Header -->
     <section class="search-header">
         <div class="search-header-content">
@@ -376,5 +400,39 @@
             e.target.value = value;
         });
     </script>
+
+</div> <!-- Fechar .main-content -->
+
+<script>
+// ADICIONAR ESTE SCRIPT
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar se está logado
+    const token = localStorage.getItem('auth_token');
+    const userData = localStorage.getItem('current_user');
+    
+    if (token && userData) {
+        try {
+            const user = JSON.parse(userData);
+            document.getElementById('currentUserName').textContent = user.name || user.username;
+            document.getElementById('dashboardNav').style.display = 'block';
+            document.getElementById('apiNav').style.display = 'block';
+            
+            if (user.isAdmin) {
+                const adminNav = document.createElement('li');
+                adminNav.className = 'nav-item';
+                adminNav.innerHTML = `
+                    <a href="admin.html" class="nav-link">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Painel Admin</span>
+                    </a>
+                `;
+                document.querySelector('.nav-menu').appendChild(adminNav);
+            }
+        } catch (e) {
+            console.error('Erro ao carregar usuário:', e);
+        }
+    }
+});
+</script>
 </body>
 </html>
