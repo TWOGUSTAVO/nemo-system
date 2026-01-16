@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <!-- QR Code Library -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<!-- CryptoJS para criptografia -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<!-- RecordRTC para gravação de áudio -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/RecordRTC/5.6.2/RecordRTC.min.js"></script>
+<!-- Emoji Picker -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.14.0/dist/index.css" />
+<script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.14.0/dist/index.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CyberShield OSINT - Plataforma de Pesquisa</title>
@@ -2195,6 +2204,930 @@
         .w-100 {
             width: 100%;
         }
+        /* ===== SISTEMA DE CHAT ===== */
+.chat-section {
+    display: none;
+    margin-bottom: 60px;
+}
+
+.chat-section.active {
+    display: block;
+}
+
+.chat-container {
+    display: flex;
+    height: 700px;
+    background: var(--darker-black);
+    border: 2px solid var(--border-gray);
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+/* Sidebar de contatos */
+.chat-sidebar {
+    width: 320px;
+    background: var(--dark-black);
+    border-right: 2px solid var(--border-gray);
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-gray);
+}
+
+.chat-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.chat-user-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary-red), var(--hacker-green));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--text-light);
+}
+
+.chat-user-info h4 {
+    color: var(--text-light);
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+.chat-user-info .status {
+    color: var(--hacker-green);
+    font-size: 0.85rem;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.chat-search-box {
+    position: relative;
+}
+
+.chat-search-input {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    background: var(--darker-black);
+    border: 1px solid var(--border-gray);
+    border-radius: 8px;
+    color: var(--text-light);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+}
+
+.chat-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-gray);
+    font-size: 0.9rem;
+}
+
+.chat-contacts {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 0;
+}
+
+.chat-contact {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.chat-contact:hover {
+    background: rgba(255, 0, 51, 0.05);
+}
+
+.chat-contact.active {
+    background: rgba(255, 0, 51, 0.1);
+    border-left: 3px solid var(--primary-red);
+}
+
+.contact-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--text-light);
+}
+
+.contact-info {
+    flex: 1;
+}
+
+.contact-name {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 3px;
+}
+
+.contact-last-msg {
+    color: var(--text-gray);
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+}
+
+.contact-time {
+    color: var(--text-dark);
+    font-size: 0.75rem;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.contact-unread {
+    background: var(--primary-red);
+    color: var(--text-light);
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+}
+
+.chat-sidebar-footer {
+    padding: 15px 20px;
+    border-top: 1px solid var(--border-gray);
+    display: flex;
+    gap: 10px;
+}
+
+/* Área principal do chat */
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-gray);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--dark-black);
+}
+
+.chat-contact-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.chat-contact-header-avatar {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--text-light);
+}
+
+.chat-contact-header-info h4 {
+    color: var(--text-light);
+    font-size: 1.1rem;
+    margin-bottom: 3px;
+}
+
+.chat-contact-header-info .status {
+    color: var(--hacker-green);
+    font-size: 0.8rem;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.chat-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-action-btn {
+    background: transparent;
+    border: 1px solid var(--border-gray);
+    color: var(--text-gray);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.chat-action-btn:hover {
+    color: var(--text-light);
+    border-color: var(--primary-red);
+    background: rgba(255, 0, 51, 0.1);
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(20, 20, 20, 0.9));
+}
+
+.message {
+    max-width: 70%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    position: relative;
+    animation: slideIn 0.3s ease;
+}
+
+.message.sent {
+    align-self: flex-end;
+    background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+    color: var(--text-light);
+    border-bottom-right-radius: 5px;
+}
+
+.message.received {
+    align-self: flex-start;
+    background: var(--darker-black);
+    color: var(--text-light);
+    border: 1px solid var(--border-gray);
+    border-bottom-left-radius: 5px;
+}
+
+.message-content {
+    word-wrap: break-word;
+    line-height: 1.4;
+}
+
+.message-image {
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.message-image:hover {
+    transform: scale(1.02);
+}
+
+.audio-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+}
+
+.audio-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.audio-play-btn {
+    background: var(--primary-red);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.audio-progress {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.audio-progress-bar {
+    height: 100%;
+    background: var(--primary-red);
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+.audio-duration {
+    color: var(--text-gray);
+    font-size: 0.8rem;
+    font-family: 'Share Tech Mono', monospace;
+    min-width: 40px;
+}
+
+.message-time {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 5px;
+    text-align: right;
+}
+
+.message-status {
+    font-size: 0.7rem;
+    margin-left: 5px;
+}
+
+.message-status.delivered {
+    color: var(--hacker-green);
+}
+
+.message-status.read {
+    color: var(--primary-red);
+}
+
+.chat-input-container {
+    padding: 20px;
+    border-top: 1px solid var(--border-gray);
+    background: var(--dark-black);
+}
+
+.chat-input-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.chat-input-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.chat-input-action-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-gray);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.chat-input-action-btn:hover {
+    color: var(--text-light);
+    background: rgba(255, 0, 51, 0.1);
+}
+
+.chat-input-action-btn.active {
+    color: var(--primary-red);
+    background: rgba(255, 0, 51, 0.2);
+}
+
+.chat-input-box {
+    flex: 1;
+    position: relative;
+}
+
+.chat-textarea {
+    width: 100%;
+    min-height: 40px;
+    max-height: 120px;
+    padding: 12px 50px 12px 15px;
+    background: var(--darker-black);
+    border: 1px solid var(--border-gray);
+    border-radius: 20px;
+    color: var(--text-light);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.95rem;
+    resize: none;
+    line-height: 1.4;
+    transition: all 0.3s ease;
+}
+
+.chat-textarea:focus {
+    outline: none;
+    border-color: var(--primary-red);
+    box-shadow: 0 0 15px rgba(255, 0, 51, 0.2);
+}
+
+.emoji-btn {
+    position: absolute;
+    right: 40px;
+    bottom: 8px;
+    background: transparent;
+    border: none;
+    color: var(--text-gray);
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.send-btn {
+    background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: var(--text-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.send-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 0, 51, 0.4);
+}
+
+.send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.recording-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: rgba(255, 0, 51, 0.1);
+    border-radius: 20px;
+    margin-top: 10px;
+    animation: pulse 1.5s infinite;
+}
+
+.recording-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--primary-red);
+    border-radius: 50%;
+}
+
+.recording-text {
+    color: var(--primary-red);
+    font-size: 0.9rem;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.recording-timer {
+    color: var(--text-light);
+    font-family: 'Share Tech Mono', monospace;
+    margin-left: auto;
+}
+
+.cancel-recording {
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* Emoji Picker */
+emoji-picker {
+    --background: var(--dark-black);
+    --border-color: var(--border-gray);
+    --indicator-color: var(--primary-red);
+    --input-font-size: 14px;
+    --input-padding: 10px;
+    width: 350px;
+    height: 400px;
+    position: absolute;
+    bottom: 70px;
+    right: 20px;
+    z-index: 1000;
+    display: none;
+}
+
+emoji-picker.visible {
+    display: block;
+}
+
+/* Modal de adicionar contato */
+.add-contact-modal .modal-container {
+    max-width: 500px;
+}
+
+.contact-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.contact-method {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: var(--darker-black);
+    border: 1px solid var(--border-gray);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.contact-method:hover {
+    border-color: var(--primary-red);
+    background: rgba(255, 0, 51, 0.05);
+}
+
+.contact-method-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--text-light);
+}
+
+.contact-method-info h4 {
+    color: var(--text-light);
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+.contact-method-info p {
+    color: var(--text-gray);
+    font-size: 0.9rem;
+}
+
+.token-display {
+    background: var(--darker-black);
+    border: 2px solid var(--border-gray);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.token-value {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.2rem;
+    color: var(--hacker-green);
+    word-break: break-all;
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+}
+
+.token-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.qr-code-container {
+    text-align: center;
+    margin: 20px 0;
+    padding: 20px;
+    background: var(--darker-black);
+    border-radius: 10px;
+}
+
+#contactQRCode {
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.share-options {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.share-btn {
+    padding: 10px 20px;
+    border: 1px solid var(--border-gray);
+    background: transparent;
+    color: var(--text-gray);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.share-btn:hover {
+    border-color: var(--primary-red);
+    color: var(--text-light);
+    background: rgba(255, 0, 51, 0.1);
+}
+
+/* Modal de visualização de imagem */
+.image-viewer-modal .modal-container {
+    max-width: 90%;
+    max-height: 90vh;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.image-viewer-content {
+    text-align: center;
+}
+
+.image-viewer-content img {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.image-info {
+    margin-top: 20px;
+    color: var(--text-light);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+}
+
+/* Notificações de chat */
+.chat-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    max-width: 350px;
+    z-index: 9999;
+    animation: slideIn 0.3s ease;
+    box-shadow: 0 5px 20px rgba(255, 0, 51, 0.3);
+    cursor: pointer;
+}
+
+.chat-notification-avatar {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--primary-red);
+}
+
+.chat-notification-content h4 {
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+}
+
+.chat-notification-content p {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.chat-notification-close {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+/* Status online/offline */
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.status-online {
+    background: var(--hacker-green);
+    box-shadow: 0 0 10px var(--hacker-green);
+}
+
+.status-offline {
+    background: var(--text-gray);
+}
+
+.status-typing {
+    background: var(--hacker-yellow);
+    box-shadow: 0 0 10px var(--hacker-yellow);
+    animation: pulse 1.5s infinite;
+}
+
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 15px;
+    background: var(--darker-black);
+    border-radius: 15px;
+    width: fit-content;
+    margin-top: 5px;
+}
+
+.typing-dots {
+    display: flex;
+    gap: 3px;
+}
+
+.typing-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--hacker-green);
+    border-radius: 50%;
+    animation: typing 1.4s infinite;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing {
+    0%, 60%, 100% {
+        transform: translateY(0);
+    }
+    30% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Responsividade do chat */
+@media (max-width: 992px) {
+    .chat-container {
+        height: 600px;
+    }
+    
+    .chat-sidebar {
+        width: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .chat-container {
+        height: 500px;
+        flex-direction: column;
+    }
+    
+    .chat-sidebar {
+        width: 100%;
+        height: 200px;
+        border-right: none;
+        border-bottom: 2px solid var(--border-gray);
+    }
+    
+    .chat-main {
+        flex: 1;
+    }
+    
+    .message {
+        max-width: 85%;
+    }
+    
+    emoji-picker {
+        width: 300px;
+        height: 350px;
+        right: 10px;
+        bottom: 60px;
+    }
+    
+    .chat-notification {
+        max-width: 300px;
+        right: 10px;
+        bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chat-container {
+        height: calc(100vh - 200px);
+    }
+    
+    .chat-sidebar {
+        height: 180px;
+    }
+    
+    .contact-last-msg {
+        max-width: 120px;
+    }
+    
+    .message {
+        max-width: 90%;
+    }
+    
+    .message-image {
+        max-width: 200px;
+        max-height: 200px;
+    }
+    
+    .share-options {
+        flex-direction: column;
+    }
+    
+    .share-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Animações para chat */
+@keyframes messageSlide {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== TEMAS DO CHAT ===== */
+body.chat-theme-dark {
+    --chat-bg: #0a0a0a;
+    --chat-border: #333;
+    --chat-text: #ffffff;
+    --chat-accent: #ff0033;
+}
+
+body.chat-theme-light {
+    --chat-bg: #f5f5f5;
+    --chat-border: #ddd;
+    --chat-text: #333333;
+    --chat-accent: #0066cc;
+}
+
+body.chat-theme-matrix {
+    --chat-bg: #000000;
+    --chat-border: #00ff41;
+    --chat-text: #00ff41;
+    --chat-accent: #00ff41;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 255, 65, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(0, 255, 65, 0.05) 0%, transparent 20%);
+}
+
+body.chat-theme-matrix .chat-container {
+    border-color: var(--chat-border);
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+}
+
+body.chat-theme-matrix .message.sent {
+    background: linear-gradient(135deg, #00ff41, #009900);
+    color: #000;
+}
+
+body.chat-theme-matrix .message.received {
+    background: rgba(0, 255, 65, 0.1);
+    border-color: var(--chat-border);
+    color: var(--chat-text);
+}
+
+/* Scrollbar personalizado para chat */
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
     </style>
 </head>
 <body>
@@ -3045,7 +3978,153 @@
                         </div>
                     </div>
                 </section>
-
+<!-- Seção de Chat -->
+<section id="chatSection" class="chat-section">
+    <h2 class="section-title"><i class="fas fa-comments"></i> Chat Criptografado</h2>
+    
+    <div class="chat-container">
+        <!-- Sidebar de contatos -->
+        <div class="chat-sidebar">
+            <div class="chat-sidebar-header">
+                <div class="chat-user-profile">
+                    <div class="chat-user-avatar" id="chatUserAvatar">
+                        <i class="fas fa-user-secret"></i>
+                    </div>
+                    <div class="chat-user-info">
+                        <h4 id="chatUsername">Carregando...</h4>
+                        <div class="status">
+                            <span id="chatUserStatus">Offline</span>
+                            <span class="status-indicator" id="statusIndicator"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-search-box">
+                    <i class="fas fa-search chat-search-icon"></i>
+                    <input type="text" class="chat-search-input" id="contactSearch" placeholder="Buscar contatos...">
+                </div>
+            </div>
+            
+            <div class="chat-contacts" id="chatContacts">
+                <!-- Contatos serão carregados aqui -->
+                <div class="empty-contacts" style="text-align: center; padding: 40px 20px; color: var(--text-gray);">
+                    <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                    <p>Nenhum contato adicionado</p>
+                    <button class="btn btn-secondary" onclick="openAddContactModal()" style="margin-top: 15px;">
+                        <i class="fas fa-user-plus"></i> Adicionar Contato
+                    </button>
+                </div>
+            </div>
+            
+            <div class="chat-sidebar-footer">
+                <button class="chat-action-btn" onclick="openAddContactModal()" title="Adicionar contato">
+                    <i class="fas fa-user-plus"></i>
+                </button>
+                <button class="chat-action-btn" onclick="openSettingsModal()" title="Configurações">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="chat-action-btn" onclick="refreshContacts()" title="Atualizar contatos">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Área principal do chat -->
+        <div class="chat-main">
+            <div class="chat-header" id="chatHeader" style="display: none;">
+                <div class="chat-contact-header">
+                    <div class="chat-contact-header-avatar" id="currentContactAvatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="chat-contact-header-info">
+                        <h4 id="currentContactName">Selecione um contato</h4>
+                        <div class="status">
+                            <span id="currentContactStatus">Offline</span>
+                            <span class="status-indicator" id="currentContactStatusIndicator"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-actions">
+                    <button class="chat-action-btn" onclick="startVideoCall()" title="Videochamada">
+                        <i class="fas fa-video"></i>
+                    </button>
+                    <button class="chat-action-btn" onclick="clearChat()" title="Limpar chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="chat-action-btn" onclick="exportChat()" title="Exportar conversa">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <!-- Mensagens serão carregadas aqui -->
+                <div class="welcome-message" style="text-align: center; padding: 60px 20px; color: var(--text-gray);">
+                    <i class="fas fa-comment-dots" style="font-size: 4rem; margin-bottom: 20px; opacity: 0.3;"></i>
+                    <h3 style="color: var(--text-light); margin-bottom: 10px;">Bem-vindo ao Chat</h3>
+                    <p>Selecione um contato para começar a conversar</p>
+                    <p style="font-size: 0.9rem; margin-top: 20px;">
+                        <i class="fas fa-shield-alt" style="color: var(--hacker-green);"></i>
+                        Todas as mensagens são criptografadas de ponta a ponta
+                    </p>
+                </div>
+            </div>
+            
+            <div class="chat-input-container" id="chatInputContainer" style="display: none;">
+                <div class="chat-input-actions">
+                    <button class="chat-input-action-btn" onclick="toggleEmojiPicker()" title="Emoji">
+                        <i class="far fa-smile"></i>
+                    </button>
+                    <button class="chat-input-action-btn" onclick="attachImage()" title="Enviar imagem">
+                        <i class="fas fa-image"></i>
+                    </button>
+                    <button class="chat-input-action-btn" onclick="startRecording()" title="Gravar áudio">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="chat-input-action-btn" onclick="attachFile()" title="Enviar arquivo">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                </div>
+                
+                <div class="chat-input-wrapper">
+                    <div class="chat-input-box">
+                        <textarea class="chat-textarea" id="messageInput" 
+                                  placeholder="Digite sua mensagem..." 
+                                  rows="1"
+                                  oninput="autoResizeTextarea(this)"></textarea>
+                        <button class="emoji-btn" onclick="toggleEmojiPicker()">
+                            <i class="far fa-smile"></i>
+                        </button>
+                    </div>
+                    
+                    <button class="send-btn" id="sendMessageBtn" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                
+                <div class="recording-indicator" id="recordingIndicator" style="display: none;">
+                    <div class="recording-dot"></div>
+                    <div class="recording-text">Gravando áudio...</div>
+                    <div class="recording-timer" id="recordingTimer">00:00</div>
+                    <button class="cancel-recording" onclick="cancelRecording()">Cancelar</button>
+                </div>
+                
+                <emoji-picker id="emojiPicker"></emoji-picker>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Indicador de digitação -->
+    <div class="typing-indicator" id="typingIndicator" style="display: none;">
+        <div class="typing-dots">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+        <span id="typingText">digitando...</span>
+    </div>
+</section>
                 <!-- Seção de Resultados -->
                 <section id="resultsSection" class="results-section">
                     <div class="results-header">
@@ -4047,17 +5126,25 @@
         }
 
         function updateUIAfterLogin() {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('registerForm').style.display = 'none';
-            document.getElementById('userInfo').style.display = 'flex';
-            document.getElementById('loggedUser').textContent = currentUser.username;
-            document.getElementById('userDashboard').style.display = 'block';
-            
-            // Atualizar dashboard do usuário
-            updateUserDashboard();
-            
-            toggleLoginButton();
-        }
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('userInfo').style.display = 'flex';
+    document.getElementById('loggedUser').textContent = currentUser.username;
+    document.getElementById('userDashboard').style.display = 'block';
+    
+    // Atualizar dashboard do usuário
+    updateUserDashboard();
+    
+    // Inicializar sistema de chat
+    if (!chatSystem) {
+        chatSystem = new EncryptedChatSystem();
+    }
+    
+    // Atualizar interface do chat
+    updateChatUI();
+    
+    toggleLoginButton();
+}
 
         function updateUserDashboard() {
             if (!currentUser) return;
@@ -5190,6 +6277,1584 @@ Use com responsabilidade.`);
                 }));
             }
         });
+        // ============================================
+// SISTEMA DE CHAT CRIPTOGRAFADO
+// ============================================
+
+class EncryptedChatSystem {
+    constructor() {
+        this.contacts = [];
+        this.messages = {};
+        this.currentChat = null;
+        this.encryptionKey = null;
+        this.recorder = null;
+        this.recordingTimer = null;
+        this.recordingStartTime = null;
+        this.audioContext = null;
+        this.isTyping = false;
+        this.typingTimeout = null;
+        
+        this.init();
+    }
+
+    init() {
+        this.loadFromStorage();
+        this.generateEncryptionKey();
+        this.setupEventListeners();
+        this.setupEmojiPicker();
+        this.updateUserStatus();
+        
+        // Simular contatos online (em produção seria WebSocket)
+        this.simulateOnlineUsers();
+    }
+
+    loadFromStorage() {
+        this.contacts = JSON.parse(localStorage.getItem('cybershield_chat_contacts')) || [];
+        this.messages = JSON.parse(localStorage.getItem('cybershield_chat_messages')) || {};
+        
+        // Gerar token do usuário se não existir
+        if (!localStorage.getItem('cybershield_chat_token')) {
+            this.generateUserToken();
+        }
+        
+        // Carregar configurações
+        this.settings = JSON.parse(localStorage.getItem('cybershield_chat_settings')) || {
+            status: 'online',
+            notifications: true,
+            sound: true,
+            encryption: true,
+            theme: 'default'
+        };
+    }
+
+    saveToStorage() {
+        localStorage.setItem('cybershield_chat_contacts', JSON.stringify(this.contacts));
+        localStorage.setItem('cybershield_chat_messages', JSON.stringify(this.messages));
+        localStorage.setItem('cybershield_chat_settings', JSON.stringify(this.settings));
+    }
+
+    generateUserToken() {
+        // Gerar token único
+        const token = 'CS-' + Date.now().toString(36) + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        localStorage.setItem('cybershield_chat_token', token);
+        localStorage.setItem('cybershield_chat_username', currentUser?.username || 'Usuário');
+        return token;
+    }
+
+    getUserToken() {
+        let token = localStorage.getItem('cybershield_chat_token');
+        if (!token) {
+            token = this.generateUserToken();
+        }
+        return token;
+    }
+
+    generateEncryptionKey() {
+        // Gerar chave de criptografia baseada no token do usuário
+        const token = this.getUserToken();
+        this.encryptionKey = CryptoJS.SHA256(token).toString();
+    }
+
+    encryptMessage(text) {
+        if (!this.settings.encryption) return text;
+        
+        try {
+            return CryptoJS.AES.encrypt(text, this.encryptionKey).toString();
+        } catch (error) {
+            console.error('Erro ao criptografar:', error);
+            return text;
+        }
+    }
+
+    decryptMessage(encryptedText) {
+        if (!this.settings.encryption) return encryptedText;
+        
+        try {
+            const bytes = CryptoJS.AES.decrypt(encryptedText, this.encryptionKey);
+            return bytes.toString(CryptoJS.enc.Utf8);
+        } catch (error) {
+            console.error('Erro ao descriptografar:', error);
+            return encryptedText;
+        }
+    }
+
+    setupEventListeners() {
+        // Evento de input para detecção de digitação
+        document.getElementById('messageInput').addEventListener('input', () => {
+            this.sendTypingIndicator();
+        });
+
+        // Evento de pressionar Enter para enviar (Shift+Enter para nova linha)
+        document.getElementById('messageInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.sendMessage();
+            }
+        });
+
+        // Evento de pesquisa de contatos
+        document.getElementById('contactSearch').addEventListener('input', (e) => {
+            this.filterContacts(e.target.value);
+        });
+
+        // Eventos de upload de arquivos
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            this.handleFileUpload(e.target.files[0]);
+        });
+
+        document.getElementById('imageInput').addEventListener('change', (e) => {
+            this.handleImageUpload(e.target.files);
+        });
+
+        // Evento para fechar emoji picker ao clicar fora
+        document.addEventListener('click', (e) => {
+            const emojiPicker = document.getElementById('emojiPicker');
+            const emojiBtn = document.querySelector('.emoji-btn');
+            
+            if (emojiPicker.classList.contains('visible') && 
+                !emojiPicker.contains(e.target) && 
+                !emojiBtn.contains(e.target)) {
+                emojiPicker.classList.remove('visible');
+            }
+        });
+
+        // Atualizar status quando o usuário voltar para a página
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                this.updateUserStatus();
+            }
+        });
+    }
+
+    setupEmojiPicker() {
+        const picker = document.getElementById('emojiPicker');
+        
+        picker.addEventListener('emoji-click', event => {
+            const textarea = document.getElementById('messageInput');
+            const cursorPos = textarea.selectionStart;
+            const textBefore = textarea.value.substring(0, cursorPos);
+            const textAfter = textarea.value.substring(cursorPos);
+            
+            textarea.value = textBefore + event.detail.unicode + textAfter;
+            textarea.focus();
+            textarea.selectionStart = textarea.selectionEnd = cursorPos + event.detail.unicode.length;
+            
+            // Atualizar altura do textarea
+            this.autoResizeTextarea(textarea);
+            
+            // Esconder picker após selecionar emoji
+            picker.classList.remove('visible');
+        });
+    }
+
+    autoResizeTextarea(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+    }
+
+    updateUserStatus() {
+        if (!currentUser) return;
+        
+        document.getElementById('chatUsername').textContent = currentUser.username;
+        document.getElementById('statusIndicator').className = 'status-indicator status-' + this.settings.status;
+        
+        // Atualizar status em todos os chats abertos
+        this.broadcastStatus();
+    }
+
+    broadcastStatus() {
+        // Em produção, isso seria via WebSocket
+        console.log('Status atualizado:', this.settings.status);
+    }
+
+    simulateOnlineUsers() {
+        // Simular alguns contatos para demonstração
+        if (this.contacts.length === 0) {
+            const demoContacts = [
+                {
+                    id: 'demo1',
+                    username: 'Agente Smith',
+                    token: 'DEMO-123',
+                    status: 'online',
+                    lastSeen: Date.now(),
+                    avatarColor: '#667eea',
+                    isDemo: true
+                },
+                {
+                    id: 'demo2',
+                    username: 'Neo',
+                    token: 'DEMO-456',
+                    status: 'away',
+                    lastSeen: Date.now() - 3600000,
+                    avatarColor: '#764ba2',
+                    isDemo: true
+                },
+                {
+                    id: 'demo3',
+                    username: 'Trinity',
+                    token: 'DEMO-789',
+                    status: 'busy',
+                    lastSeen: Date.now() - 1800000,
+                    avatarColor: '#f093fb',
+                    isDemo: true
+                }
+            ];
+            
+            this.contacts.push(...demoContacts);
+            this.saveToStorage();
+            this.renderContacts();
+        }
+    }
+
+    renderContacts() {
+        const container = document.getElementById('chatContacts');
+        const searchTerm = document.getElementById('contactSearch').value.toLowerCase();
+        
+        let filteredContacts = this.contacts;
+        if (searchTerm) {
+            filteredContacts = this.contacts.filter(contact => 
+                contact.username.toLowerCase().includes(searchTerm)
+            );
+        }
+        
+        if (filteredContacts.length === 0) {
+            container.innerHTML = `
+                <div class="empty-contacts" style="text-align: center; padding: 40px 20px; color: var(--text-gray);">
+                    <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                    <p>${searchTerm ? 'Nenhum contato encontrado' : 'Nenhum contato adicionado'}</p>
+                    <button class="btn btn-secondary" onclick="openAddContactModal()" style="margin-top: 15px;">
+                        <i class="fas fa-user-plus"></i> Adicionar Contato
+                    </button>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = filteredContacts.map(contact => {
+            // Obter última mensagem
+            const chatId = this.getChatId(contact.id);
+            const lastMessage = this.messages[chatId]?.slice(-1)[0];
+            
+            // Contar mensagens não lidas
+            const unreadCount = this.messages[chatId]?.filter(m => 
+                m.sender === contact.id && !m.read
+            ).length || 0;
+            
+            // Formatar hora da última mensagem
+            let lastMessageTime = '';
+            if (lastMessage) {
+                const time = new Date(lastMessage.timestamp);
+                lastMessageTime = time.toLocaleTimeString('pt-BR', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+            }
+            
+            // Formatar última mensagem
+            let lastMessageText = lastMessage?.content || 'Nenhuma mensagem';
+            if (lastMessage?.type === 'image') {
+                lastMessageText = '📷 Imagem';
+            } else if (lastMessage?.type === 'audio') {
+                lastMessageText = '🎤 Áudio';
+            } else if (lastMessage?.type === 'file') {
+                lastMessageText = '📎 Arquivo';
+            }
+            
+            // Limitar tamanho do texto
+            if (lastMessageText.length > 30) {
+                lastMessageText = lastMessageText.substring(0, 27) + '...';
+            }
+            
+            return `
+                <div class="chat-contact ${this.currentChat === contact.id ? 'active' : ''}" 
+                     onclick="chatSystem.selectContact('${contact.id}')">
+                    <div class="contact-avatar" style="background: ${contact.avatarColor}">
+                        ${contact.username.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-name">${contact.username}</div>
+                        <div class="contact-last-msg">${lastMessageText}</div>
+                    </div>
+                    <div class="contact-time">${lastMessageTime}</div>
+                    ${unreadCount > 0 ? `<div class="contact-unread">${unreadCount}</div>` : ''}
+                </div>
+            `;
+        }).join('');
+    }
+
+    filterContacts(searchTerm) {
+        this.renderContacts();
+    }
+
+    selectContact(contactId) {
+        this.currentChat = contactId;
+        this.renderContacts();
+        this.renderChat();
+        this.showChatInterface();
+        this.markMessagesAsRead(contactId);
+        
+        // Scroll para baixo
+        setTimeout(() => {
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }, 100);
+    }
+
+    getChatId(contactId) {
+        // Gerar ID único para o chat entre dois usuários
+        const userId = currentUser?.username || 'user';
+        const participants = [userId, contactId].sort();
+        return participants.join('_');
+    }
+
+    renderChat() {
+        if (!this.currentChat) return;
+        
+        const contact = this.contacts.find(c => c.id === this.currentChat);
+        if (!contact) return;
+        
+        // Atualizar header do chat
+        document.getElementById('currentContactName').textContent = contact.username;
+        document.getElementById('currentContactStatus').textContent = contact.status;
+        document.getElementById('currentContactStatusIndicator').className = 
+            `status-indicator status-${contact.status}`;
+        
+        document.getElementById('currentContactAvatar').innerHTML = 
+            contact.username.charAt(0).toUpperCase();
+        document.getElementById('currentContactAvatar').style.background = contact.avatarColor;
+        
+        // Renderizar mensagens
+        const chatId = this.getChatId(this.currentChat);
+        const messages = this.messages[chatId] || [];
+        const container = document.getElementById('chatMessages');
+        
+        if (messages.length === 0) {
+            container.innerHTML = `
+                <div class="welcome-chat" style="text-align: center; padding: 60px 20px; color: var(--text-gray);">
+                    <i class="fas fa-comments" style="font-size: 4rem; margin-bottom: 20px; opacity: 0.3;"></i>
+                    <h3 style="color: var(--text-light); margin-bottom: 10px;">Conversa com ${contact.username}</h3>
+                    <p>Esta é o início da sua conversa com ${contact.username}</p>
+                    <p style="font-size: 0.9rem; margin-top: 20px;">
+                        <i class="fas fa-shield-alt" style="color: var(--hacker-green);"></i>
+                        As mensagens aqui são criptografadas de ponta a ponta
+                    </p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = messages.map(message => {
+            const isSent = message.sender === (currentUser?.username || 'user');
+            const time = new Date(message.timestamp).toLocaleTimeString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            let messageContent = '';
+            
+            switch (message.type) {
+                case 'text':
+                    const decryptedContent = this.decryptMessage(message.content);
+                    messageContent = `<div class="message-content">${this.formatMessage(decryptedContent)}</div>`;
+                    break;
+                    
+                case 'image':
+                    messageContent = `
+                        <div class="message-content">
+                            <img src="${message.content}" 
+                                 class="message-image" 
+                                 onclick="chatSystem.viewImage('${message.content}', '${message.metadata?.name || 'Imagem'}')"
+                                 alt="Imagem">
+                        </div>
+                    `;
+                    break;
+                    
+                case 'audio':
+                    messageContent = `
+                        <div class="message-content">
+                            <div class="audio-message">
+                                <div class="audio-controls">
+                                    <button class="audio-play-btn" onclick="chatSystem.playAudio('${message.content}')">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                    <div class="audio-progress">
+                                        <div class="audio-progress-bar" id="progress-${message.id}"></div>
+                                    </div>
+                                    <div class="audio-duration">${message.metadata?.duration || '00:00'}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'file':
+                    messageContent = `
+                        <div class="message-content">
+                            <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 10px;">
+                                <i class="fas fa-file" style="font-size: 1.5rem;"></i>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500;">${message.metadata?.name || 'Arquivo'}</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-gray);">
+                                        ${this.formatFileSize(message.metadata?.size || 0)}
+                                    </div>
+                                </div>
+                                <button class="auth-btn secondary" onclick="chatSystem.downloadFile('${message.content}', '${message.metadata?.name || 'file'}')">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            return `
+                <div class="message ${isSent ? 'sent' : 'received'}">
+                    ${messageContent}
+                    <div class="message-time">
+                        ${time}
+                        ${isSent ? `<span class="message-status ${message.read ? 'read' : 'delivered'}">
+                            ${message.read ? '✓✓' : '✓'}
+                        </span>` : ''}
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        // Scroll para baixo
+        setTimeout(() => {
+            container.scrollTop = container.scrollHeight;
+        }, 100);
+    }
+
+    formatMessage(text) {
+        // Substituir URLs por links clicáveis
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        let formatted = text.replace(urlRegex, url => 
+            `<a href="${url}" target="_blank" style="color: inherit; text-decoration: underline;">${url}</a>`
+        );
+        
+        // Substituir quebras de linha
+        formatted = formatted.replace(/\n/g, '<br>');
+        
+        return formatted;
+    }
+
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    showChatInterface() {
+        document.getElementById('chatHeader').style.display = 'flex';
+        document.getElementById('chatInputContainer').style.display = 'block';
+        
+        // Esconder mensagem de boas-vindas
+        const welcomeMsg = document.querySelector('.welcome-message');
+        if (welcomeMsg) {
+            welcomeMsg.style.display = 'none';
+        }
+    }
+
+    sendMessage() {
+        const input = document.getElementById('messageInput');
+        const message = input.value.trim();
+        
+        if (!message || !this.currentChat) return;
+        
+        // Criptografar mensagem
+        const encryptedMessage = this.encryptMessage(message);
+        
+        // Salvar mensagem
+        const chatId = this.getChatId(this.currentChat);
+        if (!this.messages[chatId]) this.messages[chatId] = [];
+        
+        const messageObj = {
+            id: Date.now().toString(),
+            sender: currentUser?.username || 'user',
+            content: encryptedMessage,
+            type: 'text',
+            timestamp: Date.now(),
+            read: false
+        };
+        
+        this.messages[chatId].push(messageObj);
+        this.saveToStorage();
+        
+        // Limpar input
+        input.value = '';
+        this.autoResizeTextarea(input);
+        
+        // Renderizar mensagem
+        this.renderChat();
+        
+        // Simular resposta (apenas para demo)
+        if (this.contacts.find(c => c.id === this.currentChat)?.isDemo) {
+            setTimeout(() => {
+                this.simulateReply();
+            }, 1000 + Math.random() * 2000);
+        }
+        
+        // Notificar contato (em produção seria via WebSocket)
+        this.sendNotification('message', this.currentChat);
+    }
+
+    simulateReply() {
+        if (!this.currentChat) return;
+        
+        const demoReplies = [
+            "Interessante! Como você descobriu isso?",
+            "Preciso verificar essa informação.",
+            "Tem mais detalhes sobre isso?",
+            "Isso pode ser útil para minha investigação.",
+            "Estou analisando os dados que você enviou.",
+            "Encontrei algo relacionado, vou compartilhar.",
+            "Você já verificou essa fonte?",
+            "Precisamos de mais evidências para isso."
+        ];
+        
+        const randomReply = demoReplies[Math.floor(Math.random() * demoReplies.length)];
+        const encryptedReply = this.encryptMessage(randomReply);
+        
+        const chatId = this.getChatId(this.currentChat);
+        const messageObj = {
+            id: Date.now().toString(),
+            sender: this.currentChat,
+            content: encryptedReply,
+            type: 'text',
+            timestamp: Date.now(),
+            read: false
+        };
+        
+        this.messages[chatId].push(messageObj);
+        this.saveToStorage();
+        this.renderChat();
+        
+        // Mostrar notificação
+        if (document.hidden || !document.getElementById('chatSection').classList.contains('active')) {
+            this.showNotification(this.currentChat, randomReply);
+        }
+    }
+
+    sendTypingIndicator() {
+        if (!this.currentChat || this.isTyping) return;
+        
+        this.isTyping = true;
+        
+        // Em produção, enviaria via WebSocket
+        // Por enquanto, apenas mostramos localmente
+        const contact = this.contacts.find(c => c.id === this.currentChat);
+        if (contact?.isDemo) {
+            // Demo: mostrar que o contato está digitando
+            document.getElementById('typingText').textContent = `${contact.username} está digitando...`;
+            document.getElementById('typingIndicator').style.display = 'flex';
+        }
+        
+        // Limpar timeout anterior
+        if (this.typingTimeout) clearTimeout(this.typingTimeout);
+        
+        // Esconder indicador após 3 segundos
+        this.typingTimeout = setTimeout(() => {
+            this.isTyping = false;
+            document.getElementById('typingIndicator').style.display = 'none';
+        }, 3000);
+    }
+
+    startRecording() {
+        if (this.recorder) return;
+        
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                this.recorder = RecordRTC(stream, {
+                    type: 'audio',
+                    mimeType: 'audio/webm',
+                    recorderType: RecordRTC.StereoAudioRecorder,
+                    timeSlice: 1000,
+                    desiredSampRate: 16000,
+                    numberOfAudioChannels: 1,
+                    bufferSize: 4096,
+                    audioBitsPerSecond: 128000
+                });
+                
+                this.recorder.startRecording();
+                this.recordingStartTime = Date.now();
+                
+                // Mostrar indicador de gravação
+                document.getElementById('recordingIndicator').style.display = 'flex';
+                
+                // Iniciar timer
+                this.updateRecordingTimer();
+                this.recordingTimer = setInterval(() => {
+                    this.updateRecordingTimer();
+                }, 1000);
+            })
+            .catch(error => {
+                showAlert('Erro ao acessar microfone: ' + error.message, 'error');
+            });
+    }
+
+    updateRecordingTimer() {
+        if (!this.recordingStartTime) return;
+        
+        const elapsed = Math.floor((Date.now() - this.recordingStartTime) / 1000);
+        const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+        const seconds = (elapsed % 60).toString().padStart(2, '0');
+        
+        document.getElementById('recordingTimer').textContent = `${minutes}:${seconds}`;
+    }
+
+    stopRecording() {
+        if (!this.recorder) return;
+        
+        this.recorder.stopRecording(() => {
+            const audioBlob = this.recorder.getBlob();
+            
+            // Converter blob para base64
+            const reader = new FileReader();
+            reader.readAsDataURL(audioBlob);
+            reader.onloadend = () => {
+                const base64Audio = reader.result;
+                this.sendAudioMessage(base64Audio, Math.floor(audioBlob.size / 1000));
+            };
+            
+            // Limpar
+            this.cleanupRecording();
+        });
+    }
+
+    cancelRecording() {
+        if (this.recorder) {
+            this.recorder.stopRecording();
+            this.cleanupRecording();
+        }
+    }
+
+    cleanupRecording() {
+        if (this.recorder) {
+            this.recorder.destroy();
+            this.recorder = null;
+        }
+        
+        if (this.recordingTimer) {
+            clearInterval(this.recordingTimer);
+            this.recordingTimer = null;
+        }
+        
+        this.recordingStartTime = null;
+        document.getElementById('recordingIndicator').style.display = 'none';
+    }
+
+    sendAudioMessage(audioData, durationInSeconds) {
+        if (!this.currentChat) return;
+        
+        const duration = `${Math.floor(durationInSeconds / 60)}:${(durationInSeconds % 60).toString().padStart(2, '0')}`;
+        
+        const chatId = this.getChatId(this.currentChat);
+        if (!this.messages[chatId]) this.messages[chatId] = [];
+        
+        const messageObj = {
+            id: Date.now().toString(),
+            sender: currentUser?.username || 'user',
+            content: audioData,
+            type: 'audio',
+            timestamp: Date.now(),
+            read: false,
+            metadata: {
+                duration: duration,
+                size: audioData.length
+            }
+        };
+        
+        this.messages[chatId].push(messageObj);
+        this.saveToStorage();
+        this.renderChat();
+    }
+
+    playAudio(audioData) {
+        const audio = new Audio(audioData);
+        audio.play();
+        
+        // Simular progresso (em produção seria com eventos reais)
+        const progressId = `progress-${Date.now()}`;
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 2;
+            if (progress > 100) {
+                clearInterval(interval);
+                return;
+            }
+            // Atualizar barra de progresso
+            const progressBar = document.getElementById(progressId);
+            if (progressBar) {
+                progressBar.style.width = progress + '%';
+            }
+        }, 100);
+        
+        audio.onended = () => {
+            clearInterval(interval);
+        };
+    }
+
+    handleImageUpload(files) {
+        if (!files.length || !this.currentChat) return;
+        
+        Array.from(files).forEach(file => {
+            if (!file.type.startsWith('image/')) {
+                showAlert('Por favor, selecione apenas imagens', 'error');
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                showAlert('A imagem é muito grande (máximo 10MB)', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                this.sendImageMessage(reader.result, file.name, file.size);
+            };
+        });
+    }
+
+    sendImageMessage(imageData, filename, size) {
+        const chatId = this.getChatId(this.currentChat);
+        if (!this.messages[chatId]) this.messages[chatId] = [];
+        
+        const messageObj = {
+            id: Date.now().toString(),
+            sender: currentUser?.username || 'user',
+            content: imageData,
+            type: 'image',
+            timestamp: Date.now(),
+            read: false,
+            metadata: {
+                name: filename,
+                size: size,
+                type: 'image'
+            }
+        };
+        
+        this.messages[chatId].push(messageObj);
+        this.saveToStorage();
+        this.renderChat();
+    }
+
+    handleFileUpload(file) {
+        if (!file || !this.currentChat) return;
+        
+        if (file.size > 50 * 1024 * 1024) { // 50MB limit
+            showAlert('O arquivo é muito grande (máximo 50MB)', 'error');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            this.sendFileMessage(reader.result, file.name, file.size, file.type);
+        };
+    }
+
+    sendFileMessage(fileData, filename, size, fileType) {
+        const chatId = this.getChatId(this.currentChat);
+        if (!this.messages[chatId]) this.messages[chatId] = [];
+        
+        const messageObj = {
+            id: Date.now().toString(),
+            sender: currentUser?.username || 'user',
+            content: fileData,
+            type: 'file',
+            timestamp: Date.now(),
+            read: false,
+            metadata: {
+                name: filename,
+                size: size,
+                type: fileType
+            }
+        };
+        
+        this.messages[chatId].push(messageObj);
+        this.saveToStorage();
+        this.renderChat();
+    }
+
+    viewImage(imageSrc, title) {
+        document.getElementById('viewerImage').src = imageSrc;
+        document.getElementById('imageViewerTitle').textContent = title;
+        
+        // Calcular tamanho da imagem
+        const img = new Image();
+        img.src = imageSrc;
+        img.onload = () => {
+            const size = (imageSrc.length * 0.75) / 1024; // KB aproximado
+            document.getElementById('imageInfo').textContent = 
+                `Tamanho: ${img.width} × ${img.height}px | ${size.toFixed(2)}KB`;
+        };
+        
+        document.getElementById('imageViewerModal').style.display = 'flex';
+    }
+
+    downloadFile(fileData, filename) {
+        const link = document.createElement('a');
+        link.href = fileData;
+        link.download = filename;
+        link.click();
+    }
+
+    markMessagesAsRead(contactId) {
+        const chatId = this.getChatId(contactId);
+        if (!this.messages[chatId]) return;
+        
+        this.messages[chatId].forEach(message => {
+            if (message.sender === contactId) {
+                message.read = true;
+            }
+        });
+        
+        this.saveToStorage();
+        this.renderContacts();
+    }
+
+    showNotification(contactId, message) {
+        const contact = this.contacts.find(c => c.id === contactId);
+        if (!contact) return;
+        
+        // Criar elemento de notificação
+        const notification = document.createElement('div');
+        notification.className = 'chat-notification';
+        notification.innerHTML = `
+            <div class="chat-notification-avatar" style="background: ${contact.avatarColor}">
+                ${contact.username.charAt(0).toUpperCase()}
+            </div>
+            <div class="chat-notification-content">
+                <h4>${contact.username}</h4>
+                <p>${message.length > 50 ? message.substring(0, 47) + '...' : message}</p>
+            </div>
+            <button class="chat-notification-close" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        notification.onclick = () => {
+            showSection('chat');
+            this.selectContact(contactId);
+            notification.remove();
+        };
+        
+        document.body.appendChild(notification);
+        
+        // Remover após 5 segundos
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 5000);
+        
+        // Tocar som de notificação
+        if (this.settings.sound) {
+            this.playNotificationSound();
+        }
+    }
+
+    playNotificationSound() {
+        const audio = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==');
+        audio.volume = 0.3;
+        audio.play();
+    }
+
+    sendNotification(type, contactId) {
+        // Em produção, enviaria via WebSocket para o servidor
+        console.log(`Notificação ${type} enviada para ${contactId}`);
+    }
+
+    addContactByToken(token) {
+        if (!token.trim()) {
+            showAlert('Digite um token válido', 'error');
+            return;
+        }
+        
+        // Verificar se não é o próprio token
+        const userToken = this.getUserToken();
+        if (token === userToken) {
+            showAlert('Você não pode adicionar a si mesmo', 'error');
+            return;
+        }
+        
+        // Verificar se contato já existe
+        if (this.contacts.some(c => c.token === token)) {
+            showAlert('Este contato já foi adicionado', 'warning');
+            return;
+        }
+        
+        // Em produção, validaria token com o servidor
+        // Por enquanto, criamos um contato de demonstração
+        
+        const newContact = {
+            id: 'contact_' + Date.now(),
+            username: 'Usuário ' + token.substring(0, 6),
+            token: token,
+            status: 'online',
+            lastSeen: Date.now(),
+            avatarColor: this.getRandomColor(),
+            isDemo: false
+        };
+        
+        this.contacts.push(newContact);
+        this.saveToStorage();
+        this.renderContacts();
+        
+        showAlert('Contato adicionado com sucesso!', 'success');
+        closeAddContactModal();
+    }
+
+    getRandomColor() {
+        const colors = [
+            '#667eea', '#764ba2', '#f093fb', '#f5576c', 
+            '#4facfe', '#00f2fe', '#43e97b', '#38f9d7',
+            '#fa709a', '#fee140', '#a8edea', '#fed6e3'
+        ];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    generateQRCode() {
+        const userToken = this.getUserToken();
+        const shareData = {
+            token: userToken,
+            username: currentUser?.username || 'Usuário',
+            platform: 'CyberShield Chat',
+            url: window.location.origin
+        };
+        
+        const qrData = JSON.stringify(shareData);
+        
+        QRCode.toCanvas(document.getElementById('contactQRCode'), qrData, {
+            width: 200,
+            height: 200,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        }, function(error) {
+            if (error) console.error(error);
+        });
+    }
+
+    shareViaWhatsApp() {
+        const userToken = this.getUserToken();
+        const message = `Adicione-me no CyberShield Chat!\n\nMeu token: ${userToken}\n\nPlataforma: ${window.location.origin}`;
+        const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+    }
+
+    shareViaTelegram() {
+        const userToken = this.getUserToken();
+        const message = `Adicione-me no CyberShield Chat!\n\nMeu token: ${userToken}\n\nPlataforma: ${window.location.origin}`;
+        const url = `https://t.me/share/url?url=${encodeURIComponent(window.location.origin)}&text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+    }
+
+    shareViaEmail() {
+        const userToken = this.getUserToken();
+        const subject = 'Adicione-me no CyberShield Chat';
+        const body = `Olá!\n\nAdicione-me no CyberShield Chat usando o seguinte token:\n\nToken: ${userToken}\n\nPlataforma: ${window.location.origin}\n\nAtenciosamente,\n${currentUser?.username || 'Usuário'}`;
+        const url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = url;
+    }
+
+    copyShareLink() {
+        const userToken = this.getUserToken();
+        const shareText = `Adicione-me no CyberShield Chat!\nToken: ${userToken}\nPlataforma: ${window.location.origin}`;
+        
+        navigator.clipboard.writeText(shareText)
+            .then(() => showAlert('Link copiado para a área de transferência!', 'success'))
+            .catch(() => showAlert('Erro ao copiar link', 'error'));
+    }
+
+    clearChat() {
+        if (!this.currentChat) return;
+        
+        if (confirm('Tem certeza que deseja limpar esta conversa?')) {
+            const chatId = this.getChatId(this.currentChat);
+            this.messages[chatId] = [];
+            this.saveToStorage();
+            this.renderChat();
+            showAlert('Conversa limpa com sucesso', 'success');
+        }
+    }
+
+    exportChat() {
+        if (!this.currentChat) return;
+        
+        const contact = this.contacts.find(c => c.id === this.currentChat);
+        if (!contact) return;
+        
+        const chatId = this.getChatId(this.currentChat);
+        const messages = this.messages[chatId] || [];
+        
+        // Formatar mensagens para exportação
+        const exportData = {
+            exportDate: new Date().toISOString(),
+            participants: [currentUser?.username || 'user', contact.username],
+            platform: 'CyberShield OSINT Chat',
+            messages: messages.map(msg => ({
+                time: new Date(msg.timestamp).toLocaleString('pt-BR'),
+                sender: msg.sender,
+                type: msg.type,
+                content: msg.type === 'text' ? this.decryptMessage(msg.content) : `[${msg.type.toUpperCase()}]`,
+                read: msg.read
+            }))
+        };
+        
+        // Criar e baixar arquivo
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `chat_${contact.username}_${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showAlert('Conversa exportada com sucesso!', 'success');
+    }
+
+    clearAllChats() {
+        if (confirm('Tem certeza que deseja limpar TODAS as conversas?\nEsta ação não pode ser desfeita.')) {
+            this.messages = {};
+            this.saveToStorage();
+            this.renderChat();
+            showAlert('Todas as conversas foram limpas', 'success');
+        }
+    }
+
+    exportAllChats() {
+        const exportData = {
+            exportDate: new Date().toISOString(),
+            user: currentUser?.username || 'user',
+            platform: 'CyberShield OSINT Chat',
+            contacts: this.contacts,
+            chats: this.messages
+        };
+        
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `cybershield_chat_backup_${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showAlert('Backup completo exportado com sucesso!', 'success');
+    }
+}
+
+// Instanciar sistema de chat
+let chatSystem = null;
+
+// ============================================
+// FUNÇÕES DE INTERFACE PARA CHAT
+// ============================================
+
+function showChatSection() {
+    if (!currentUser) {
+        showAlert('Faça login para usar o chat', 'error');
+        return;
+    }
+    
+    showSection('chat');
+    
+    // Inicializar sistema de chat se não existir
+    if (!chatSystem) {
+        chatSystem = new EncryptedChatSystem();
+    }
+    
+    // Atualizar interface
+    updateChatUI();
+}
+
+function updateChatUI() {
+    if (!chatSystem) return;
+    
+    // Atualizar token na interface
+    document.getElementById('userTokenDisplay').textContent = chatSystem.getUserToken();
+    
+    // Atualizar status
+    const statusSelect = document.getElementById('chatStatusSelect');
+    if (statusSelect) {
+        statusSelect.value = chatSystem.settings.status;
+    }
+    
+    // Atualizar checkboxes de configurações
+    document.getElementById('notificationsEnabled').checked = chatSystem.settings.notifications;
+    document.getElementById('soundEnabled').checked = chatSystem.settings.sound;
+    document.getElementById('encryptionEnabled').checked = chatSystem.settings.encryption;
+    document.getElementById('chatThemeSelect').value = chatSystem.settings.theme;
+    
+    // Renderizar contatos
+    chatSystem.renderContacts();
+    
+    // Gerar QR Code se necessário
+    if (document.getElementById('contactQRCode').children.length === 0) {
+        chatSystem.generateQRCode();
+    }
+}
+
+function openAddContactModal() {
+    document.getElementById('addContactModal').style.display = 'flex';
+    showContactMethods();
+}
+
+function closeAddContactModal() {
+    document.getElementById('addContactModal').style.display = 'none';
+}
+
+function showContactMethods() {
+    document.getElementById('addByTokenSection').style.display = 'none';
+    document.getElementById('shareTokenSection').style.display = 'none';
+    document.querySelector('.contact-methods').style.display = 'flex';
+}
+
+function showAddByToken() {
+    document.querySelector('.contact-methods').style.display = 'none';
+    document.getElementById('addByTokenSection').style.display = 'block';
+}
+
+function showShareOptions() {
+    document.querySelector('.contact-methods').style.display = 'none';
+    document.getElementById('shareTokenSection').style.display = 'block';
+    
+    // Atualizar token exibido
+    document.getElementById('userTokenDisplay').textContent = chatSystem.getUserToken();
+    
+    // Gerar/atualizar QR Code
+    const qrContainer = document.getElementById('contactQRCode');
+    qrContainer.innerHTML = '';
+    chatSystem.generateQRCode();
+}
+
+function addContactByToken() {
+    const token = document.getElementById('contactToken').value.trim();
+    chatSystem.addContactByToken(token);
+}
+
+function copyToken() {
+    const token = chatSystem.getUserToken();
+    navigator.clipboard.writeText(token)
+        .then(() => showAlert('Token copiado para a área de transferência!', 'success'))
+        .catch(() => showAlert('Erro ao copiar token', 'error'));
+}
+
+function generateNewToken() {
+    if (confirm('Gerar novo token? Contatos existentes não conseguirão te adicionar novamente.')) {
+        const newToken = chatSystem.generateUserToken();
+        document.getElementById('userTokenDisplay').textContent = newToken;
+        
+        // Atualizar QR Code
+        const qrContainer = document.getElementById('contactQRCode');
+        qrContainer.innerHTML = '';
+        chatSystem.generateQRCode();
+        
+        showAlert('Novo token gerado com sucesso!', 'success');
+    }
+}
+
+function openChatSettings() {
+    if (!chatSystem) return;
+    
+    document.getElementById('chatSettingsModal').style.display = 'flex';
+    updateChatUI();
+}
+
+function closeChatSettings() {
+    document.getElementById('chatSettingsModal').style.display = 'none';
+}
+
+function saveChatSettings() {
+    if (!chatSystem) return;
+    
+    chatSystem.settings.status = document.getElementById('chatStatusSelect').value;
+    chatSystem.settings.notifications = document.getElementById('notificationsEnabled').checked;
+    chatSystem.settings.sound = document.getElementById('soundEnabled').checked;
+    chatSystem.settings.encryption = document.getElementById('encryptionEnabled').checked;
+    chatSystem.settings.theme = document.getElementById('chatThemeSelect').value;
+    
+    chatSystem.saveToStorage();
+    chatSystem.updateUserStatus();
+    
+    // Aplicar tema
+    applyChatTheme(chatSystem.settings.theme);
+    
+    closeChatSettings();
+    showAlert('Configurações salvas com sucesso!', 'success');
+}
+
+function applyChatTheme(theme) {
+    const body = document.body;
+    
+    // Remover temas anteriores
+    body.classList.remove('chat-theme-dark', 'chat-theme-light', 'chat-theme-matrix');
+    
+    if (theme !== 'default') {
+        body.classList.add(`chat-theme-${theme}`);
+    }
+}
+
+function openImageViewer() {
+    // Função chamada pelo sistema de chat
+    document.getElementById('imageViewerModal').style.display = 'flex';
+}
+
+function closeImageViewer() {
+    document.getElementById('imageViewerModal').style.display = 'none';
+}
+
+function downloadImage() {
+    const img = document.getElementById('viewerImage');
+    const link = document.createElement('a');
+    link.href = img.src;
+    link.download = `image_${Date.now()}.png`;
+    link.click();
+}
+
+function toggleEmojiPicker() {
+    const picker = document.getElementById('emojiPicker');
+    picker.classList.toggle('visible');
+}
+
+function attachImage() {
+    document.getElementById('imageInput').click();
+}
+
+function attachFile() {
+    document.getElementById('fileInput').click();
+}
+
+function startRecording() {
+    if (!chatSystem) return;
+    chatSystem.startRecording();
+}
+
+function stopRecording() {
+    if (!chatSystem) return;
+    chatSystem.stopRecording();
+}
+
+function cancelRecording() {
+    if (!chatSystem) return;
+    chatSystem.cancelRecording();
+}
+
+function refreshContacts() {
+    if (!chatSystem) return;
+    chatSystem.renderContacts();
+    showAlert('Contatos atualizados', 'success');
+}
+
+function startVideoCall() {
+    showAlert('Videochamada em desenvolvimento', 'info');
+}
+
+// Adicionar link de chat no menu de navegação
+document.addEventListener('DOMContentLoaded', function() {
+    // Adicionar item no menu
+    const navMenu = document.getElementById('navMenu');
+    const chatNavItem = document.createElement('li');
+    chatNavItem.className = 'nav-item';
+    chatNavItem.innerHTML = `
+        <a href="#chat" class="nav-link" onclick="showChatSection()">
+            <i class="fas fa-comments"></i> Chat
+        </a>
+    `;
+    
+    // Inserir antes do item Admin
+    const adminItem = document.querySelector('.nav-item:last-child');
+    navMenu.insertBefore(chatNavItem, adminItem);
+    
+    // Adicionar seção de chat no main content
+    const mainContent = document.querySelector('.main-content .container');
+    
+    // Procurar seção de resultados para inserir antes
+    const resultsSection = document.getElementById('resultsSection');
+    if (resultsSection) {
+        // Criar elemento da seção de chat
+        const chatSectionHTML = `
+            <section id="chatSection" class="chat-section">
+                <!-- O conteúdo do chat será injetado aqui dinamicamente -->
+            </section>
+        `;
+        
+        // Inserir antes da seção de resultados
+        resultsSection.insertAdjacentHTML('beforebegin', chatSectionHTML);
+    }
+});
+
+// Adicionar estas funções ao objeto global para acesso via HTML
+window.chatSystem = chatSystem;
+window.showChatSection = showChatSection;
+// Função para redimensionar textarea
+function autoResizeTextarea(textarea) {
+    if (chatSystem) {
+        chatSystem.autoResizeTextarea(textarea);
+    } else {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+    }
+}
+
+// Adicionar estas funções ao objeto global para acesso via HTML
+window.chatSystem = chatSystem;
+window.showChatSection = showChatSection;
+window.autoResizeTextarea = autoResizeTextarea;
+window.openAddContactModal = openAddContactModal;
+window.closeAddContactModal = closeAddContactModal;
+window.showAddByToken = showAddByToken;
+window.showShareOptions = showShareOptions;
+window.addContactByToken = addContactByToken;
+window.copyToken = copyToken;
+window.generateNewToken = generateNewToken;
+window.shareViaWhatsApp = chatSystem ? chatSystem.shareViaWhatsApp : () => {};
+window.shareViaTelegram = chatSystem ? chatSystem.shareViaTelegram : () => {};
+window.shareViaEmail = chatSystem ? chatSystem.shareViaEmail : () => {};
+window.copyShareLink = chatSystem ? chatSystem.copyShareLink : () => {};
+window.openChatSettings = openChatSettings;
+window.closeChatSettings = closeChatSettings;
+window.saveChatSettings = saveChatSettings;
+window.clearChat = chatSystem ? () => chatSystem.clearChat() : () => {};
+window.exportChat = chatSystem ? () => chatSystem.exportChat() : () => {};
+window.clearAllChats = chatSystem ? () => chatSystem.clearAllChats() : () => {};
+window.exportAllChats = chatSystem ? () => chatSystem.exportAllChats() : () => {};
+window.openImageViewer = openImageViewer;
+window.closeImageViewer = closeImageViewer;
+window.downloadImage = downloadImage;
+window.toggleEmojiPicker = toggleEmojiPicker;
+window.attachImage = attachImage;
+window.attachFile = attachFile;
+window.startRecording = startRecording;
+window.stopRecording = stopRecording;
+window.cancelRecording = cancelRecording;
+window.refreshContacts = refreshContacts;
+window.startVideoCall = startVideoCall;
     </script>
+    <!-- Modal Adicionar Contato -->
+<div class="modal-overlay" id="addContactModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <div class="modal-title">
+                <i class="fas fa-user-plus"></i>
+                <h3>Adicionar Contato</h3>
+            </div>
+            <button class="modal-close" onclick="closeAddContactModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="modal-body">
+            <div class="contact-methods">
+                <div class="contact-method" onclick="showAddByToken()">
+                    <div class="contact-method-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div class="contact-method-info">
+                        <h4>Adicionar por Token</h4>
+                        <p>Use o token único de outro usuário</p>
+                    </div>
+                </div>
+                
+                <div class="contact-method" onclick="showShareOptions()">
+                    <div class="contact-method-icon">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                    <div class="contact-method-info">
+                        <h4>Compartilhar Meu Token</h4>
+                        <p>Gere QR Code ou link para compartilhar</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Adicionar por Token -->
+            <div id="addByTokenSection" style="display: none;">
+                <div class="modal-input-group">
+                    <label class="modal-label">Token do Contato</label>
+                    <input type="text" class="modal-input" id="contactToken" 
+                           placeholder="Cole o token aqui...">
+                </div>
+                
+                <div class="modal-footer">
+                    <button class="modal-btn secondary" onclick="showContactMethods()">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                    <button class="modal-btn primary" onclick="addContactByToken()">
+                        <i class="fas fa-user-plus"></i> Adicionar
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Compartilhar Token -->
+            <div id="shareTokenSection" style="display: none;">
+                <div class="token-display">
+                    <h4 style="color: var(--text-light); margin-bottom: 15px;">Seu Token Único</h4>
+                    <div class="token-value" id="userTokenDisplay">
+                        <!-- Token será exibido aqui -->
+                    </div>
+                    <div class="token-actions">
+                        <button class="auth-btn secondary" onclick="copyToken()">
+                            <i class="fas fa-copy"></i> Copiar
+                        </button>
+                        <button class="auth-btn secondary" onclick="generateNewToken()">
+                            <i class="fas fa-sync-alt"></i> Gerar Novo
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="qr-code-container">
+                    <h4 style="color: var(--text-light); margin-bottom: 15px;">QR Code para Adição</h4>
+                    <div id="contactQRCode"></div>
+                    <p style="color: var(--text-gray); margin-top: 15px; font-size: 0.9rem;">
+                        Escaneie este QR code para adicionar contato
+                    </p>
+                </div>
+                
+                <div class="share-options">
+                    <button class="share-btn" onclick="shareViaWhatsApp()">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </button>
+                    <button class="share-btn" onclick="shareViaTelegram()">
+                        <i class="fab fa-telegram"></i> Telegram
+                    </button>
+                    <button class="share-btn" onclick="shareViaEmail()">
+                        <i class="fas fa-envelope"></i> Email
+                    </button>
+                    <button class="share-btn" onclick="copyShareLink()">
+                        <i class="fas fa-link"></i> Copiar Link
+                    </button>
+                </div>
+                
+                <div class="modal-footer">
+                    <button class="modal-btn secondary" onclick="showContactMethods()">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Configurações do Chat -->
+<div class="modal-overlay" id="chatSettingsModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <div class="modal-title">
+                <i class="fas fa-cog"></i>
+                <h3>Configurações do Chat</h3>
+            </div>
+            <button class="modal-close" onclick="closeChatSettings()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="modal-body">
+            <div class="modal-input-group">
+                <label class="modal-label">Status</label>
+                <select class="modal-input" id="chatStatusSelect">
+                    <option value="online">Online</option>
+                    <option value="away">Ausente</option>
+                    <option value="busy">Ocupado</option>
+                    <option value="offline">Offline</option>
+                </select>
+            </div>
+            
+            <div class="modal-input-group">
+                <label class="modal-label">
+                    <input type="checkbox" id="notificationsEnabled" checked> 
+                    Notificações de mensagens
+                </label>
+            </div>
+            
+            <div class="modal-input-group">
+                <label class="modal-label">
+                    <input type="checkbox" id="soundEnabled" checked> 
+                    Sons de notificação
+                </label>
+            </div>
+            
+            <div class="modal-input-group">
+                <label class="modal-label">
+                    <input type="checkbox" id="encryptionEnabled" checked> 
+                    Criptografia de ponta a ponta
+                </label>
+            </div>
+            
+            <div class="modal-input-group">
+                <label class="modal-label">Tema do Chat</label>
+                <select class="modal-input" id="chatThemeSelect">
+                    <option value="default">Padrão (Hacker)</option>
+                    <option value="dark">Escuro</option>
+                    <option value="light">Claro</option>
+                    <option value="matrix">Matrix</option>
+                </select>
+            </div>
+            
+            <div class="modal-input-group">
+                <label class="modal-label">Limpar histórico</label>
+                <div style="display: flex; gap: 10px;">
+                    <button class="auth-btn secondary" onclick="clearAllChats()">
+                        <i class="fas fa-trash"></i> Limpar Todos
+                    </button>
+                    <button class="auth-btn secondary" onclick="exportAllChats()">
+                        <i class="fas fa-download"></i> Exportar Todos
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <button class="modal-btn secondary" onclick="closeChatSettings()">
+                Cancelar
+            </button>
+            <button class="modal-btn primary" onclick="saveChatSettings()">
+                Salvar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Visualização de Imagem -->
+<div class="modal-overlay" id="imageViewerModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <div class="modal-title">
+                <i class="fas fa-image"></i>
+                <h3 id="imageViewerTitle"></h3>
+            </div>
+            <button class="modal-close" onclick="closeImageViewer()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="modal-body">
+            <div class="image-viewer-content">
+                <img id="viewerImage" src="" alt="">
+                <div class="image-info" id="imageInfo"></div>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <button class="modal-btn secondary" onclick="closeImageViewer()">
+                Fechar
+            </button>
+            <button class="modal-btn primary" onclick="downloadImage()">
+                <i class="fas fa-download"></i> Download
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Input oculto para upload de arquivos -->
+<input type="file" id="fileInput" style="display: none;" accept="image/*,audio/*,video/*,.pdf,.txt,.doc,.docx">
+<input type="file" id="imageInput" style="display: none;" accept="image/*" multiple>
 </body>
 </html>
