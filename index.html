@@ -3,740 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APIs de Segurança - BlackNet</title>
-    <style>
-        /* Estilos do dashboard aqui (similar aos anteriores) */
-        /* Adicionar apenas os estilos específicos para as APIs */
-        
-        .api-category {
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--medium-gray);
-        }
-
-        .category-title {
-            color: var(--primary);
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .api-docs {
-            background: rgba(20, 20, 20, 0.9);
-            border: 1px solid var(--medium-gray);
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 15px;
-            display: none;
-        }
-
-        .api-docs.active {
-            display: block;
-        }
-
-        .docs-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--medium-gray);
-        }
-
-        .docs-title {
-            color: var(--accent);
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
-        .docs-content {
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            color: var(--text-dim);
-            line-height: 1.5;
-        }
-
-        .api-key-input {
-            background: rgba(30, 30, 30, 0.8);
-            border: 1px solid var(--medium-gray);
-            border-radius: 8px;
-            padding: 10px;
-            color: var(--text);
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .test-btn {
-            background: linear-gradient(45deg, var(--accent), #00aa00);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 15px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9em;
-        }
-    </style>
-    <!-- Incluir estilos do dashboard -->
+    <title>CyberShield OSINT - Plataforma de Pesquisa</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Sidebar similar ao dashboard -->
-    <!-- Main content -->
-    <div class="main-content">
-        <div class="header">
-            <h1><i class="fas fa-code"></i> APIs de Segurança</h1>
-            <div style="color: var(--text-dim); font-size: 0.9em;">
-                <span id="apiCount">8 APIs disponíveis</span>
+    <div class="container">
+        <!-- Header com Efeito Hacker -->
+        <header class="header">
+            <div class="logo">
+                <h1><span class="red-text">Cyber</span>Shield</h1>
+                <div class="terminal-line">
+                    <span class="prompt">root@cybershield:~$</span>
+                    <span class="command">start_security_platform</span>
+                    <span class="cursor">█</span>
+                </div>
             </div>
-        </div>
-
-        <!-- API Categories -->
-        
-        <!-- 1. Reconhecimento -->
-        <div class="api-category">
-            <h2 class="category-title">
-                <i class="fas fa-search"></i> 🌍 Reconhecimento
-            </h2>
             
-            <div class="tool-card" id="shodan">
-                <i class="fas fa-search tool-icon"></i>
-                <h3 class="tool-title">Shodan</h3>
-                <p class="tool-desc">Motor de busca para dispositivos IoT, servidores, câmeras, roteadores e serviços expostos na internet.</p>
-                
-                <div class="tool-tags">
-                    <span class="tag">IoT</span>
-                    <span class="tag">Servidores</span>
-                    <span class="tag">Recon</span>
-                </div>
-                
-                <div style="margin-top: 15px;">
-                    <input type="password" class="api-key-input" id="shodanKey" placeholder="Chave da API Shodan">
-                    <button class="test-btn" onclick="testShodanAPI()">
-                        <i class="fas fa-play"></i> Testar Conexão
-                    </button>
-                </div>
-                
-                <button class="action-btn view" onclick="toggleDocs('shodanDocs')" style="margin-top: 10px;">
-                    <i class="fas fa-book"></i> Ver Documentação
-                </button>
-                
-                <div id="shodanDocs" class="api-docs">
-                    <div class="docs-header">
-                        <div class="docs-title">Documentação Shodan API</div>
-                        <button class="modal-close" onclick="toggleDocs('shodanDocs')">&times;</button>
-                    </div>
-                    <div class="docs-content">
-                        <pre>
-Endpoint: https://api.shodan.io/shodan/host/search
-Método: GET
-Parâmetros:
-  - query: Termo de busca
-  - key: Sua chave API
-
-Exemplo:
-  GET /shodan/host/search?key=SUA_CHAVE&query=apache
-
-Limites:
-  - Free: 1 requisição/segundo
-  - Resultados: Primeiras 100 páginas
-
-Documentação oficial: https://developer.shodan.io/api
-                        </pre>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. Threat Intelligence -->
-        <div class="api-category">
-            <h2 class="category-title">
-                <i class="fas fa-virus"></i> ⚠️ Threat Intelligence
-            </h2>
+            <!-- Menu de Navegação -->
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="index.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="buscar_dados.html"><i class="fas fa-search"></i> Buscar Dados</a></li>
+                    <li><a href="#ferramentas"><i class="fas fa-tools"></i> Ferramentas</a></li>
+                    <li><a href="#documentacao"><i class="fas fa-book"></i> Documentação</a></li>
+                    <li><a href="#sobre"><i class="fas fa-info-circle"></i> Sobre</a></li>
+                </ul>
+            </nav>
             
-            <div class="tool-card" id="virustotal">
-                <i class="fas fa-shield-virus tool-icon"></i>
-                <h3 class="tool-title">VirusTotal</h3>
-                <p class="tool-desc">Analise URLs, arquivos e hashes em mais de 70 antivírus simultaneamente. Detecção de malware e ameaças.</p>
-                
-                <div class="tool-tags">
-                    <span class="tag">Malware</span>
-                    <span class="tag">Análise</span>
-                    <span class="tag">Scan</span>
+            <!-- Sistema de Login/Registro -->
+            <div class="auth-section">
+                <div id="login-form" class="auth-form">
+                    <input type="text" id="username" placeholder="usuário" class="auth-input">
+                    <input type="password" id="password" placeholder="senha" class="auth-input">
+                    <button onclick="login()" class="auth-btn"><i class="fas fa-terminal"></i> Login</button>
+                    <button onclick="showRegister()" class="auth-btn secondary">Registrar</button>
                 </div>
                 
-                <div style="margin-top: 15px;">
-                    <input type="password" class="api-key-input" id="virustotalKey" placeholder="Chave da API VirusTotal">
-                    <button class="test-btn" onclick="testVirusTotalAPI()">
-                        <i class="fas fa-play"></i> Testar Conexão
-                    </button>
+                <div id="register-form" class="auth-form" style="display: none;">
+                    <input type="text" id="reg-username" placeholder="novo usuário" class="auth-input">
+                    <input type="email" id="reg-email" placeholder="email" class="auth-input">
+                    <input type="password" id="reg-password" placeholder="nova senha" class="auth-input">
+                    <input type="password" id="reg-confirm" placeholder="confirmar senha" class="auth-input">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms">
+                        <label for="terms">Aceito os termos éticos de uso</label>
+                    </div>
+                    <button onclick="register()" class="auth-btn"><i class="fas fa-user-plus"></i> Criar Conta</button>
+                    <button onclick="showLogin()" class="auth-btn secondary">Voltar ao Login</button>
                 </div>
                 
-                <button class="action-btn view" onclick="toggleDocs('virustotalDocs')" style="margin-top: 10px;">
-                    <i class="fas fa-book"></i> Ver Documentação
-                </button>
-                
-                <div id="virustotalDocs" class="api-docs">
-                    <div class="docs-header">
-                        <div class="docs-title">Documentação VirusTotal API</div>
-                        <button class="modal-close" onclick="toggleDocs('virustotalDocs')">&times;</button>
-                    </div>
-                    <div class="docs-content">
-                        <pre>
-Endpoint: https://www.virustotal.com/api/v3
-Métodos disponíveis:
-  - /urls (POST): Analisar URL
-  - /files (POST): Upload de arquivo
-  - /analyses/{id} (GET): Obter resultado
-
-Headers obrigatórios:
-  x-apikey: SUA_CHAVE_VIRUSTOTAL
-
-Limites:
-  - Free: 500 requisições/dia
-  - 4 requisições/minuto
-
-Documentação: https://developers.virustotal.com/reference
-                        </pre>
-                    </div>
+                <div id="user-info" class="user-info" style="display: none;">
+                    <span id="logged-user" class="username"></span>
+                    <button onclick="logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
                 </div>
             </div>
+        </header>
+
+        <!-- Sistema de Alertas -->
+        <div class="alert-container">
+            <div class="alert" id="alert-box"></div>
         </div>
 
-        <!-- 3. OSINT -->
-        <div class="api-category">
-            <h2 class="category-title">
-                <i class="fas fa-user-secret"></i> 🔍 OSINT
-            </h2>
-            
-            <div class="tool-card" id="hibp">
-                <i class="fas fa-shield-alt tool-icon"></i>
-                <h3 class="tool-title">Have I Been Pwned</h3>
-                <p class="tool-desc">Verifique se emails, senhas ou nomes de usuário foram comprometidos em vazamentos de dados públicos.</p>
-                
-                <div class="tool-tags">
-                    <span class="tag">Privacidade</span>
-                    <span class="tag">Vazamentos</span>
-                    <span class="tag">Segurança</span>
-                </div>
-                
-                <div style="margin-top: 15px;">
-                    <input type="text" class="api-key-input" id="hibpEmail" placeholder="Email para verificar">
-                    <button class="test-btn" onclick="testHIBPAPI()">
-                        <i class="fas fa-play"></i> Verificar Email
-                    </button>
-                </div>
-                
-                <button class="action-btn view" onclick="toggleDocs('hibpDocs')" style="margin-top: 10px;">
-                    <i class="fas fa-book"></i> Ver Documentação
-                </button>
-                
-                <div id="hibpDocs" class="api-docs">
-                    <div class="docs-header">
-                        <div class="docs-title">Documentação HIBP API</div>
-                        <button class="modal-close" onclick="toggleDocs('hibpDocs')">&times;</button>
-                    </div>
-                    <div class="docs-content">
-                        <pre>
-Endpoints:
-  - Email: https://haveibeenpwned.com/api/v3/breachedaccount/{email}
-  - Senhas: https://api.pwnedpasswords.com/range/{first5Hash}
-
-Headers:
-  - hibp-api-key: SUA_CHAVE (opcional)
-  - User-Agent: SeuApp/1.0
-
-Exemplo sem chave (rate limitado):
-  GET /breachedaccount/test@example.com
-  Retorna: Lista de vazamentos
-
-Para senhas (k-Anonymity):
-  - Hash SHA-1 da senha
-  - Enviar primeiros 5 chars
-  - Comparar localmente
-
-Documentação: https://haveibeenpwned.com/API/v3
-                        </pre>
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <section class="hero">
+                <div class="hero-text">
+                    <h2><span class="red-text">>></span> Plataforma de Pesquisa em Segurança Cibernética</h2>
+                    <p class="subtitle">Ferramentas defensivas para análise forense digital e pesquisa acadêmica</p>
+                    
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-number">8</div>
+                            <div class="stat-label">APIs Integradas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Monitoramento</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">Ético</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- 4. Análise de Malware -->
-        <div class="api-category">
-            <h2 class="category-title">
-                <i class="fas fa-biohazard"></i> 🧪 Análise de Malware
-            </h2>
-            
-            <div class="tool-card" id="hybrid">
-                <i class="fas fa-microscope tool-icon"></i>
-                <h3 class="tool-title">Hybrid Analysis</h3>
-                <p class="tool-desc">Sandbox para análise comportamental de malware. Analisa arquivos executáveis em ambiente controlado.</p>
                 
-                <div class="tool-tags">
-                    <span class="tag">Sandbox</span>
-                    <span class="tag">Malware</span>
-                    <span class="tag">Análise</span>
-                </div>
-                
-                <div style="margin-top: 15px;">
-                    <input type="password" class="api-key-input" id="hybridKey" placeholder="Chave da API Hybrid Analysis">
-                    <button class="test-btn" onclick="testHybridAPI()">
-                        <i class="fas fa-play"></i> Testar Conexão
-                    </button>
-                </div>
-                
-                <button class="action-btn view" onclick="toggleDocs('hybridDocs')" style="margin-top: 10px;">
-                    <i class="fas fa-book"></i> Ver Documentação
-                </button>
-                
-                <div id="hybridDocs" class="api-docs">
-                    <div class="docs-header">
-                        <div class="docs-title">Documentação Hybrid Analysis</div>
-                        <button class="modal-close" onclick="toggleDocs('hybridDocs')">&times;</button>
+                <div class="hero-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <span class="terminal-title">terminal@cybershield:~</span>
                     </div>
-                    <div class="docs-content">
-                        <pre>
-Endpoint: https://www.hybrid-analysis.com/api/v2
-Métodos principais:
-  - /submit/url (POST): Analisar URL
-  - /submit/file (POST): Upload de arquivo
-  - /report/{id} (GET): Obter relatório
-
-Headers obrigatórios:
-  api-key: SUA_CHAVE
-  user-agent: Falcon Sandbox
-  accept: application/json
-
-Limites:
-  - Community: 10 análises/dia
-  - Tamanho arquivo: 100MB
-
-Ambientes disponíveis:
-  - Windows 10 64-bit
-  - Android
-  - Linux
-
-Documentação: https://www.hybrid-analysis.com/docs/api/v2
-                        </pre>
+                    <div class="terminal-body" id="terminal-output">
+                        <div class="terminal-line"><span class="prompt">$</span> Inicializando sistema de segurança...</div>
+                        <div class="terminal-line"><span class="prompt">$</span> Carregando módulos de análise...</div>
+                        <div class="terminal-line"><span class="prompt">$</span> Verificando credenciais...</div>
+                        <div class="terminal-line"><span class="prompt">$</span> Sistema pronto para uso ético.</div>
+                        <div class="terminal-line"><span class="prompt">$</span> <span class="cursor">█</span></div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- 5. Criptografia -->
-        <div class="api-category">
-            <h2 class="category-title">
-                <i class="fas fa-lock"></i> 🔐 Criptografia
-            </h2>
-            
-            <div class="tool-card">
-                <i class="fas fa-key tool-icon"></i>
-                <h3 class="tool-title">Have I Been Encrypted?</h3>
-                <p class="tool-desc">Verifique a força de senhas usando técnica de k-Anonymity. Nunca envia a senha completa.</p>
+            <!-- Seção de APIs -->
+            <section class="apis-section">
+                <h3><i class="fas fa-code"></i> APIs Integradas para Pesquisa</h3>
                 
-                <div class="tool-tags">
-                    <span class="tag">Senhas</span>
-                    <span class="tag">Segurança</span>
-                    <span class="tag">Hash</span>
-                </div>
-                
-                <div style="margin-top: 15px;">
-                    <input type="password" class="api-key-input" id="passwordCheck" placeholder="Senha para verificar">
-                    <button class="test-btn" onclick="checkPasswordStrength()">
-                        <i class="fas fa-play"></i> Verificar Senha
-                    </button>
-                </div>
-                
-                <div id="passwordResult" style="margin-top: 10px; padding: 10px; border-radius: 5px; display: none;"></div>
-            </div>
-        </div>
-
-        <!-- 6. Rede & Infraestrutura -->
-        <div class="api-category">
-            <h2 class="category-title">
-                <i class="fas fa-network-wired"></i> 📡 Rede & Infraestrutura
-            </h2>
-            
-            <div class="tool-card">
-                <i class="fas fa-map-marker-alt tool-icon"></i>
-                <h3 class="tool-title">BGPView</h3>
-                <p class="tool-desc">Informações de roteamento BGP, ASN, prefixos IP e dados de infraestrutura de rede global.</p>
-                
-                <div class="tool-tags">
-                    <span class="tag">BGP</span>
-                    <span class="tag">ASN</span>
-                    <span class="tag">Rede</span>
-                </div>
-                
-                <div style="margin-top: 15px;">
-                    <input type="text" class="api-key-input" id="bgpQuery" placeholder="ASN ou IP (ex: AS15169)">
-                    <button class="test-btn" onclick="testBGPViewAPI()">
-                        <i class="fas fa-play"></i> Consultar
-                    </button>
-                </div>
-                
-                <button class="action-btn view" onclick="toggleDocs('bgpDocs')" style="margin-top: 10px;">
-                    <i class="fas fa-book"></i> Ver Documentação
-                </button>
-                
-                <div id="bgpDocs" class="api-docs">
-                    <div class="docs-header">
-                        <div class="docs-title">Documentação BGPView API</div>
-                        <button class="modal-close" onclick="toggleDocs('bgpDocs')">&times;</button>
+                <div class="api-grid">
+                    <!-- Grupo 1: APIs OSINT -->
+                    <div class="api-card">
+                        <div class="api-header">
+                            <h4><i class="fas fa-search"></i> APIs OSINT</h4>
+                            <span class="api-status active">Ativo</span>
+                        </div>
+                        <div class="api-body">
+                            <ul class="api-list">
+                                <li><i class="fas fa-check red-text"></i> Shodan API</li>
+                                <li><i class="fas fa-check red-text"></i> Censys API</li>
+                                <li><i class="fas fa-check red-text"></i> VirusTotal API</li>
+                                <li><i class="fas fa-check red-text"></i> HaveIBeenPwned</li>
+                            </ul>
+                            <button class="api-btn" onclick="window.location.href='buscar_dados.html'">
+                                <i class="fas fa-external-link-alt"></i> Acessar
+                            </button>
+                        </div>
                     </div>
-                    <div class="docs-content">
-                        <pre>
-Endpoint: https://api.bgpview.io
-Métodos gratuitos:
-  - /asn/{asn} (GET): Dados do ASN
-  - /ip/{ip} (GET): Dados do IP
-  - /asn/{asn}/prefixes (GET): Prefixos do ASN
 
-Exemplo:
-  GET /asn/15169
-  Retorna: Google LLC, IPv4: 8.8.8.0/24, etc.
+                    <!-- Grupo 2: APIs de Geolocalização -->
+                    <div class="api-card">
+                        <div class="api-header">
+                            <h4><i class="fas fa-map-marker-alt"></i> Geolocalização</h4>
+                            <span class="api-status active">Ativo</span>
+                        </div>
+                        <div class="api-body">
+                            <ul class="api-list">
+                                <li><i class="fas fa-check red-text"></i> ip-api.com</li>
+                                <li><i class="fas fa-check red-text"></i> MaxMind GeoIP</li>
+                                <li><i class="fas fa-check red-text"></i> Google Maps API</li>
+                            </ul>
+                            <button class="api-btn" onclick="showApiModal('geolocation')">
+                                <i class="fas fa-code"></i> Documentação
+                            </button>
+                        </div>
+                    </div>
 
-Limites:
-  - Rate limit: 60 requisições/minuto
-  - Sem chave necessária
+                    <!-- Grupo 3: APIs de Redes Sociais -->
+                    <div class="api-card">
+                        <div class="api-header">
+                            <h4><i class="fas fa-share-alt"></i> Redes Sociais</h4>
+                            <span class="api-status limited">Limitado</span>
+                        </div>
+                        <div class="api-body">
+                            <ul class="api-list">
+                                <li><i class="fas fa-check red-text"></i> Twitter API v2</li>
+                                <li><i class="fas fa-check red-text"></i> Facebook Graph</li>
+                                <li><i class="fas fa-check red-text"></i> LinkedIn API</li>
+                            </ul>
+                            <button class="api-btn" onclick="showApiModal('social')">
+                                <i class="fas fa-exclamation-triangle"></i> Termos de Uso
+                            </button>
+                        </div>
+                    </div>
 
-Documentação: https://bgpview.docs.apiary.io
-                        </pre>
+                    <!-- Grupo 4: Análise de Vulnerabilidades -->
+                    <div class="api-card">
+                        <div class="api-header">
+                            <h4><i class="fas fa-shield-alt"></i> Vulnerabilidades</h4>
+                            <span class="api-status active">Ativo</span>
+                        </div>
+                        <div class="api-body">
+                            <ul class="api-list">
+                                <li><i class="fas fa-check red-text"></i> NVD API</li>
+                                <li><i class="fas fa-check red-text"></i> Exploit-DB API</li>
+                                <li><i class="fas fa-check red-text"></i> CVE Search API</li>
+                            </ul>
+                            <button class="api-btn" onclick="showApiModal('vulnerabilities')">
+                                <i class="fas fa-file-code"></i> Exemplos
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- 7. CTFs & Treinamento -->
-        <div class="api-category">
-            <h2 class="category-title">
-                <i class="fas fa-flag"></i> 🎮 CTFs & Treinamento
-            </h2>
-            
-            <div class="tool-card">
-                <i class="fas fa-trophy tool-icon"></i>
-                <h3 class="tool-title">CTFtime</h3>
-                <p class="tool-desc">Informações sobre competições CTF (Capture The Flag) ao redor do mundo. Calendário e resultados.</p>
-                
-                <div class="tool-tags">
-                    <span class="tag">CTF</span>
-                    <span class="tag">Competições</span>
-                    <span class="tag">Treinamento</span>
+            <!-- Termos Éticos -->
+            <section class="ethical-section">
+                <div class="ethical-card">
+                    <h3><i class="fas fa-balance-scale"></i> Termos de Uso Ético</h3>
+                    <div class="ethical-content">
+                        <p>A plataforma CyberShield OSINT destina-se exclusivamente para:</p>
+                        <ul>
+                            <li><i class="fas fa-user-shield red-text"></i> Testes de penetração autorizados</li>
+                            <li><i class="fas fa-graduation-cap red-text"></i> Pesquisa acadêmica em segurança</li>
+                            <li><i class="fas fa-search red-text"></i> Análise forense digital</li>
+                            <li><i class="fas fa-shield-alt red-text"></i> Desenvolvimento de ferramentas defensivas</li>
+                        </ul>
+                        <div class="warning-box">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>O uso não autorizado desta plataforma para atividades maliciosas é estritamente proibido e constitui crime.</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <div style="margin-top: 15px;">
-                    <button class="test-btn" onclick="loadCTFEvents()">
-                        <i class="fas fa-play"></i> Carregar Próximos CTFs
-                    </button>
-                </div>
-                
-                <div id="ctfResults" style="margin-top: 10px;"></div>
-            </div>
-        </div>
+            </section>
+        </main>
 
-        <!-- 8. Utilitários -->
-        <div class="api-category">
-            <h2 class="category-title">
-                <i class="fas fa-tools"></i> 🛠️ Utilitários
-            </h2>
-            
-            <div class="tool-card">
-                <i class="fas fa-hashtag tool-icon"></i>
-                <h3 class="tool-title">Hash Calculator</h3>
-                <p class="tool-desc">Calcule hashes em múltiplos algoritmos (MD5, SHA-1, SHA-256, SHA-512) localmente no navegador.</p>
-                
-                <div class="tool-tags">
-                    <span class="tag">Hash</span>
-                    <span class="tag">Criptografia</span>
-                    <span class="tag">Ferramenta</span>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>CyberShield OSINT</h4>
+                    <p>Plataforma para pesquisa em segurança cibernética</p>
+                    <p class="copyright">© 2024 - Uso exclusivo para fins éticos</p>
                 </div>
-                
-                <div style="margin-top: 15px;">
-                    <input type="text" class="api-key-input" id="hashInput" placeholder="Texto para calcular hash">
-                    <select class="api-key-input" id="hashAlgorithm" style="margin-top: 10px;">
-                        <option value="SHA-256">SHA-256</option>
-                        <option value="SHA-512">SHA-512</option>
-                        <option value="SHA-1">SHA-1</option>
-                        <option value="MD5">MD5</option>
-                    </select>
-                    <button class="test-btn" onclick="calculateHash()">
-                        <i class="fas fa-play"></i> Calcular Hash
-                    </button>
+                <div class="footer-section">
+                    <h4>Contato</h4>
+                    <p><i class="fas fa-envelope red-text"></i> research@cybershield.osint</p>
+                    <p><i class="fas fa-book red-text"></i> Documentação Completa</p>
                 </div>
-                
-                <div id="hashResult" style="margin-top: 10px; font-family: monospace; word-break: break-all;"></div>
+                <div class="footer-section">
+                    <h4>Recursos Acadêmicos</h4>
+                    <p><i class="fas fa-university red-text"></i> MITRE ATT&CK</p>
+                    <p><i class="fas fa-shield-alt red-text"></i> OWASP Foundation</p>
+                </div>
             </div>
-        </div>
-
+            <div class="footer-hacking">
+                <div class="hacking-text">
+                    <span id="hacking-text">[ Sistema seguro ativo ]</span>
+                </div>
+            </div>
+        </footer>
     </div>
 
-    <script src="auth.js"></script>
-    <script>
-        // Verificar autenticação
-        async function checkAuth() {
-            const token = localStorage.getItem('auth_token');
-            if (!token) {
-                window.location.href = 'index.html';
-                return;
-            }
-            
-            try {
-                const response = await auth.verifyToken(token);
-                if (!response.valid) {
-                    throw new Error('Token inválido');
-                }
-            } catch (error) {
-                window.location.href = 'index.html';
-            }
-        }
+    <!-- Modal para APIs -->
+    <div id="api-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title"></h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
 
-        function toggleDocs(docId) {
-            const doc = document.getElementById(docId);
-            doc.classList.toggle('active');
-        }
-
-        // Testar APIs
-        async function testShodanAPI() {
-            const key = document.getElementById('shodanKey').value;
-            if (!key) {
-                alert('Insira a chave da API Shodan');
-                return;
-            }
-            
-            try {
-                // Testar conexão básica
-                const response = await fetch(`https://api.shodan.io/api-info?key=${key}`);
-                const data = await response.json();
-                
-                if (data.error) {
-                    alert('Chave inválida: ' + data.error);
-                } else {
-                    alert('Conexão bem-sucedida! Plan: ' + (data.plan || 'Free'));
-                }
-            } catch (error) {
-                alert('Erro ao conectar: ' + error.message);
-            }
-        }
-
-        async function testVirusTotalAPI() {
-            const key = document.getElementById('virustotalKey').value;
-            if (!key) {
-                alert('Insira a chave da API VirusTotal');
-                return;
-            }
-            
-            try {
-                const response = await fetch('https://www.virustotal.com/api/v3/ping', {
-                    headers: {
-                        'x-apikey': key
-                    }
-                });
-                
-                if (response.status === 200) {
-                    alert('Conexão bem-sucedida! API VirusTotal funcionando.');
-                } else {
-                    alert('Chave inválida ou limite excedido');
-                }
-            } catch (error) {
-                alert('Erro ao conectar: ' + error.message);
-            }
-        }
-
-        async function testHIBPAPI() {
-            const email = document.getElementById('hibpEmail').value;
-            if (!email) {
-                alert('Insira um email para verificar');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email)}`, {
-                    headers: {
-                        'User-Agent': 'BlackNet-Security-Tools'
-                    }
-                });
-                
-                if (response.status === 200) {
-                    const breaches = await response.json();
-                    alert(`Email encontrado em ${breaches.length} vazamentos!`);
-                } else if (response.status === 404) {
-                    alert('Email NÃO encontrado em vazamentos conhecidos. ✓');
-                } else {
-                    alert('Erro na consulta: ' + response.status);
-                }
-            } catch (error) {
-                alert('Erro ao verificar: ' + error.message);
-            }
-        }
-
-        async function checkPasswordStrength() {
-            const password = document.getElementById('passwordCheck').value;
-            if (!password) {
-                alert('Insira uma senha para verificar');
-                return;
-            }
-            
-            // Calcular hash SHA-1
-            const encoder = new TextEncoder();
-            const data = encoder.encode(password);
-            const hashBuffer = await crypto.subtle.digest('SHA-1', data);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
-            
-            // Usar k-Anonymity (primeiros 5 chars)
-            const prefix = hashHex.substring(0, 5);
-            const suffix = hashHex.substring(5);
-            
-            try {
-                const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
-                const data = await response.text();
-                
-                const results = data.split('\n');
-                const found = results.some(line => line.startsWith(suffix));
-                
-                const resultDiv = document.getElementById('passwordResult');
-                if (found) {
-                    resultDiv.style.background = 'rgba(255, 0, 0, 0.2)';
-                    resultDiv.style.color = 'var(--danger)';
-                    resultDiv.style.border = '1px solid var(--danger)';
-                    resultDiv.innerHTML = `
-                        <strong><i class="fas fa-exclamation-triangle"></i> SENHA COMPROMETIDA</strong><br>
-                        Esta senha foi encontrada em vazamentos de dados públicos.
-                        Recomendação: Troque imediatamente.
-                    `;
-                } else {
-                    resultDiv.style.background = 'rgba(0, 255, 0, 0.2)';
-                    resultDiv.style.color = 'var(--safe)';
-                    resultDiv.style.border = '1px solid var(--safe)';
-                    resultDiv.innerHTML = `
-                        <strong><i class="fas fa-check-circle"></i> SENHA SEGURA</strong><br>
-                        Esta senha não foi encontrada em vazamentos conhecidos.
-                        Pontuação de força: ${calculatePasswordScore(password)}/100
-                    `;
-                }
-                resultDiv.style.display = 'block';
-                
-            } catch (error) {
-                alert('Erro ao verificar senha: ' + error.message);
-            }
-        }
-
-        function calculatePasswordScore(password) {
-            let score = 0;
-            
-            // Comprimento
-            if (password.length >= 8) score += 20;
-            if (password.length >= 12) score += 10;
-            if (password.length >= 16) score += 10;
-            
-            // Caracteres diversos
-            if (/[A-Z]/.test(password)) score += 10;
-            if (/[a-z]/.test(password)) score += 10;
-            if (/[0-9]/.test(password)) score += 10;
-            if (/[^A-Za-z0-9]/.test(password)) score += 10;
-            
-            // Não é palavra comum
-            const common = ['password', '123456', 'qwerty', 'admin', 'letmein'];
-            if (!common.some(word => password.toLowerCase().includes(word))) {
-                score += 20;
-            }
-            
-            return Math.min(score, 100);
-        }
-
-        async function testBGPViewAPI() {
-            const query = document.getElementById('bgpQuery').value;
-            if (!query) {
-                alert('Insira um ASN ou IP para consultar');
-                return;
-            }
-            
-            try {
-                let url = `https://api.bgpview.io`;
-                if (query.startsWith('AS') || /^\d+$/.test(query)) {
-                    const asn = query.replace('AS', '');
-                    url += `/asn/${asn}`;
-                } else {
-                    url += `/ip/${query}`;
-                }
-                
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data.status === 'ok') {
-                    alert('Consulta realizada com sucesso!\nVerifique o console para detalhes.');
-                    console.log('BGPView Result:', data);
-                } else {
-                    alert('Erro na consulta: ' + (data.status_message || 'Unknown error'));
-                }
-            } catch (error) {
-                alert('Erro ao consultar: ' + error.message);
-            }
-        }
-
-        async function loadCTFEvents() {
-            try {
-                const response = await fetch('https://ctftime.org/api/v1/events/?limit=5');
-                const events = await response.json();
-                
-                const container = document.getElementById('ctfResults');
-                container.innerHTML = '';
-                
-                events.forEach(event => {
-                    const eventDiv = document.createElement('div');
-                    eventDiv.style.cssText = 'padding: 10px; margin-bottom: 10px; background: rgba(255,0,0,0.1); border-radius: 8px;';
-                    
-                    const start = new Date(event.start);
-                    const end = new Date(event.finish);
-                    
-                    eventDiv.innerHTML = `
-                        <strong>${event.title}</strong><br>
-                        <small>${start.toLocaleDateString('pt-BR')} - ${end.toLocaleDateString('pt-BR')}</small><br>
-                        <small>Organizador: ${event.organizers.map(o => o.name).join(', ')}</small>
-                    `;
-                    
-                    container.appendChild(eventDiv);
-                });
-                
-            } catch (error) {
-                alert('Erro ao carregar CTFs: ' + error.message);
-            }
-        }
-
-        async function calculateHash() {
-            const input = document.getElementById('hashInput').value;
-            const algorithm = document.getElementById('hashAlgorithm').value;
-            
-            if (!input) {
-                alert('Insira um texto para calcular o hash');
-                return;
-            }
-            
-            try {
-                const encoder = new TextEncoder();
-                const data = encoder.encode(input);
-                const hashBuffer = await crypto.subtle.digest(algorithm, data);
-                const hashArray = Array.from(new Uint8Array(hashBuffer));
-                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-                
-                document.getElementById('hashResult').innerHTML = `
-                    <strong>${algorithm}:</strong><br>
-                    <code style="color: var(--accent);">${hashHex}</code>
-                `;
-                
-            } catch (error) {
-                alert('Erro ao calcular hash: ' + error.message);
-            }
-        }
-
-        // Inicializar
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuth();
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
