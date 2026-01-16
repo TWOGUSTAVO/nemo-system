@@ -3,436 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscar Dados - CyberSecurity Tools</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Buscar Dados - CyberShield OSINT</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-<!-- ADICIONAR ISSO NO INÍCIO DO BODY -->
-<div class="sidebar">
-    <div class="logo">
-        <div class="logo-text">BLACKNET</div>
-        <div style="font-size: 0.8em; color: var(--text-dim);">Ferramentas</div>
-    </div>
-
-    <div class="user-info">
-        <div class="user-name" id="currentUserName">Visitante</div>
-        <div class="user-role">
-            <i class="fas fa-user"></i>
-            <span>Visitante</span>
-        </div>
-    </div>
-
-    <ul class="nav-menu">
-        <li class="nav-item">
-            <a href="index.html" class="nav-link">
-                <i class="fas fa-home"></i>
-                <span>Login</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="buscar-dados.html" class="nav-link active">
-                <i class="fas fa-search"></i>
-                <span>Ferramentas Públicas</span>
-            </a>
-        </li>
-        <li class="nav-item" id="apiNav" style="display: none;">
-            <a href="api.html" class="nav-link">
-                <i class="fas fa-code"></i>
-                <span>APIs de Segurança</span>
-            </a>
-        </li>
-        <li class="nav-item" id="dashboardNav" style="display: none;">
-            <a href="dashboard.html" class="nav-link">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
-    </ul>
-</div>
-
-<div class="main-content">
-    <!-- MANTER TODO O CONTEÚDO ATUAL AQUI -->
-    <!-- Search Header -->
-    <section class="search-header">
-        <div class="search-header-content">
-            <h1><i class="fas fa-search"></i> Buscar Dados</h1>
-            <p>Selecione uma ferramenta abaixo para realizar consultas legais</p>
-            
-            <!-- Quick Navigation -->
-            <div class="quick-nav">
-                <a href="#cep" class="nav-btn"><i class="fas fa-map-marker-alt"></i> CEP</a>
-                <a href="#cnpj" class="nav-btn"><i class="fas fa-building"></i> CNPJ</a>
-                <a href="#municipios" class="nav-btn"><i class="fas fa-city"></i> Municípios</a>
-                <a href="#redes-sociais" class="nav-btn"><i class="fas fa-hashtag"></i> Redes Sociais</a>
-                <a href="#verificacao" class="nav-btn"><i class="fas fa-user-check"></i> Verificação</a>
-                <a href="#internacional" class="nav-btn"><i class="fas fa-globe"></i> Internacional</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Tool Sections -->
-    <div class="tools-container">
-        <!-- CEP Tool -->
-        <section id="cep" class="tool-section">
-            <div class="tool-header">
-                <div class="tool-icon">
-                    <i class="fas fa-map-marked-alt"></i>
-                </div>
-                <div>
-                    <h2>Consulta de CEP</h2>
-                    <p>Busque endereços por Código de Endereçamento Postal</p>
-                </div>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1><span class="red-text">Cyber</span>Shield</h1>
             </div>
             
-            <div class="tool-body">
-                <div class="input-group">
-                    <input type="text" id="cep-input" placeholder="Digite o CEP (ex: 01001000)" maxlength="9">
-                    <button onclick="consultarCEP()" class="btn-primary">
-                        <i class="fas fa-search"></i> Buscar
-                    </button>
-                </div>
-                
-                <div class="results-container">
-                    <div id="cep-result" class="results">
-                        <div class="placeholder">
-                            <i class="fas fa-map"></i>
-                            <p>Os resultados da busca aparecerão aqui</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="api-info">
-                    <h4><i class="fas fa-info-circle"></i> Sobre esta API</h4>
-                    <p>Utiliza a API pública dos Correios para consulta de CEP. Dados oficiais e atualizados.</p>
-                    <code>https://viacep.com.br/ws/{cep}/json/</code>
-                </div>
-            </div>
-        </section>
-
-        <!-- CNPJ Tool -->
-        <section id="cnpj" class="tool-section">
-            <div class="tool-header">
-                <div class="tool-icon">
-                    <i class="fas fa-building"></i>
-                </div>
-                <div>
-                    <h2>Consulta de CNPJ</h2>
-                    <p>Dados cadastrais de empresas brasileiras</p>
-                </div>
-            </div>
-            
-            <div class="tool-body">
-                <div class="input-group">
-                    <input type="text" id="cnpj-input" placeholder="Digite o CNPJ (ex: 00.000.000/0001-00)">
-                    <button onclick="consultarCNPJ()" class="btn-primary">
-                        <i class="fas fa-search"></i> Buscar
-                    </button>
-                </div>
-                
-                <div class="results-container">
-                    <div id="cnpj-result" class="results">
-                        <div class="placeholder">
-                            <i class="fas fa-briefcase"></i>
-                            <p>Informações da empresa aparecerão aqui</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="api-info">
-                    <h4><i class="fas fa-info-circle"></i> Sobre esta API</h4>
-                    <p>API pública da Receita Federal para consulta de dados cadastrais de CNPJ.</p>
-                    <code>https://receitaws.com.br/v1/cnpj/{cnpj}</code>
-                </div>
-            </div>
-        </section>
-
-        <!-- Municípios Tool -->
-        <section id="municipios" class="tool-section">
-            <div class="tool-header">
-                <div class="tool-icon">
-                    <i class="fas fa-city"></i>
-                </div>
-                <div>
-                    <h2>Consulta de Municípios</h2>
-                    <p>Dados do IBGE sobre cidades brasileiras</p>
-                </div>
-            </div>
-            
-            <div class="tool-body">
-                <div class="input-group">
-                    <select id="uf-select" onchange="carregarMunicipios()">
-                        <option value="">Selecione um estado...</option>
-                        <option value="SP">São Paulo</option>
-                        <option value="RJ">Rio de Janeiro</option>
-                        <option value="MG">Minas Gerais</option>
-                        <option value="RS">Rio Grande do Sul</option>
-                        <option value="PR">Paraná</option>
-                        <option value="SC">Santa Catarina</option>
-                        <option value="BA">Bahia</option>
-                        <option value="CE">Ceará</option>
-                        <option value="PE">Pernambuco</option>
-                    </select>
-                    <select id="municipio-select" disabled>
-                        <option value="">Selecione um município...</option>
-                    </select>
-                    <button onclick="consultarMunicipio()" class="btn-primary">
-                        <i class="fas fa-search"></i> Buscar
-                    </button>
-                </div>
-                
-                <div class="results-container">
-                    <div id="municipio-result" class="results">
-                        <div class="placeholder">
-                            <i class="fas fa-chart-bar"></i>
-                            <p>Dados do município aparecerão aqui</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="api-info">
-                    <h4><i class="fas fa-info-circle"></i> Sobre esta API</h4>
-                    <p>API oficial do IBGE para dados geográficos e estatísticos dos municípios brasileiros.</p>
-                    <code>https://servicodados.ibge.gov.br/api/v1/localidades/municipios</code>
-                </div>
-            </div>
-        </section>
-
-        <!-- Redes Sociais Tool -->
-        <section id="redes-sociais" class="tool-section">
-            <div class="tool-header">
-                <div class="tool-icon">
-                    <i class="fas fa-hashtag"></i>
-                </div>
-                <div>
-                    <h2>Busca em Redes Sociais</h2>
-                    <p>Busca por perfis públicos em plataformas sociais</p>
-                </div>
-            </div>
-            
-            <div class="tool-body">
-                <div class="consent-warning">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <p>Esta ferramenta busca apenas informações publicamente disponíveis. Respeitamos a privacidade dos usuários.</p>
-                </div>
-                
-                <div class="input-group">
-                    <input type="text" id="social-input" placeholder="Digite nome de usuário ou termo de busca">
-                    <select id="social-platform">
-                        <option value="twitter">Twitter/X</option>
-                        <option value="github">GitHub</option>
-                        <option value="instagram">Instagram (público)</option>
-                        <option value="linkedin">LinkedIn (público)</option>
-                    </select>
-                    <button onclick="buscarRedeSocial()" class="btn-primary">
-                        <i class="fas fa-search"></i> Buscar
-                    </button>
-                </div>
-                
-                <div class="results-container">
-                    <div id="social-result" class="results">
-                        <div class="placeholder">
-                            <i class="fas fa-users"></i>
-                            <p>Resultados da busca em redes sociais aparecerão aqui</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="api-info">
-                    <h4><i class="fas fa-info-circle"></i> Informações Legais</h4>
-                    <p>Esta ferramenta utiliza apenas APIs oficiais ou busca pública de dados. Não acessamos informações privadas.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Verificação Corporativa -->
-        <section id="verificacao" class="tool-section">
-            <div class="tool-header">
-                <div class="tool-icon">
-                    <i class="fas fa-user-check"></i>
-                </div>
-                <div>
-                    <h2>Verificação Corporativa</h2>
-                    <p>Ferramentas para verificação de identidade com consentimento</p>
-                </div>
-            </div>
-            
-            <div class="tool-body">
-                <div class="consent-box">
-                    <h4><i class="fas fa-file-contract"></i> Termo de Consentimento</h4>
-                    <p>Para usar ferramentas de verificação, é necessário consentimento explícito:</p>
-                    
-                    <div class="consent-form">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="consent-checkbox">
-                            <span>Eu concordo em fornecer meus dados para verificação e autorizo o processamento conforme a LGPD</span>
-                        </label>
-                        
-                        <textarea id="verification-data" placeholder='{"nome": "João Silva", "cpf": "000.000.000-00", "finalidade": "verificação de identidade"}' rows="4"></textarea>
-                        
-                        <button onclick="processarVerificacao()" class="btn-primary" disabled id="verify-btn">
-                            <i class="fas fa-check-circle"></i> Processar Verificação
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="results-container">
-                    <div id="verification-result" class="results">
-                        <div class="placeholder">
-                            <i class="fas fa-id-card"></i>
-                            <p>Resultado da verificação aparecerá aqui</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="api-info">
-                    <h4><i class="fas fa-info-circle"></i> Conformidade LGPD</h4>
-                    <p>Todas as verificações seguem os artigos 7º e 8º da LGPD, garantindo consentimento explícito e finalidade específica.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Dados Internacionais -->
-        <section id="internacional" class="tool-section">
-            <div class="tool-header">
-                <div class="tool-icon">
-                    <i class="fas fa-globe-americas"></i>
-                </div>
-                <div>
-                    <h2>Dados Internacionais</h2>
-                    <p>APIs públicas de outros países</p>
-                </div>
-            </div>
-            
-            <div class="tool-body">
-                <div class="country-selector">
-                    <h4>Selecione um país para consulta:</h4>
-                    <div class="country-buttons">
-                        <button class="country-btn" onclick="consultarPais('us')">
-                            <i class="fas fa-flag-usa"></i> Estados Unidos
-                        </button>
-                        <button class="country-btn" onclick="consultarPais('eu')">
-                            <i class="fas fa-flag-eu"></i> União Europeia
-                        </button>
-                        <button class="country-btn" onclick="consultarPais('uk')">
-                            <i class="fas fa-flag-uk"></i> Reino Unido
-                        </button>
-                        <button class="country-btn" onclick="consultarPais('ca')">
-                            <i class="fas fa-flag"></i> Canadá
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="results-container">
-                    <div id="international-result" class="results">
-                        <div class="placeholder">
-                            <i class="fas fa-globe"></i>
-                            <p>Selecione um país para ver APIs públicas disponíveis</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="api-info">
-                    <h4><i class="fas fa-info-circle"></i> APIs Internacionais</h4>
-                    <p>Esta seção demonstra APIs públicas de dados abertos de diversos países, sempre dentro da legalidade local.</p>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-section">
-                <h3>CyberTools</h3>
-                <p>Ferramentas de segurança digital dentro da conformidade legal.</p>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Links Rápidos</h3>
+            <nav class="nav-menu">
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="buscar-dados.html">Buscar Dados</a></li>
-                    <li><a href="index.html#ferramentas">Ferramentas</a></li>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="buscar_dados.html" class="active"><i class="fas fa-search"></i> Buscar Dados</a></li>
+                    <li><a href="#analise"><i class="fas fa-chart-bar"></i> Análise</a></li>
+                    <li><a href="#relatorios"><i class="fas fa-file-alt"></i> Relatórios</a></li>
                 </ul>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2024 CyberTools. Desenvolvido para fins educacionais e demonstrativos.</p>
-        </div>
-    </footer>
-
-    <script src="api.js"></script>
-    <script src="script.js"></script>
-    <script>
-        // Ativar/desativar botão de verificação
-        document.getElementById('consent-checkbox').addEventListener('change', function() {
-            document.getElementById('verify-btn').disabled = !this.checked;
-        });
-
-        // Mascara para CEP
-        document.getElementById('cep-input').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 5) {
-                value = value.substring(0,5) + '-' + value.substring(5,8);
-            }
-            e.target.value = value;
-        });
-
-        // Mascara para CNPJ
-        document.getElementById('cnpj-input').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 12) {
-                value = value.substring(0,2) + '.' + value.substring(2,5) + '.' + 
-                        value.substring(5,8) + '/' + value.substring(8,12) + '-' + 
-                        value.substring(12,14);
-            } else if (value.length > 8) {
-                value = value.substring(0,2) + '.' + value.substring(2,5) + '.' + 
-                        value.substring(5,8) + '/' + value.substring(8);
-            } else if (value.length > 5) {
-                value = value.substring(0,2) + '.' + value.substring(2,5) + '.' + 
-                        value.substring(5);
-            } else if (value.length > 2) {
-                value = value.substring(0,2) + '.' + value.substring(2);
-            }
-            e.target.value = value;
-        });
-    </script>
-
-</div> <!-- Fechar .main-content -->
-
-<script>
-// ADICIONAR ESTE SCRIPT
-document.addEventListener('DOMContentLoaded', function() {
-    // Verificar se está logado
-    const token = localStorage.getItem('auth_token');
-    const userData = localStorage.getItem('current_user');
-    
-    if (token && userData) {
-        try {
-            const user = JSON.parse(userData);
-            document.getElementById('currentUserName').textContent = user.name || user.username;
-            document.getElementById('dashboardNav').style.display = 'block';
-            document.getElementById('apiNav').style.display = 'block';
+            </nav>
             
-            if (user.isAdmin) {
-                const adminNav = document.createElement('li');
-                adminNav.className = 'nav-item';
-                adminNav.innerHTML = `
-                    <a href="admin.html" class="nav-link">
-                        <i class="fas fa-user-shield"></i>
-                        <span>Painel Admin</span>
-                    </a>
-                `;
-                document.querySelector('.nav-menu').appendChild(adminNav);
-            }
-        } catch (e) {
-            console.error('Erro ao carregar usuário:', e);
+            <div class="auth-section">
+                <div id="user-info" class="user-info">
+                    <span id="logged-user" class="username">Pesquisador</span>
+                    <button onclick="logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Conteúdo Principal de Busca -->
+        <main class="main-content">
+            <section class="search-section">
+                <h2><i class="fas fa-search"></i> Busca de Dados Públicos</h2>
+                <p class="subtitle">Ferramentas para pesquisa em segurança e análise forense</p>
+                
+                <!-- Painel de Controle -->
+                <div class="control-panel">
+                    <div class="control-tabs">
+                        <button class="control-tab active" onclick="showTab('ip-search')">
+                            <i class="fas fa-network-wired"></i> IP/Domínio
+                        </button>
+                        <button class="control-tab" onclick="showTab('vulnerability-search')">
+                            <i class="fas fa-bug"></i> Vulnerabilidades
+                        </button>
+                        <button class="control-tab" onclick="showTab('email-search')">
+                            <i class="fas fa-envelope"></i> Email
+                        </button>
+                        <button class="control-tab" onclick="showTab('file-analysis')">
+                            <i class="fas fa-file-code"></i> Análise de Arquivos
+                        </button>
+                    </div>
+                    
+                    <!-- Busca por IP/Domínio -->
+                    <div id="ip-search" class="control-content active">
+                        <div class="search-box">
+                            <input type="text" id="ip-input" placeholder="Digite IP ou domínio (ex: 8.8.8.8 ou google.com)" class="search-input">
+                            <button onclick="searchIP()" class="search-btn">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                        
+                        <div class="api-selector">
+                            <label>Selecione as APIs:</label>
+                            <div class="api-checkboxes">
+                                <label><input type="checkbox" name="api" value="shodan" checked> Shodan</label>
+                                <label><input type="checkbox" name="api" value="censys" checked> Censys</label>
+                                <label><input type="checkbox" name="api" value="whois"> WHOIS</label>
+                                <label><input type="checkbox" name="api" value="geoip"> GeoIP</label>
+                                <label><input type="checkbox" name="api" value="securitytrails"> SecurityTrails</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Busca de Vulnerabilidades -->
+                    <div id="vulnerability-search" class="control-content">
+                        <div class="search-box">
+                            <input type="text" id="cve-input" placeholder="Código CVE ou nome da vulnerabilidade" class="search-input">
+                            <button onclick="searchVulnerability()" class="search-btn">
+                                <i class="fas fa-shield-alt"></i> Buscar
+                            </button>
+                        </div>
+                        
+                        <div class="api-selector">
+                            <label>Fontes de Dados:</label>
+                            <div class="api-checkboxes">
+                                <label><input type="checkbox" name="vuln-api" value="nvd" checked> NVD</label>
+                                <label><input type="checkbox" name="vuln-api" value="exploitdb"> Exploit-DB</label>
+                                <label><input type="checkbox" name="vuln-api" value="cve"> CVE Search</label>
+                                <label><input type="checkbox" name="vuln-api" value="owasp"> OWASP</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Busca por Email -->
+                    <div id="email-search" class="control-content">
+                        <div class="search-box">
+                            <input type="email" id="email-input" placeholder="email@exemplo.com" class="search-input">
+                            <button onclick="searchEmail()" class="search-btn">
+                                <i class="fas fa-envelope"></i> Verificar
+                            </button>
+                        </div>
+                        
+                        <div class="warning-box">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>A verificação de email é apenas para análise forense de incidentes reportados.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Análise de Arquivos -->
+                    <div id="file-analysis" class="control-content">
+                        <div class="file-upload">
+                            <input type="file" id="file-input" class="file-input">
+                            <label for="file-input" class="file-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Arraste arquivo ou clique para selecionar</span>
+                            </label>
+                            <button onclick="analyzeFile()" class="search-btn">
+                                <i class="fas fa-virus"></i> Analisar
+                            </button>
+                        </div>
+                        
+                        <div class="api-selector">
+                            <label>Serviços de Análise:</label>
+                            <div class="api-checkboxes">
+                                <label><input type="checkbox" name="file-api" value="virustotal" checked> VirusTotal</label>
+                                <label><input type="checkbox" name="file-api" value="hybrid"> Hybrid Analysis</label>
+                                <label><input type="checkbox" name="file-api" value="malwarebazaar"> MalwareBazaar</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Resultados -->
+                <div class="results-section">
+                    <div class="results-header">
+                        <h3><i class="fas fa-poll"></i> Resultados da Busca</h3>
+                        <button onclick="exportResults()" class="export-btn">
+                            <i class="fas fa-download"></i> Exportar JSON
+                        </button>
+                    </div>
+                    
+                    <div class="results-container">
+                        <div class="loading" id="loading" style="display: none;">
+                            <div class="spinner"></div>
+                            <p>Analisando dados...</p>
+                        </div>
+                        
+                        <div class="results-grid" id="results">
+                            <!-- Resultados serão inseridos aqui via JavaScript -->
+                            <div class="empty-state">
+                                <i class="fas fa-search fa-3x"></i>
+                                <p>Execute uma busca para ver os resultados</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Painel de API Status -->
+                <div class="api-status-panel">
+                    <h3><i class="fas fa-heartbeat"></i> Status das APIs</h3>
+                    <div class="status-grid">
+                        <div class="status-item active">
+                            <span class="status-dot"></span>
+                            <span>Shodan API</span>
+                        </div>
+                        <div class="status-item active">
+                            <span class="status-dot"></span>
+                            <span>Censys API</span>
+                        </div>
+                        <div class="status-item active">
+                            <span class="status-dot"></span>
+                            <span>VirusTotal API</span>
+                        </div>
+                        <div class="status-item active">
+                            <span class="status-dot"></span>
+                            <span>GeoIP API</span>
+                        </div>
+                        <div class="status-item limited">
+                            <span class="status-dot"></span>
+                            <span>Twitter API</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Exemplos de Código -->
+            <section class="code-examples">
+                <h3><i class="fas fa-code"></i> Exemplos de Uso das APIs</h3>
+                
+                <div class="code-tabs">
+                    <div class="code-tab active" onclick="showCodeTab('python')">Python</div>
+                    <div class="code-tab" onclick="showCodeTab('javascript')">JavaScript</div>
+                    <div class="code-tab" onclick="showCodeTab('curl')">cURL</div>
+                </div>
+                
+                <div class="code-content">
+                    <pre id="python-code" class="code-block active">
+<code class="python"># Exemplo: Consulta à API Shodan
+import shodan
+
+API_KEY = "sua_chave_aqui"
+api = shodan.Shodan(API_KEY)
+
+def search_ip(ip):
+    try:
+        # Busca informações do IP
+        host = api.host(ip)
+        
+        print(f"IP: {host['ip_str']}")
+        print(f"Organização: {host.get('org', 'N/A')}")
+        print(f"Sistema Operacional: {host.get('os', 'N/A')}")
+        
+        # Portas abertas
+        for item in host['data']:
+            print(f"Porta {item['port']}: {item.get('product', '')}")
+            
+    except shodan.APIError as e:
+        print(f"Erro: {e}")
+
+# Uso ético apenas
+search_ip("8.8.8.8")</code></pre>
+                    
+                    <pre id="javascript-code" class="code-block">
+<code class="javascript">// Exemplo: Consulta à API VirusTotal
+async function analyzeFile(fileHash) {
+    const apiKey = 'sua_chave_aqui';
+    const url = `https://www.virustotal.com/api/v3/files/${fileHash}`;
+    
+    const response = await fetch(url, {
+        headers: {
+            'x-apikey': apiKey
         }
+    });
+    
+    const data = await response.json();
+    
+    // Análise dos resultados
+    if (data.data.attributes.last_analysis_results) {
+        const results = data.data.attributes.last_analysis_results;
+        let malicious = 0;
+        
+        for (const engine in results) {
+            if (results[engine].category === 'malicious') {
+                malicious++;
+            }
+        }
+        
+        console.log(`Arquivo: ${fileHash}`);
+        console.log(`Detecções maliciosas: ${malicious}`);
     }
-});
-</script>
+}
+
+// Uso responsável
+analyzeFile('hash_do_arquivo');</code></pre>
+                    
+                    <pre id="curl-code" class="code-block">
+<code class="bash"># Exemplo: Consulta à API de WHOIS
+curl -X GET \
+  "https://api.whoisxmlapi.com/v1?apiKey=SUA_CHAVE&domainName=exemplo.com&outputFormat=JSON"
+
+# Exemplo: Consulta à API de GeoIP
+curl "http://ip-api.com/json/8.8.8.8?fields=status,message,country,regionName,city,isp,org,as,query"
+
+# Exemplo: Consulta à HaveIBeenPwned
+curl -H "hibp-api-key: SUA_CHAVE" \
+  "https://haveibeenpwned.com/api/v3/breachedaccount/email@exemplo.com"
+
+# Importante: Use rate limiting e respeite os ToS</code></pre>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Ferramentas de Busca</h4>
+                    <p>APIs para pesquisa acadêmica e análise forense</p>
+                    <p class="copyright">Sistema monitorado - Todas as atividades são registradas</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Limitações Éticas</h4>
+                    <p><i class="fas fa-ban red-text"></i> Não use para ataques</p>
+                    <p><i class="fas fa-user-check red-text"></i> Autorização necessária</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
