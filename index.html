@@ -42,6 +42,273 @@
             --modal-bg: rgba(0, 0, 0, 0.95);
         }
 
+        /* ===== MODAL DE BOAS-VINDAS ===== */
+        .welcome-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--darker-black), var(--primary-black));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .welcome-container {
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.98), rgba(10, 10, 10, 0.98));
+            border: 3px solid var(--primary-red);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(255, 0, 51, 0.3);
+            animation: slideIn 0.6s ease;
+        }
+
+        .welcome-header {
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: float 20s linear infinite;
+        }
+
+        .welcome-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-logo-icon {
+            font-size: 4rem;
+            color: var(--text-light);
+            animation: pulse 2s infinite;
+        }
+
+        .welcome-logo-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ffffff, var(--hacker-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .welcome-tagline {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--text-light);
+            letter-spacing: 2px;
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        .welcome-body {
+            padding: 40px;
+        }
+
+        .welcome-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            background: var(--darker-black);
+            border-radius: 12px;
+            padding: 5px;
+            gap: 5px;
+        }
+
+        .welcome-tab {
+            flex: 1;
+            padding: 18px;
+            background: transparent;
+            border: none;
+            color: var(--text-gray);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .welcome-tab:hover {
+            background: rgba(255, 0, 51, 0.1);
+            color: var(--primary-red);
+        }
+
+        .welcome-tab.active {
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: var(--text-light);
+            box-shadow: 0 5px 20px rgba(255, 0, 51, 0.3);
+        }
+
+        .welcome-content {
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .welcome-content.active {
+            display: block;
+        }
+
+        .welcome-input-group {
+            margin-bottom: 25px;
+        }
+
+        .welcome-label {
+            display: block;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .welcome-input {
+            width: 100%;
+            padding: 18px 25px;
+            background-color: var(--darker-black);
+            border: 2px solid var(--border-gray);
+            color: var(--text-light);
+            font-family: 'Share Tech Mono', monospace;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .welcome-input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 25px rgba(255, 0, 51, 0.3);
+        }
+
+        .welcome-footer {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .welcome-btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .welcome-btn.primary {
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: var(--text-light);
+        }
+
+        .welcome-btn.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 0, 51, 0.4);
+        }
+
+        .welcome-btn.secondary {
+            background: transparent;
+            border: 2px solid var(--border-light);
+            color: var(--text-gray);
+        }
+
+        .welcome-btn.secondary:hover {
+            border-color: var(--primary-red);
+            color: var(--text-light);
+            background-color: rgba(255, 0, 51, 0.1);
+        }
+
+        .welcome-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .welcome-feature {
+            background: rgba(255, 0, 51, 0.05);
+            border: 1px solid var(--border-gray);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .welcome-feature:hover {
+            border-color: var(--primary-red);
+            transform: translateY(-3px);
+        }
+
+        .welcome-feature i {
+            font-size: 2rem;
+            color: var(--primary-red);
+            margin-bottom: 10px;
+        }
+
+        .welcome-feature h4 {
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .welcome-feature p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Botão de skip */
+        .welcome-skip {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .skip-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-gray);
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            text-decoration: underline;
+        }
+
+        .skip-btn:hover {
+            color: var(--primary-red);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -1826,6 +2093,14 @@
                 padding: 25px;
                 width: 95%;
             }
+            
+            .welcome-container {
+                width: 95%;
+            }
+            
+            .welcome-features {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1860,6 +2135,15 @@
             .user-info-header {
                 flex-direction: column;
                 text-align: center;
+            }
+            
+            .welcome-logo {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .welcome-logo-text h1 {
+                font-size: 2.2rem;
             }
         }
 
@@ -1917,6 +2201,134 @@
     <!-- Efeito Scanline -->
     <div class="scanline"></div>
 
+    <!-- Modal de Boas-Vindas -->
+    <div class="welcome-modal" id="welcomeModal">
+        <div class="welcome-container">
+            <div class="welcome-header">
+                <div class="welcome-logo">
+                    <div class="welcome-logo-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="welcome-logo-text">
+                        <h1>CyberShield OSINT</h1>
+                        <div class="welcome-tagline">>_ Plataforma de Pesquisa Profissional</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="welcome-body">
+                <div class="welcome-tabs">
+                    <button class="welcome-tab active" onclick="showWelcomeTab('login')">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <button class="welcome-tab" onclick="showWelcomeTab('register')">
+                        <i class="fas fa-user-plus"></i> Registrar
+                    </button>
+                    <button class="welcome-tab" onclick="showWelcomeTab('features')">
+                        <i class="fas fa-star"></i> Recursos
+                    </button>
+                </div>
+                
+                <!-- Tab de Login -->
+                <div id="welcomeLogin" class="welcome-content active">
+                    <div class="welcome-input-group">
+                        <label class="welcome-label">Usuário</label>
+                        <input type="text" id="welcomeUsername" class="welcome-input" placeholder="Digite seu usuário" autocomplete="username">
+                    </div>
+                    <div class="welcome-input-group">
+                        <label class="welcome-label">Senha</label>
+                        <input type="password" id="welcomePassword" class="welcome-input" placeholder="Digite sua senha" autocomplete="current-password">
+                    </div>
+                    
+                    <div class="welcome-footer">
+                        <button class="welcome-btn secondary" onclick="skipWelcome()">
+                            <i class="fas fa-arrow-right"></i> Explorar Sem Login
+                        </button>
+                        <button class="welcome-btn primary" onclick="welcomeLogin()">
+                            <i class="fas fa-sign-in-alt"></i> Entrar
+                        </button>
+                    </div>
+                    
+                    <div class="welcome-skip">
+                        <small style="color: var(--text-gray);">Dica: Use <strong>Nemo</strong> / <strong>gustavo2709</strong> para acessar como administrador</small>
+                    </div>
+                </div>
+                
+                <!-- Tab de Registro -->
+                <div id="welcomeRegister" class="welcome-content">
+                    <div class="welcome-input-group">
+                        <label class="welcome-label">Usuário</label>
+                        <input type="text" id="welcomeRegUsername" class="welcome-input" placeholder="Escolha um nome de usuário" autocomplete="username">
+                    </div>
+                    <div class="welcome-input-group">
+                        <label class="welcome-label">Email</label>
+                        <input type="email" id="welcomeRegEmail" class="welcome-input" placeholder="seu@email.com" autocomplete="email">
+                    </div>
+                    <div class="welcome-input-group">
+                        <label class="welcome-label">Senha</label>
+                        <input type="password" id="welcomeRegPassword" class="welcome-input" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+                    </div>
+                    <div class="welcome-input-group">
+                        <label class="welcome-label">Confirmar Senha</label>
+                        <input type="password" id="welcomeRegConfirm" class="welcome-input" placeholder="Digite a senha novamente" autocomplete="new-password">
+                    </div>
+                    
+                    <div class="welcome-footer">
+                        <button class="welcome-btn secondary" onclick="showWelcomeTab('login')">
+                            <i class="fas fa-arrow-left"></i> Voltar para Login
+                        </button>
+                        <button class="welcome-btn primary" onclick="welcomeRegister()">
+                            <i class="fas fa-user-plus"></i> Criar Conta
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Tab de Recursos -->
+                <div id="welcomeFeatures" class="welcome-content">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h3 style="color: var(--text-light); margin-bottom: 15px;">Recursos da Plataforma</h3>
+                        <p style="color: var(--text-gray);">Todas as APIs estão 100% funcionais</p>
+                    </div>
+                    
+                    <div class="welcome-features">
+                        <div class="welcome-feature">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <h4>Geolocalização</h4>
+                            <p>Mapas interativos com localização em tempo real</p>
+                        </div>
+                        <div class="welcome-feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <h4>Segurança</h4>
+                            <p>Verificação de vulnerabilidades e IPs maliciosos</p>
+                        </div>
+                        <div class="welcome-feature">
+                            <i class="fas fa-database"></i>
+                            <h4>APIs Reais</h4>
+                            <p>8 APIs funcionais sem necessidade de chaves</p>
+                        </div>
+                        <div class="welcome-feature">
+                            <i class="fas fa-user-secret"></i>
+                            <h4>Painel Admin</h4>
+                            <p>Controle total do sistema com logs detalhados</p>
+                        </div>
+                    </div>
+                    
+                    <div class="welcome-footer">
+                        <button class="welcome-btn primary" onclick="showWelcomeTab('login')" style="margin-top: 20px;">
+                            <i class="fas fa-rocket"></i> Começar a Usar
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="welcome-skip">
+                    <button class="skip-btn" onclick="skipWelcome()">
+                        <i class="fas fa-bolt"></i> Entrar como Visitante
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Sistema de Alertas -->
     <div class="alert-container">
         <div class="alert" id="alert-box"></div>
@@ -1973,6 +2385,11 @@
                             <div class="logo-tagline">>_ Plataforma de Pesquisa</div>
                         </div>
                     </div>
+
+                    <!-- Botão para reabrir menu de login -->
+                    <button class="auth-btn" onclick="showWelcomeModal()" id="openLoginBtn" style="display: none;">
+                        <i class="fas fa-sign-in-alt"></i> Login/Registro
+                    </button>
 
                     <!-- Menu Mobile -->
                     <button class="mobile-menu-btn" id="mobileMenuBtn">
@@ -2802,6 +3219,354 @@
     <!-- JavaScript -->
     <script>
         // ============================================
+        // SOLICITAÇÃO DE PERMISSÃO DE LOCALIZAÇÃO
+        // ============================================
+        function requestLocationPermission() {
+            if (!navigator.geolocation) {
+                showAlert('Geolocalização não é suportada pelo seu navegador', 'warning');
+                return;
+            }
+            
+            // Verificar se já temos permissão
+            if (navigator.permissions) {
+                navigator.permissions.query({name: 'geolocation'})
+                    .then(function(result) {
+                        if (result.state === 'granted') {
+                            console.log('Permissão de localização já concedida');
+                            getUserLocation();
+                        } else if (result.state === 'prompt') {
+                            showLocationRequestModal();
+                        } else if (result.state === 'denied') {
+                            showAlert('Permissão de localização negada. Algumas APIs podem não funcionar corretamente.', 'warning');
+                        }
+                    });
+            } else {
+                // Fallback para navegadores antigos
+                showLocationRequestModal();
+            }
+        }
+
+        function showLocationRequestModal() {
+            // Criar modal de solicitação de localização
+            const locationModalHTML = `
+                <div class="modal-overlay" id="locationModal" style="display: flex; z-index: 99999;">
+                    <div class="modal-container" style="max-width: 500px;">
+                        <div class="modal-header">
+                            <div class="modal-title">
+                                <i class="fas fa-map-marker-alt" style="color: var(--hacker-green);"></i>
+                                <h3>Permissão de Localização</h3>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div style="text-align: center; padding: 20px 0;">
+                                <i class="fas fa-globe-americas" style="font-size: 4rem; color: var(--primary-red); margin-bottom: 20px;"></i>
+                                <h3 style="color: var(--text-light); margin-bottom: 15px;">Permitir acesso à sua localização?</h3>
+                                <p style="color: var(--text-gray); line-height: 1.6;">
+                                    Para que as APIs de geolocalização funcionem corretamente, precisamos da sua permissão para acessar sua localização aproximada.
+                                    <br><br>
+                                    <strong>Usamos sua localização para:</strong>
+                                    <br>• Mostrar seu mapa na página inicial
+                                    <br>• Melhorar a precisão das pesquisas
+                                    <br>• Personalizar resultados baseados na sua região
+                                </p>
+                                <div class="alert alert-info" style="margin-top: 20px; display: block; text-align: left;">
+                                    <i class="fas fa-info-circle"></i> 
+                                    Sua localização <strong>nunca</strong> é compartilhada com terceiros ou armazenada permanentemente.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="modal-btn secondary" onclick="declineLocation()">
+                                <i class="fas fa-times"></i> Negar
+                            </button>
+                            <button class="modal-btn primary" onclick="getUserLocation()">
+                                <i class="fas fa-check"></i> Permitir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const modalDiv = document.createElement('div');
+            modalDiv.innerHTML = locationModalHTML;
+            document.body.appendChild(modalDiv.firstElementChild);
+        }
+
+        function declineLocation() {
+            const modal = document.getElementById('locationModal');
+            if (modal) modal.remove();
+            
+            showAlert('Localização negada. Você pode ativar manualmente nas configurações do navegador.', 'warning');
+            
+            // Criar botão para tentar novamente
+            const retryBtn = document.createElement('div');
+            retryBtn.className = 'alert alert-warning';
+            retryBtn.style.cssText = 'position: fixed; bottom: 20px; right: 20px; z-index: 9998; cursor: pointer;';
+            retryBtn.innerHTML = `
+                <i class="fas fa-map-marker-alt"></i> 
+                <span>Localização necessária</span>
+                <button onclick="requestLocationPermission()" style="margin-left: 10px; background: var(--primary-red); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                    Ativar
+                </button>
+            `;
+            retryBtn.id = 'locationRetryBtn';
+            document.body.appendChild(retryBtn);
+        }
+
+        async function getUserLocation() {
+            const modal = document.getElementById('locationModal');
+            if (modal) modal.remove();
+            
+            showLoading(true);
+            
+            try {
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    });
+                });
+                
+                const { latitude, longitude } = position.coords;
+                
+                // Armazenar localização temporariamente
+                sessionStorage.setItem('userLocation', JSON.stringify({
+                    lat: latitude,
+                    lon: longitude,
+                    timestamp: new Date().toISOString()
+                }));
+                
+                showAlert('✅ Localização obtida com sucesso!', 'success');
+                
+                // Se o usuário estiver logado, atualizar mapa
+                if (currentUser) {
+                    displayUserMap(latitude, longitude, {
+                        city: 'Sua localização',
+                        country_name: 'Detectada via GPS'
+                    });
+                }
+                
+            } catch (error) {
+                console.error('Erro ao obter localização:', error);
+                
+                let errorMessage = 'Não foi possível obter sua localização. ';
+                switch(error.code) {
+                    case 1:
+                        errorMessage += 'Permissão negada.';
+                        break;
+                    case 2:
+                        errorMessage += 'Localização indisponível.';
+                        break;
+                    case 3:
+                        errorMessage += 'Tempo limite excedido.';
+                        break;
+                    default:
+                        errorMessage += 'Erro desconhecido.';
+                }
+                
+                showAlert(errorMessage, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Remover botão de retry se existir
+        function removeLocationRetryButton() {
+            const retryBtn = document.getElementById('locationRetryBtn');
+            if (retryBtn) retryBtn.remove();
+        }
+
+        // ============================================
+        // MODAL DE BOAS-VINDAS
+        // ============================================
+        function showWelcomeModal() {
+            const welcomeModal = document.getElementById('welcomeModal');
+            if (welcomeModal) {
+                welcomeModal.style.display = 'flex';
+                document.getElementById('welcomeUsername').focus();
+            }
+        }
+
+        function hideWelcomeModal() {
+            const welcomeModal = document.getElementById('welcomeModal');
+            if (welcomeModal) {
+                welcomeModal.style.display = 'none';
+                // Iniciar solicitação de localização após fechar modal
+                setTimeout(requestLocationPermission, 1000);
+            }
+        }
+
+        function showWelcomeTab(tabName) {
+            // Esconder todas as tabs
+            document.querySelectorAll('.welcome-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remover active de todas as tabs
+            document.querySelectorAll('.welcome-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Mostrar tab selecionada
+            document.getElementById('welcome' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function welcomeLogin() {
+            const username = document.getElementById('welcomeUsername').value.trim();
+            const password = document.getElementById('welcomePassword').value;
+            
+            if (!username || !password) {
+                showAlert('Preencha todos os campos', 'error');
+                return;
+            }
+            
+            const user = storage.users[username];
+            if (user && user.password === password) {
+                if (user.status === 'banned') {
+                    showAlert('Usuário banido do sistema', 'error');
+                    return;
+                }
+                
+                currentUser = {
+                    username: username,
+                    email: user.email,
+                    role: user.role || 'user',
+                    createdAt: user.createdAt,
+                    searches: user.searches || 0
+                };
+                
+                currentSession = storage.createSession(username);
+                
+                // Atualizar último login
+                user.lastLogin = new Date().toISOString();
+                storage.saveUsers();
+                
+                updateUIAfterLogin();
+                storage.logAction('LOGIN', { username: username });
+                
+                showAlert(`Bem-vindo, ${username}!`, 'success');
+                addTerminalOutput(`Usuário ${username} autenticado com sucesso`);
+                
+                // Carregar localização do usuário
+                loadUserLocation();
+                
+                // Se for admin, mostrar link do painel
+                if (user.role === 'admin') {
+                    document.getElementById('adminNavLink').style.display = 'flex';
+                }
+                
+                // Fechar modal de boas-vindas
+                hideWelcomeModal();
+                
+            } else {
+                showAlert('Credenciais inválidas', 'error');
+            }
+        }
+
+        function welcomeRegister() {
+            const username = document.getElementById('welcomeRegUsername').value.trim();
+            const email = document.getElementById('welcomeRegEmail').value.trim();
+            const password = document.getElementById('welcomeRegPassword').value;
+            const confirmPassword = document.getElementById('welcomeRegConfirm').value;
+            
+            if (!username || !email || !password || !confirmPassword) {
+                showAlert('Preencha todos os campos', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showAlert('As senhas não coincidem', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showAlert('A senha deve ter pelo menos 6 caracteres', 'error');
+                return;
+            }
+            
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showAlert('Email inválido', 'error');
+                return;
+            }
+            
+            if (storage.users[username]) {
+                showAlert('Usuário já existe', 'error');
+                return;
+            }
+            
+            storage.users[username] = {
+                email: email,
+                password: password,
+                role: 'user',
+                createdAt: new Date().toISOString(),
+                searches: 0,
+                lastLogin: new Date().toISOString(),
+                status: 'active'
+            };
+            
+            storage.saveUsers();
+            storage.logAction('REGISTER', { username: username, email: email });
+            
+            // Auto login após registro
+            currentUser = {
+                username: username,
+                email: email,
+                role: 'user',
+                createdAt: new Date().toISOString(),
+                searches: 0
+            };
+            
+            currentSession = storage.createSession(username);
+            updateUIAfterLogin();
+            updateCounters();
+            
+            showAlert(`Conta criada com sucesso! Bem-vindo, ${username}!`, 'success');
+            addTerminalOutput(`Novo usuário registrado: ${username}`);
+            
+            hideWelcomeModal();
+            loadUserLocation();
+        }
+
+        function skipWelcome() {
+            hideWelcomeModal();
+            showAlert('Você está navegando como visitante. Algumas funcionalidades são restritas a usuários logados.', 'info');
+        }
+
+        function toggleLoginButton() {
+            const loginBtn = document.getElementById('openLoginBtn');
+            if (currentUser) {
+                loginBtn.style.display = 'none';
+            } else {
+                loginBtn.style.display = 'flex';
+            }
+        }
+
+        // ============================================
+        // FUNÇÕES DE LOCALIZAÇÃO
+        // ============================================
+        function useStoredLocation() {
+            const storedLocation = sessionStorage.getItem('userLocation');
+            if (storedLocation) {
+                try {
+                    const location = JSON.parse(storedLocation);
+                    // Verificar se a localização não expirou (5 minutos)
+                    const locationTime = new Date(location.timestamp);
+                    const now = new Date();
+                    const minutesDiff = (now - locationTime) / (1000 * 60);
+                    
+                    if (minutesDiff < 5) {
+                        return location;
+                    }
+                } catch (e) {
+                    // Ignorar erro
+                }
+            }
+            return null;
+        }
+
+        // ============================================
         // CONFIGURAÇÃO DAS APIS REAIS
         // ============================================
         const REAL_APIS = {
@@ -3267,6 +4032,8 @@
             
             showAlert('Logout realizado', 'info');
             addTerminalOutput('Sessão encerrada');
+            
+            toggleLoginButton();
         }
 
         function showLogin() {
@@ -3288,6 +4055,8 @@
             
             // Atualizar dashboard do usuário
             updateUserDashboard();
+            
+            toggleLoginButton();
         }
 
         function updateUserDashboard() {
@@ -3306,6 +4075,23 @@
         // LOCALIZAÇÃO DO USUÁRIO
         // ============================================
         async function loadUserLocation() {
+            const storedLocation = useStoredLocation();
+            
+            if (storedLocation && storedLocation.lat && storedLocation.lon) {
+                // Usar localização armazenada
+                document.getElementById('userIP').textContent = 'Usando GPS';
+                document.getElementById('userLocation').textContent = 
+                    `${storedLocation.lat.toFixed(4)}, ${storedLocation.lon.toFixed(4)}`;
+                document.getElementById('userISP').textContent = 'Localização do dispositivo';
+                
+                displayUserMap(storedLocation.lat, storedLocation.lon, {
+                    city: 'Sua localização via GPS',
+                    country_name: 'Precisão alta'
+                });
+                return;
+            }
+            
+            // Se não tem localização armazenada, buscar via IP
             try {
                 // Obter IP público do usuário
                 const ipResponse = await fetch('https://api.ipify.org?format=json');
@@ -4335,11 +5121,26 @@ Use com responsabilidade.`);
                             document.getElementById('adminNavLink').style.display = 'flex';
                         }
                         
+                        // Não mostrar modal de boas-vindas se já está logado
+                        hideWelcomeModal();
                         loadUserLocation();
                     }
                 } catch (e) {
                     console.log('Sessão inválida');
                 }
+            }
+
+            // Verificar se já passou pelo welcome modal hoje
+            const lastWelcome = localStorage.getItem('lastWelcomeDate');
+            const today = new Date().toDateString();
+
+            // Mostrar modal de boas-vindas apenas se não tiver visto hoje OU se não estiver logado
+            if ((!lastWelcome || lastWelcome !== today || !currentUser) && !savedSession) {
+                setTimeout(showWelcomeModal, 1000);
+                localStorage.setItem('lastWelcomeDate', today);
+            } else {
+                // Se já viu hoje e está logado, solicitar localização
+                setTimeout(requestLocationPermission, 1000);
             }
 
             // Atualizar contadores
